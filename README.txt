@@ -23,4 +23,19 @@ any later version."
 BUILDING
 ========
 
-TODO: when you have something to build add instructions here :)
+In order successfully complete these build instructions you must have:
+* git
+* ant >= 1.7.1
+* java development kit (JDK) >= 1.5
+
+To obtain and build the source code enter the following commands (where
+GIT_URL is git://github.com/cgd/drake-genetics.git if you are not a member of
+this project and git@github.com:cgd/drake-genetics.git if you are a member of
+this project):
+    git clone GIT_URL
+    cd drake-genetics
+    ./init-git-submodules.sh
+    ant
+
+This will build a war file under `./modules/drake-genetics-server/dist/` which
+you can deploy using a java application server such as tomcat.
