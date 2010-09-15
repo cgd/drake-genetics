@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ivy-module version="2.0">
+    <info organisation="org.jax" module="drake-genetics-server" revision="1.0"/>
+    
+    <configurations>
+        <conf
+            name="compile"
+            description="dependencies needed to compile"/>
+        <conf
+            name="test"
+            extends="compile"
+            description="dependencies needed to test"/>
+    </configurations>
+
+    <publications>
+        <artifact name="drake-genetics-server" type="war" ext="war"/>
+    </publications>
+    
+    <dependencies>
+        <dependency
+            org="com.google"
+            name="gwt"
+            rev="latest.integration"
+            conf="*->server"/>
+        <dependency
+            org="org.jax"
+            name="drake-genetics-client"
+            rev="latest.integration"
+            transitive="false"/>
+        
+        <!-- java web/enterprise stuff -->
+        <dependency
+            org="net.java.dev.jersey"
+            name="jersey"
+            rev="latest.integration"/>
+        <dependency
+            org="javax"
+            name="servlet"
+            rev="latest.integration"/>
+        <dependency
+            org="javax"
+            name="annotation"
+            rev="latest.integration"/>
+    </dependencies>
+    
+</ivy-module>

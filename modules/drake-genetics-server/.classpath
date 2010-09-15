@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
+	<classpathentry kind="lib" path="lib/jersey-core-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/jersey-server-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/jsr311-api-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/jersey-multipart-1.0.3.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-servlet-2.0.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/drake-genetics-client"/>
+	<classpathentry kind="output" path="eclipse-output"/>
+</classpath>
