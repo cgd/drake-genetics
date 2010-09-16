@@ -1,6 +1,5 @@
 #!/bin/bash
-true_script_location=`readlink -fn $0`
-APPDIR=`dirname $true_script_location`;
+APPDIR=`dirname $0`;
 
 # Run with debugging disabled
 unset CP
