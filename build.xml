@@ -16,5 +16,9 @@
     <target name="clean">
         <subant buildpath="${basedir}/modules/drake-genetics-server" target="clean"/>
     </target>
+    
+    <target name="run-devmode">
+        <subant buildpath="${basedir}/modules/drake-genetics-server" target="run-devmode"/>
+    </target>
 
 </project>
