@@ -70,4 +70,42 @@
         </java>
     </target>
     
+    <target name="debug-devmode" depends="clean,dist,debug-devmode-nobuild" description="use this target to build clean and debug in devmode"/>
+    
+    <!--
+    NOTE: this works the same as the run target except for the:
+    <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/>
+    option set in the java task
+    -->
+    <target name="debug-devmode-nobuild" description="use this target to debug in devmode if no targets need to be rebuilt">
+        <ivy:info file="ivy.xml"/>
+        
+        <!-- we have to "explode" the WAR file for GWT's jetty server -->
+        <delete quiet="true" dir="${build}/temp-run-dir"/>
+        <mkdir dir="${build}/temp-run-dir/war"/>
+        <unjar src="${dist}/${ivy.module}-${ivy.revision}.war" dest="${build}/temp-run-dir/war"/>
+        
+        <!--
+        translated the following into an ant call
+        java -Xmx256M -cp "$CLIENT_DIR/src/java:$CLIENT_DIR/build/java:$CP" com.google.gwt.dev.DevMode \
+            -gen $SCRIPT_DIR/temp-run-dir/gwt-gen -war "$SCRIPT_DIR/temp-run-dir/war" org.jax.drakegenetics.gwtclientapp.DrakeGeneticsApplication
+        -->
+        <java classname="com.google.gwt.dev.DevMode" fork="true" failonerror="true">
+            <arg value="-gen"/>
+            <arg value="${build}/temp-run-dir/gwt-gen"/>
+            <arg value="-war"/>
+            <arg value="${build}/temp-run-dir/war"/>
+            <arg value="org.jax.drakegenetics.gwtclientapp.DrakeGeneticsApplication"/>
+            <jvmarg value="-Xmx256M"/>
+            <jvmarg value="-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=y"/>
+            
+            <classpath>
+                <fileset dir="${basedir}/../drake-genetics-client/lib">
+                    <include name="*.jar"/>
+                </fileset>
+                
+                <pathelement location="${basedir}/../drake-genetics-client/src/java"/>
+            </classpath>
+        </java>
+    </target>
 </project>

@@ -21,4 +21,8 @@
         <subant buildpath="${basedir}/modules/drake-genetics-server" target="run-devmode"/>
     </target>
 
+    <target name="debug-devmode">
+        <subant buildpath="${basedir}/modules/drake-genetics-server" target="debug-devmode"/>
+    </target>
+
 </project>
