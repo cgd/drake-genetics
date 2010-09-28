@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <projectDescription>
-   <name>QueryApplication</name>
-   <comment>QueryApplication project</comment>
+   <name>drake-genetics-server</name>
+   <comment>Drake Genetics Server project</comment>
    <projects/>
    <buildSpec>
        <buildCommand>
