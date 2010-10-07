@@ -2,6 +2,7 @@ package org.jax.drakegenetics.gwtclientapp.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -12,25 +13,21 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class DrakeGeneticsEntryPoint implements EntryPoint
 {
+    private final AuthenticationServiceAsync authenticationService = 
+    	GWT.create(AuthenticationService.class);
+    private final HelloServiceAsync helloService = 
+    	GWT.create(HelloService.class);
+    private final String username = "No User";
+
     /**
      * {@inheritDoc}
      */
     public void onModuleLoad()
     {
-        HelloServiceAsync helloService = GWT.create(HelloService.class);
-        helloService.sayHelloTo("Keith", new AsyncCallback<String>()
-        {
-            
-            public void onSuccess(String result)
-            {
-                DrakeGeneticsEntryPoint.this.setHelloWorldMessage(result);
-            }
-            
-            public void onFailure(Throwable caught)
-            {
-                DrakeGeneticsEntryPoint.this.setHelloWorldMessage(caught.toString());
-            }
-        });
+    	String sessionID = Cookies.getCookie("sid");
+        if ( sessionID != null ) validateSessionId(sessionID);
+        else displayLoginBox();
+        
     }
     
     /**
@@ -40,5 +37,62 @@ public class DrakeGeneticsEntryPoint implements EntryPoint
     private void setHelloWorldMessage(String message)
     {
         RootPanel.get("helloWorldContainer").add(new Label(message));
+    }
+    
+    private void displayLoginBox() {
+    	
+    	authenticationService.login("Keith", new AsyncCallback<String>()
+                {
+                    
+                    public void onSuccess(String result)
+                    {
+                        DrakeGeneticsEntryPoint.this.setHelloWorldMessage(result);
+                    }
+                    
+                    public void onFailure(Throwable caught)
+                    {
+                        DrakeGeneticsEntryPoint.this.setHelloWorldMessage(caught.toString());
+                    }
+                });
+    }
+    
+    private void validateSessionId(String sessionID) {
+    	
+    	authenticationService.validateSessionId(sessionID, new AsyncCallback<String>()
+                {
+                    
+                    public void onSuccess(String result)
+                    {
+                    	if (result.equals("INVALID")) {
+                    		displayLoginBox();
+                    	} else {
+                    		
+                            DrakeGeneticsEntryPoint.this.
+                            	setHelloWorldMessage(result);
+                    	}
+                    }
+                    
+                    public void onFailure(Throwable caught)
+                    {
+                        DrakeGeneticsEntryPoint.this.setHelloWorldMessage(caught.toString());
+                    }
+                });
+    }
+    
+    private void initLayout() {
+    	
+    	helloService.sayHelloTo(username, new AsyncCallback<String>()
+                {
+                    
+                    public void onSuccess(String result)
+                    {
+                        DrakeGeneticsEntryPoint.this.setHelloWorldMessage(result);
+                    }
+                    
+                    public void onFailure(Throwable caught)
+                    {
+                        DrakeGeneticsEntryPoint.this.setHelloWorldMessage(caught.toString());
+                    }
+                });
     }
 }
