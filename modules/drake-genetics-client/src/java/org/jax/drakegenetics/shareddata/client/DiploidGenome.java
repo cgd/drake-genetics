@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2010 The Jackson Laboratory
+ * 
+ * This is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.jax.drakegenetics.shareddata.client;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
+ */
+public class DiploidGenome implements Serializable
+{
+    private static final long serialVersionUID = -5461239317917973856L;
+
+    private List<Chromosome> maternalHaploid;
+    private List<Chromosome> paternalHaploid;
+    
+    /**
+     * Getter for the maternal haploid (the chromosomes contributed from the
+     * mother's egg)
+     * @return the maternalHaploid
+     */
+    public List<Chromosome> getMaternalHaploid()
+    {
+        return this.maternalHaploid;
+    }
+    
+    /**
+     * Setter for the maternale haploid.
+     * @param maternalHaploid the maternalHaploid to set
+     */
+    public void setMaternalHaploid(List<Chromosome> maternalHaploid)
+    {
+        this.maternalHaploid = maternalHaploid;
+    }
+    
+    /**
+     * Getter for the paternal haploid (the chromosomes contributed from the
+     * fathers sperm)
+     * @return the paternalHaploid
+     */
+    public List<Chromosome> getPaternalHaploid()
+    {
+        return this.paternalHaploid;
+    }
+    
+    /**
+     * Setter for the paternal haploid
+     * @param paternalHaploid the paternalHaploid to set
+     */
+    public void setPaternalHaploid(List<Chromosome> paternalHaploid)
+    {
+        this.paternalHaploid = paternalHaploid;
+    }
+}
