@@ -17,7 +17,11 @@
 package org.jax.drakegenetics.shareddata.client;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
@@ -26,49 +30,9 @@ public class Chromosome implements Serializable
 {
     private static final long serialVersionUID = 6237372279849745397L;
     
-    private int numTenCmSegments;
-    private int centromereSegmentIndex;
     private String chromosomeName;
     private List<CrossoverPoint> crossovers;
     private String proximalHaplotypeId;
-    
-    /**
-     * Getter for the number of segments. Chromosomes are always a multiple of
-     * 10 cM long.
-     * @return the number of segments
-     */
-    public int getNumTenCmSegments()
-    {
-        return this.numTenCmSegments;
-    }
-    
-    /**
-     * Setter for the number of segments
-     * @param numTenCmSegments the new number of segments
-     */
-    public void setNumTenCmSegments(int numTenCmSegments)
-    {
-        this.numTenCmSegments = numTenCmSegments;
-    }
-    
-    /**
-     * Determines which 10 cM segment contains the centromere.
-     * @return the centromereSegmentIndex
-     */
-    public int getCentromereSegmentIndex()
-    {
-        return this.centromereSegmentIndex;
-    }
-    
-    /**
-     * Set the centromere containing the index. This number should be less
-     * than {@link #numTenCmSegments}
-     * @param centromereSegmentIndex the centromereSegmentIndex to set
-     */
-    public void setCentromereSegmentIndex(int centromereSegmentIndex)
-    {
-        this.centromereSegmentIndex = centromereSegmentIndex;
-    }
     
     /**
      * Getter for the name of this chromosome. Eg: "19" "X" "Y" ...
@@ -126,5 +90,57 @@ public class Chromosome implements Serializable
     public void setProximalHaplotypeId(String proximalHaplotypeId)
     {
         this.proximalHaplotypeId = proximalHaplotypeId;
+    }
+    
+    /**
+     * Adds all of the chromosomes which match one of the given
+     * names to the matches collection
+     * @param chromosomesToCheck
+     *          the chromosomes to scan
+     * @param chromosomeNamesToMatch
+     *          the chromosomes to try to match
+     * @param matches
+     *          the collection that we will add any matches to
+     */
+    public static void addChromosomeMatches(
+            Collection<Chromosome> chromosomesToCheck,
+            Set<String> chromosomeNamesToMatch,
+            Collection<Chromosome> matches)
+    {
+        for(Chromosome chromosome : chromosomesToCheck)
+        {
+            for(String name : chromosomeNamesToMatch)
+            {
+                if(name.equals(chromosome.getChromosomeName()))
+                {
+                    matches.add(chromosome);
+                    break;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Hash all of the given chromosomes by their chromosome name
+     * @param chromosomes
+     *          the chromosomes to hash
+     * @param chromosomeHash
+     *          the hash map to add chromosomes to
+     */
+    public static void hashChromosomes(
+            Collection<Chromosome> chromosomes,
+            Map<String, List<Chromosome>> chromosomeHash)
+    {
+        for(Chromosome chromosome: chromosomes)
+        {
+            List<Chromosome> chrList = chromosomeHash.get(chromosome.getChromosomeName());
+            if(chrList == null)
+            {
+                chrList = new ArrayList<Chromosome>();
+                chromosomeHash.put(chromosome.getChromosomeName(), chrList);
+            }
+            
+            chrList.add(chromosome);
+        }
     }
 }

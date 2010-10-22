@@ -16,6 +16,7 @@
  */
 package org.jax.drakegenetics.server;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.drakegenetics.shareddata.client.Chromosome;
@@ -38,7 +39,29 @@ public class MeiosisEngine
      */
     public List<Chromosome>[] performMeiosis(DiploidGenome genome)
     {
-        // TODO implement me
-        return null;
+        if(genome.isAneuploid())
+        {
+            // all aneuploids are infertile
+            return null;
+        }
+        
+        List<Chromosome> maternalHaploid = genome.getMaternalHaploid();
+        List<Chromosome> paternalHaploid = genome.getPaternalHaploid();
+        
+        int chrCount = maternalHaploid.size();
+        assert paternalHaploid.size() == chrCount;
+        
+        List<Chromosome>[] gametes = new ArrayList[] {
+                new ArrayList<Chromosome>(chrCount),
+                new ArrayList<Chromosome>(chrCount),
+                new ArrayList<Chromosome>(chrCount),
+                new ArrayList<Chromosome>(chrCount)};
+        
+        // we model crossover as a process which is independent for each
+        // chromosome, so we can work on each chromosome separately
+        
+        // TODO perform crossover
+        
+        return gametes;
     }
 }

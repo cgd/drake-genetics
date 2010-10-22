@@ -17,18 +17,40 @@
 package org.jax.drakegenetics.shareddata.client;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
+ * class representing a diploid genome
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
-public class DiploidGenome implements Serializable
+public abstract class DiploidGenome implements Serializable
 {
     private static final long serialVersionUID = -5461239317917973856L;
 
     private List<Chromosome> maternalHaploid;
     private List<Chromosome> paternalHaploid;
     
+    /**
+     * Constructor
+     */
+    public DiploidGenome()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param maternalHaploid   see {@link #getMaternalHaploid()}
+     * @param paternalHaploid   see {@link #getPaternalHaploid()}
+     */
+    public DiploidGenome(List<Chromosome> maternalHaploid,
+            List<Chromosome> paternalHaploid)
+    {
+        this.maternalHaploid = maternalHaploid;
+        this.paternalHaploid = paternalHaploid;
+    }
+
     /**
      * Getter for the maternal haploid (the chromosomes contributed from the
      * mother's egg)
@@ -66,4 +88,37 @@ public class DiploidGenome implements Serializable
     {
         this.paternalHaploid = paternalHaploid;
     }
+    
+    /**
+     * Get all chromosomes matching the given names
+     * @param chromosomeNamesToMatch
+     *          the chromosome names that we will look for
+     * @return
+     *          any matches (string case is ignored)
+     */
+    public List<Chromosome> getChromosomeMatches(Set<String> chromosomeNamesToMatch)
+    {
+        ArrayList<Chromosome> matches = new ArrayList<Chromosome>(
+                this.maternalHaploid.size() * 2);
+        Chromosome.addChromosomeMatches(
+                this.getMaternalHaploid(),
+                chromosomeNamesToMatch,
+                matches);
+        return matches;
+    }
+    
+    /**
+     * Determines if there is any aneuploidy in this genome.
+     * @return  true if there is any aneuploidy
+     */
+    public boolean isAneuploid()
+    {
+        return this.getSpeciesGenomeDescription().isAneuploid(this);
+    }
+    
+    /**
+     * Get the species description for this genome
+     * @return  the species description
+     */
+    public abstract SpeciesGenomeDescription getSpeciesGenomeDescription();
 }
