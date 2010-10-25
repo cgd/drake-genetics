@@ -29,6 +29,34 @@ public class CrossoverPoint implements Serializable
     private double centimorganPosition;
 
     /**
+     * Constructor
+     */
+    public CrossoverPoint()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param distalHaplotypeId see {@link #getDistalHaplotypeId()}
+     * @param centimorganPosition see {@link #getCentimorganPosition()}
+     */
+    public CrossoverPoint(String distalHaplotypeId, double centimorganPosition)
+    {
+        this.distalHaplotypeId = distalHaplotypeId;
+        this.centimorganPosition = centimorganPosition;
+    }
+
+    /**
+     * Constructor
+     * @param crossoverPoint    the crossover point
+     */
+    public CrossoverPoint(CrossoverPoint crossoverPoint)
+    {
+        this.distalHaplotypeId = crossoverPoint.distalHaplotypeId;
+        this.centimorganPosition = crossoverPoint.centimorganPosition;
+    }
+    
+    /**
      * Getter for the distal haplotype ID
      * @return the distalHaplotypeId
      */

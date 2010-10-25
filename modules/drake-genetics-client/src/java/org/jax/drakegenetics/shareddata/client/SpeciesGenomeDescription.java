@@ -109,20 +109,20 @@ public class SpeciesGenomeDescription
             {
                 if(foundSexChromosome)
                 {
+                    // two sex chromosomes should not be in a normal haploid
                     return true;
                 }
                 
-                // two sex chromosomes should not be in a normal haploid
                 foundSexChromosome = true;
             }
             else
             {
                 if(autosomesFound.contains(name))
                 {
+                    // two copies of the same autosome should not be in a normal haploid
                     return true;
                 }
                 
-                // two copies of the same autosome should not be in a normal haploid
                 autosomesFound.add(name);
             }
         }

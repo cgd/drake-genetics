@@ -24,28 +24,22 @@ package org.jax.drakegenetics.shareddata.client;
 public class ChromosomeDescription
 {
     private int numTenCmSegments;
-    private int centromereSegmentIndex;
+    private int centromerePositionCm;
     private String chromosomeName;
     
     /**
      * Constructor
      * @param numTenCmSegments see {@link #getNumTenCmSegments()}
-     * @param centromereSegmentIndex see {@link #getCentromereSegmentIndex()}
+     * @param centromerePositionCm see {@link #getCentromerePositionCm()}
      * @param chromosomeName see {@link #getChromosomeName()}
      */
     public ChromosomeDescription(
             int numTenCmSegments,
-            int centromereSegmentIndex,
+            int centromerePositionCm,
             String chromosomeName)
     {
-        if(centromereSegmentIndex >= numTenCmSegments)
-        {
-            throw new IllegalArgumentException(
-                    "centromereSegmentIndex must be less than numTenCmSegments");
-        }
-        
         this.numTenCmSegments = numTenCmSegments;
-        this.centromereSegmentIndex = centromereSegmentIndex;
+        this.centromerePositionCm = centromerePositionCm;
         this.chromosomeName = chromosomeName;
     }
 
@@ -60,12 +54,12 @@ public class ChromosomeDescription
     }
     
     /**
-     * Determines which 10 cM segment contains the centromere.
-     * @return the centromere segment index
+     * Determines the centromere's position in centimorgans
+     * @return the position
      */
-    public int getCentromereSegmentIndex()
+    public int getCentromerePositionCm()
     {
-        return this.centromereSegmentIndex;
+        return this.centromerePositionCm;
     }
     
     /**

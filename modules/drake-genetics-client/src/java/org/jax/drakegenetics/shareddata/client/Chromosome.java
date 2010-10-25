@@ -32,7 +32,28 @@ public class Chromosome implements Serializable
     
     private String chromosomeName;
     private List<CrossoverPoint> crossovers;
-    private String proximalHaplotypeId;
+    
+    /**
+     * Constructor
+     */
+    public Chromosome()
+    {
+    }
+    
+    /**
+     * Constructor
+     * @param chrToCopy the chromosome to copy
+     */
+    public Chromosome(Chromosome chrToCopy)
+    {
+        this.chromosomeName = chrToCopy.chromosomeName;
+        int crossoverCount = chrToCopy.crossovers.size();
+        this.crossovers = new ArrayList<CrossoverPoint>(crossoverCount);
+        for(int i = 0; i < crossoverCount; i++)
+        {
+            this.crossovers.set(i, new CrossoverPoint(chrToCopy.crossovers.get(i)));
+        }
+    }
     
     /**
      * Getter for the name of this chromosome. Eg: "19" "X" "Y" ...
@@ -54,7 +75,9 @@ public class Chromosome implements Serializable
     
     /**
      * Get all of the crossover points. The list returned should be in order
-     * from the most proximal crossover to the most distal
+     * from the most proximal crossover to the most distal. The first
+     * crossover point is not a true crossover point but is instead the start
+     * of the chromosome and should always be at 0cM
      * @return the crossovers
      */
     public List<CrossoverPoint> getCrossovers()
@@ -70,26 +93,6 @@ public class Chromosome implements Serializable
     public void setCrossovers(List<CrossoverPoint> crossovers)
     {
         this.crossovers = crossovers;
-    }
-    
-    /**
-     * Getter for the most proximal haplotype ID. This is needed because the
-     * data in {@link #getCrossovers()} only contains the haplotype ID distal
-     * to the crossover 
-     * @return the proximalHaplotypeId
-     */
-    public String getProximalHaplotypeId()
-    {
-        return this.proximalHaplotypeId;
-    }
-    
-    /**
-     * Setter for the most proximal haplotype ID.
-     * @param proximalHaplotypeId the proximalHaplotypeId to set
-     */
-    public void setProximalHaplotypeId(String proximalHaplotypeId)
-    {
-        this.proximalHaplotypeId = proximalHaplotypeId;
     }
     
     /**
