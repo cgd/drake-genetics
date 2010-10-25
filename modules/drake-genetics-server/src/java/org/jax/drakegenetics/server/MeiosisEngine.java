@@ -93,7 +93,7 @@ public class MeiosisEngine
             for(int i = 0; i < 2; i++)
             {
                 Chromosome maternalChr = new Chromosome(maternalHaploid.get(chrIndex));
-                Chromosome paternalChr = new Chromosome(maternalHaploid.get(chrIndex));
+                Chromosome paternalChr = new Chromosome(paternalHaploid.get(chrIndex));
                 ChromosomeDescription chrDesc = chrDescMap.get(maternalChr.getChromosomeName());
                 this.maybeCrossover(chrDesc, maternalChr, paternalChr);
                 
