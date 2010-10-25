@@ -19,6 +19,7 @@ package org.jax.drakegenetics.shareddata.client;
 import java.io.Serializable;
 
 /**
+ * Represents a particular crossover.
  * @author  <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class CrossoverPoint implements Serializable

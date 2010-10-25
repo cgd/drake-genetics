@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Class for accessing the drake species genome description
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class DrakeSpeciesSingleton

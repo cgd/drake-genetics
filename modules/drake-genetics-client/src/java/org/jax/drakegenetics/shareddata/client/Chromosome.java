@@ -24,6 +24,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Represents the genetic composition of a single chromosome. See
+ * {@link ChromosomeDescription} for representing the chromosome's structure.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class Chromosome implements Serializable

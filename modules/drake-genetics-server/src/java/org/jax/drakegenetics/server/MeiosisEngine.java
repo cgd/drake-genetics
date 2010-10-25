@@ -27,6 +27,7 @@ import org.jax.drakegenetics.shareddata.client.CrossoverPoint;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 /**
+ * Contains algorithm for simulating meiosis.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class MeiosisEngine

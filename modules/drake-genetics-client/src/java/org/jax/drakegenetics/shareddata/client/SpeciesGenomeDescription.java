@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * Constains metadata describing the structure of a particular species' genome.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class SpeciesGenomeDescription

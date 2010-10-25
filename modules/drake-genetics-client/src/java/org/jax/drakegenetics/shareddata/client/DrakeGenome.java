@@ -20,6 +20,7 @@ package org.jax.drakegenetics.shareddata.client;
 import java.util.List;
 
 /**
+ * Class for representing a drake's genome
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class DrakeGenome extends DiploidGenome

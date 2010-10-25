@@ -19,6 +19,9 @@ package org.jax.drakegenetics.shareddata.client;
 
 
 /**
+ * Class used to describe the structure of a chromosome for a particular
+ * species/chromosome number. See {@link Chromosome} for working with
+ * genetic composition data.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class ChromosomeDescription

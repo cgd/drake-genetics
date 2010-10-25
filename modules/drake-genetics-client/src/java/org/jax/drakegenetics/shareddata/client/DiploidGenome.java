@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * class representing a diploid genome
+ * Abstract class representing a diploid genome with maternal and paternal DNA
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public abstract class DiploidGenome implements Serializable
