@@ -128,7 +128,7 @@ public class MeiosisEngine
         assert chr1.getChromosomeName().equals(chr2.getChromosomeName());
         
         int[] crossoverIndices = this.getCrossoverIndices(chrDesc);
-        for(int i = 0; i < crossoverIndices.length; i++)
+        for(int i : crossoverIndices)
         {
             // randomly place the crossover somewhere in the given 10cM segment
             double crossoverLocation = (i + this.rand.nextDouble()) * 10.0;
