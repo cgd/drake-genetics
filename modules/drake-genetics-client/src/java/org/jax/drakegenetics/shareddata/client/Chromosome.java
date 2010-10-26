@@ -148,4 +148,22 @@ public class Chromosome implements Serializable
             chrList.add(chromosome);
         }
     }
+    
+    /**
+     * Determines if this is a sex chromosome
+     * @return  true iff this is a sex chromosome
+     */
+    public boolean isSexChromosome()
+    {
+        return ChromosomeDescription.isSexChromosome(this.chromosomeName);
+    }
+    
+    /**
+     * Determines if this is an autosome
+     * @return  true iff this is an autosome
+     */
+    public boolean isAutosome()
+    {
+        return !this.isSexChromosome();
+    }
 }
