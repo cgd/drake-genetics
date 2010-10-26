@@ -17,6 +17,7 @@
 package org.jax.drakegenetics.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -33,6 +34,8 @@ import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 public class MeiosisEngine
 {
     private final Random rand;
+    private static final double PROB_AUTOSOMAL_NONDISJUNCTION = 0.002;
+    private static final double PROB_SEX_NONDISJUNCTION = 0.01;
     
     /**
      * Constructor
@@ -84,33 +87,81 @@ public class MeiosisEngine
                 new ArrayList<Chromosome>(chrCount),
                 new ArrayList<Chromosome>(chrCount)};
         
-        // TODO special treatment for X and Y and Non-disjunction
-        
         // we model crossover as a process which is independent for each
         // chromosome, so we can work on each chromosome separately
         for(int chrIndex = 0; chrIndex < chrCount; chrIndex++)
         {
+            ArrayList<Chromosome> maternalChrs = new ArrayList<Chromosome>(2);
+            ArrayList<Chromosome> paternalChrs = new ArrayList<Chromosome>(2);
+            ChromosomeDescription chrDesc = chrDescMap.get(
+                    maternalHaploid.get(chrIndex).getChromosomeName());
+            
+            // we will generate 4 chromosomes in total for the gametes using
+            // 2 copies of maternal DNA and 2 copies of paternal DNA
             for(int i = 0; i < 2; i++)
             {
                 Chromosome maternalChr = new Chromosome(maternalHaploid.get(chrIndex));
                 Chromosome paternalChr = new Chromosome(paternalHaploid.get(chrIndex));
-                ChromosomeDescription chrDesc = chrDescMap.get(maternalChr.getChromosomeName());
-                this.maybeCrossover(chrDesc, maternalChr, paternalChr);
                 
-                if(this.rand.nextBoolean())
+                // we don't do crossover in the case of the Y chromosome
+                if(!paternalChr.getChromosomeName().equals("Y"))
                 {
-                    gametes[0 + i * 2].add(maternalChr);
-                    gametes[1 + i * 2].add(paternalChr);
+                    this.maybeCrossover(chrDesc, maternalChr, paternalChr);
                 }
-                else
-                {
-                    gametes[0 + i * 2].add(paternalChr);
-                    gametes[1 + i * 2].add(maternalChr);
-                }
+                
+                maternalChrs.add(maternalChr);
+                paternalChrs.add(paternalChr);
             }
+            
+            double probNonDisj = maternalHaploid.get(chrIndex).isSexChromosome() ?
+                    PROB_SEX_NONDISJUNCTION :
+                    PROB_AUTOSOMAL_NONDISJUNCTION;
+            if(this.rand.nextDouble() < probNonDisj)
+            {
+                // nondisjunction has occurred
+                this.shuffle(maternalChrs);
+                this.shuffle(paternalChrs);
+                
+                // pairing up maternal and paternal ensures that chromosomes
+                // will be non-sister at the centromere
+                gametes[0].add(maternalChrs.get(0));
+                gametes[0].add(paternalChrs.get(0));
+                gametes[1].add(maternalChrs.get(1));
+                gametes[1].add(paternalChrs.get(1));
+            }
+            else
+            {
+                // normal meiosis has occurred
+                gametes[0].add(maternalChrs.get(0));
+                gametes[1].add(maternalChrs.get(1));
+                gametes[2].add(paternalChrs.get(0));
+                gametes[3].add(paternalChrs.get(1));
+            }
+            
+            this.shuffle(Arrays.asList(gametes));
         }
         
         return gametes;
+    }
+    
+    /**
+     * Shuffle a list
+     * @param <E>   the type of elements in the list
+     * @param list  the list to shuffle
+     */
+    private <E> void shuffle(List<E> list)
+    {
+        int size = list.size();
+        for(int i = 0; i < size; i++)
+        {
+            int swapIndex = this.rand.nextInt(size);
+            if(swapIndex != i)
+            {
+                E tmp = list.get(i);
+                list.set(i, list.get(swapIndex));
+                list.set(swapIndex, tmp);
+            }
+        }
     }
     
     /**
@@ -182,6 +233,13 @@ public class MeiosisEngine
         }
     }
 
+    /**
+     * Determines where the new crossover should be inserted in the given list
+     * of crossovers.
+     * @param crossovers    the list we're going to insert a new crossover in
+     * @param newCrossover  the new crossover location in cM
+     * @return              the insertion index
+     */
     private static int findCrossoverIndex(
             List<CrossoverPoint> crossovers,
             double newCrossover)
@@ -217,15 +275,10 @@ public class MeiosisEngine
         
         // shuffle the crossover indices. This is necessary because crossover
         // order will affect the resulting chromosome
-        int numCrossovers = crossoverIndexList.size();
-        for(int i = numCrossovers; i > 0; i--)
-        {
-            Integer nextTail = crossoverIndexList.remove(this.rand.nextInt(i));
-            crossoverIndexList.add(nextTail);
-        }
+        this.shuffle(crossoverIndexList);
         
         // we want to return a maximum of 3 crossovers
-        int[] crossoverIndices = new int[Math.min(3, numCrossovers)];
+        int[] crossoverIndices = new int[Math.min(3, crossoverIndexList.size())];
         for(int i = 0; i < crossoverIndices.length; i++)
         {
             crossoverIndices[i] = crossoverIndexList.get(i);
