@@ -21,11 +21,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * Represents the genetic composition of a single chromosome. See
- * {@link ChromosomeDescription} for representing the chromosome's structure.
+ * Represents the genetic composition of a single chromosome in an individual.
+ * See {@link ChromosomeDescription} for representing the chromosome's
+ * structure.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class Chromosome implements Serializable
@@ -95,34 +95,6 @@ public class Chromosome implements Serializable
     public void setCrossovers(List<CrossoverPoint> crossovers)
     {
         this.crossovers = crossovers;
-    }
-    
-    /**
-     * Adds all of the chromosomes which match one of the given
-     * names to the matches collection
-     * @param chromosomesToCheck
-     *          the chromosomes to scan
-     * @param chromosomeNamesToMatch
-     *          the chromosomes to try to match
-     * @param matches
-     *          the collection that we will add any matches to
-     */
-    public static void addChromosomeMatches(
-            Collection<Chromosome> chromosomesToCheck,
-            Set<String> chromosomeNamesToMatch,
-            Collection<Chromosome> matches)
-    {
-        for(Chromosome chromosome : chromosomesToCheck)
-        {
-            for(String name : chromosomeNamesToMatch)
-            {
-                if(name.equals(chromosome.getChromosomeName()))
-                {
-                    matches.add(chromosome);
-                    break;
-                }
-            }
-        }
     }
     
     /**

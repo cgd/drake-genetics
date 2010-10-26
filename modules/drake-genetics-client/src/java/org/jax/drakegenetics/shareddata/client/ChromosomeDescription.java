@@ -41,6 +41,13 @@ public class ChromosomeDescription
             int centromerePositionCm,
             String chromosomeName)
     {
+        if(centromerePositionCm > numTenCmSegments  * 10.0)
+        {
+            throw new IllegalArgumentException(
+                    "the given centromere position extends beyond the end " +
+                    "of the chromosome");
+        }
+        
         this.numTenCmSegments = numTenCmSegments;
         this.centromerePositionCm = centromerePositionCm;
         this.chromosomeName = chromosomeName;

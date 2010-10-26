@@ -17,9 +17,7 @@
 package org.jax.drakegenetics.shareddata.client;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Abstract class representing a diploid genome with maternal and paternal DNA
@@ -87,24 +85,6 @@ public abstract class DiploidGenome implements Serializable
     public void setPaternalHaploid(List<Chromosome> paternalHaploid)
     {
         this.paternalHaploid = paternalHaploid;
-    }
-    
-    /**
-     * Get all chromosomes matching the given names
-     * @param chromosomeNamesToMatch
-     *          the chromosome names that we will look for
-     * @return
-     *          any matches (string case is ignored)
-     */
-    public List<Chromosome> getChromosomeMatches(Set<String> chromosomeNamesToMatch)
-    {
-        ArrayList<Chromosome> matches = new ArrayList<Chromosome>(
-                this.maternalHaploid.size() * 2);
-        Chromosome.addChromosomeMatches(
-                this.getMaternalHaploid(),
-                chromosomeNamesToMatch,
-                matches);
-        return matches;
     }
     
     /**
