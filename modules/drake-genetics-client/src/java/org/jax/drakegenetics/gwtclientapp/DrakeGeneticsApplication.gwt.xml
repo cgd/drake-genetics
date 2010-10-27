@@ -12,8 +12,8 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-  <!--
   <inherits name='com.extjs.gxt.ui.GXT'/>
+  <!--
   <inherits name='org.jax.gwtutil.GwtUtil'/>
   -->
   <inherits name='org.jax.drakegenetics.shareddata.SharedData'/>

@@ -16,6 +16,7 @@
  */
 package org.jax.drakegenetics.gwtclientapp.client;
 
+import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
@@ -57,7 +58,9 @@ public class DrakeGeneticsEntryPoint implements EntryPoint
     
     private void displayLoginBox() {
     	
-    	authenticationService.login("Keith", new AsyncCallback<String>()
+    	MessageBox login = MessageBox.prompt("Login", "Do you want to log in?");
+    	
+    	/*authenticationService.login("Keith", new AsyncCallback<String>()
                 {
                     
                     public void onSuccess(String result)
@@ -69,7 +72,7 @@ public class DrakeGeneticsEntryPoint implements EntryPoint
                     {
                         DrakeGeneticsEntryPoint.this.setHelloWorldMessage(caught.toString());
                     }
-                });
+                });*/
     }
     
     private void validateSessionId(String sessionID) {
