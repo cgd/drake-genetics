@@ -16,7 +16,9 @@
  */
 package org.jax.drakegenetics.gwtclientapp.client;
 
+import com.extjs.gxt.ui.client.widget.Layout;
 import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.layout.AnchorLayout;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Cookies;
@@ -41,6 +43,12 @@ public class DrakeGeneticsEntryPoint implements EntryPoint
      */
     public void onModuleLoad()
     {
+        // NOTE: this is a complete hack which is needed to avoid
+        //       "Invalid memory access of location 0x8 eip=0x4a8aeb" error
+        //       that occurs in dev mode otherwise. For more info on this hack
+        //       please see: http://www.extjs.com/forum/showthread.php?t=87668
+        @SuppressWarnings("unused") Layout junk = new AnchorLayout();
+        
     	String sessionID = Cookies.getCookie("sid");
         if ( sessionID != null ) validateSessionId(sessionID);
         else displayLoginBox();
