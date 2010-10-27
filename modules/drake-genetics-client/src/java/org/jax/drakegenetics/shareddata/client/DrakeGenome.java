@@ -15,30 +15,46 @@
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jax.drakegenetics.server;
+package org.jax.drakegenetics.shareddata.client;
 
-import org.jax.drakegenetics.gwtclientapp.client.HelloService;
-
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import java.util.List;
 
 /**
- * Server-side implementation of the {@link HelloService} interface
+ * Class for representing a drake's genome
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
-public class HelloServiceImpl
-extends RemoteServiceServlet
-implements HelloService
+public class DrakeGenome extends DiploidGenome
 {
     /**
      * every {@link java.io.Serializable} is supposed to have one of these
      */
-    private static final long serialVersionUID = 5304344574572230630L;
+    private static final long serialVersionUID = -2733549932765240875L;
+
+    /**
+     * Constructor
+     */
+    public DrakeGenome()
+    {
+    }
+
+    /**
+     * Constructor
+     * @param maternalHaploid   see {@link #getMaternalHaploid()}
+     * @param paternalHaploid   see {@link #getPaternalHaploid()}
+     */
+    public DrakeGenome(
+            List<Chromosome> maternalHaploid,
+            List<Chromosome> paternalHaploid)
+    {
+        super(maternalHaploid, paternalHaploid);
+    }
 
     /**
      * {@inheritDoc}
      */
-    public String sayHelloTo(String name)
+    @Override
+    public SpeciesGenomeDescription getSpeciesGenomeDescription()
     {
-        return "Hello " + name;
+        return DrakeSpeciesSingleton.getInstance();
     }
 }

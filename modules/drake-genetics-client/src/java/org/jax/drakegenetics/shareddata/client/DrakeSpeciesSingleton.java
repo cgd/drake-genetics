@@ -14,22 +14,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this software.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jax.drakegenetics.gwtclientapp.client;
 
-import com.google.gwt.user.client.rpc.RemoteService;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+package org.jax.drakegenetics.shareddata.client;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * A test service to make sure that client and server are correctly wired up
+ * Class for accessing the drake species genome description
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
-@RemoteServiceRelativePath("helloservice")
-public interface HelloService extends RemoteService
+public class DrakeSpeciesSingleton
 {
+    private static final SpeciesGenomeDescription drakeSpecies;
+    
+    static
+    {
+        Map<String, ChromosomeDescription> chromosomeDescriptions =
+            new HashMap<String, ChromosomeDescription>();
+        
+        // TODO add specifics of drake genome here
+        
+        drakeSpecies = new SpeciesGenomeDescription(
+                "Drake",
+                chromosomeDescriptions);
+    }
+    
     /**
-     * A function to say hello
-     * @param name  the name to say hello to
-     * @return      the hello message
+     * Get the singleton description for the drake species
+     * @return  the description
      */
-    public String sayHelloTo(String name);
+    public static SpeciesGenomeDescription getInstance()
+    {
+        return drakeSpecies;
+    }
 }
