@@ -17,6 +17,7 @@
 
 package org.jax.drakegenetics.shareddata.client;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,8 +28,13 @@ import java.util.Set;
  * Constains metadata describing the structure of a particular species' genome.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
-public class SpeciesGenomeDescription
+public class SpeciesGenomeDescription implements Serializable
 {
+    /**
+     * every {@link java.io.Serializable} is supposed to have one of these
+     */
+    private static final long serialVersionUID = -4935021442131156304L;
+    
     private final String name;
     private final Map<String, ChromosomeDescription> chromosomeDescriptions;
     private final Set<String> autosomeNames;

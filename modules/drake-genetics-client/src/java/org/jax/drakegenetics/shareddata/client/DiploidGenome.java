@@ -23,12 +23,13 @@ import java.util.List;
  * Abstract class representing a diploid genome with maternal and paternal DNA
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
-public abstract class DiploidGenome implements Serializable
+public class DiploidGenome implements Serializable
 {
     private static final long serialVersionUID = -5461239317917973856L;
 
     private List<Chromosome> maternalHaploid;
     private List<Chromosome> paternalHaploid;
+    private SpeciesGenomeDescription speciesGenomeDescription;
     
     /**
      * Constructor
@@ -39,14 +40,21 @@ public abstract class DiploidGenome implements Serializable
     
     /**
      * Constructor
-     * @param maternalHaploid   see {@link #getMaternalHaploid()}
-     * @param paternalHaploid   see {@link #getPaternalHaploid()}
+     * @param maternalHaploid
+     *          see {@link #getMaternalHaploid()}
+     * @param paternalHaploid
+     *          see {@link #getPaternalHaploid()}
+     * @param speciesGenomeDescription
+     *          see {@link #getSpeciesGenomeDescription()}
      */
-    public DiploidGenome(List<Chromosome> maternalHaploid,
-            List<Chromosome> paternalHaploid)
+    public DiploidGenome(
+            List<Chromosome> maternalHaploid,
+            List<Chromosome> paternalHaploid,
+            SpeciesGenomeDescription speciesGenomeDescription)
     {
         this.maternalHaploid = maternalHaploid;
         this.paternalHaploid = paternalHaploid;
+        this.speciesGenomeDescription = speciesGenomeDescription;
     }
 
     /**
@@ -100,5 +108,19 @@ public abstract class DiploidGenome implements Serializable
      * Get the species description for this genome
      * @return  the species description
      */
-    public abstract SpeciesGenomeDescription getSpeciesGenomeDescription();
+    public SpeciesGenomeDescription getSpeciesGenomeDescription()
+    {
+        return this.speciesGenomeDescription;
+    }
+    
+    /**
+     * Setter for the species description
+     * @param speciesGenomeDescription
+     *          the species description to set
+     */
+    public void setSpeciesGenomeDescription(
+            SpeciesGenomeDescription speciesGenomeDescription)
+    {
+        this.speciesGenomeDescription = speciesGenomeDescription;
+    }
 }

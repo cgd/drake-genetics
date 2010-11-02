@@ -17,6 +17,8 @@
 
 package org.jax.drakegenetics.shareddata.client;
 
+import java.io.Serializable;
+
 
 /**
  * Class used to describe the structure of a chromosome for a particular
@@ -24,8 +26,13 @@ package org.jax.drakegenetics.shareddata.client;
  * genetic composition data.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
-public class ChromosomeDescription
+public class ChromosomeDescription implements Serializable
 {
+    /**
+     * every {@link java.io.Serializable} is supposed to have one of these
+     */
+    private static final long serialVersionUID = -6043483380044554461L;
+    
     private int numTenCmSegments;
     private int centromerePositionCm;
     private String chromosomeName;
