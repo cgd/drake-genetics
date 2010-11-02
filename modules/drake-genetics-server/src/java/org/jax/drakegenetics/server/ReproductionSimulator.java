@@ -28,10 +28,10 @@ import org.jax.drakegenetics.shareddata.client.CrossoverPoint;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 /**
- * Contains algorithm for simulating meiosis.
+ * Contains algorithms for simulating reproduction.
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
-public class MeiosisEngine
+public class ReproductionSimulator
 {
     private final Random rand;
     private static final double PROB_AUTOSOMAL_NONDISJUNCTION = 0.002;
@@ -40,7 +40,7 @@ public class MeiosisEngine
     /**
      * Constructor
      */
-    public MeiosisEngine()
+    public ReproductionSimulator()
     {
         this(new Random());
     }
@@ -49,7 +49,7 @@ public class MeiosisEngine
      * Constructor
      * @param rand  the random number generator to use
      */
-    public MeiosisEngine(Random rand)
+    public ReproductionSimulator(Random rand)
     {
         this.rand = rand;
     }
@@ -190,7 +190,7 @@ public class MeiosisEngine
                 
                 // split the chromosomes at the crossover point
                 List<CrossoverPoint> mCrossovers = mChr.getCrossovers();
-                int mCrossoverIndex = MeiosisEngine.findCrossoverIndex(
+                int mCrossoverIndex = ReproductionSimulator.findCrossoverIndex(
                         mCrossovers,
                         crossoverLocation);
                 List<CrossoverPoint> mPrefix = new ArrayList<CrossoverPoint>(mCrossovers.subList(
@@ -201,7 +201,7 @@ public class MeiosisEngine
                         mCrossovers.size());
                 
                 List<CrossoverPoint> pCrossovers = pChr.getCrossovers();
-                int pCrossoverIndex = MeiosisEngine.findCrossoverIndex(
+                int pCrossoverIndex = ReproductionSimulator.findCrossoverIndex(
                         pCrossovers,
                         crossoverLocation);
                 List<CrossoverPoint> pPrefix = new ArrayList<CrossoverPoint>(pCrossovers.subList(
