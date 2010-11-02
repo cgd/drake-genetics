@@ -91,26 +91,22 @@ public class MeiosisEngine
         // chromosome, so we can work on each chromosome separately
         for(int chrIndex = 0; chrIndex < chrCount; chrIndex++)
         {
-            ArrayList<Chromosome> maternalChrs = new ArrayList<Chromosome>(2);
-            ArrayList<Chromosome> paternalChrs = new ArrayList<Chromosome>(2);
-            ChromosomeDescription chrDesc = chrDescMap.get(
-                    maternalHaploid.get(chrIndex).getChromosomeName());
-            
             // we will generate 4 chromosomes in total for the gametes using
             // 2 copies of maternal DNA and 2 copies of paternal DNA
+            ArrayList<Chromosome> maternalCopies = new ArrayList<Chromosome>(2);
+            ArrayList<Chromosome> paternalCopies = new ArrayList<Chromosome>(2);
             for(int i = 0; i < 2; i++)
             {
-                Chromosome maternalChr = new Chromosome(maternalHaploid.get(chrIndex));
-                Chromosome paternalChr = new Chromosome(paternalHaploid.get(chrIndex));
-                
-                // we don't do crossover in the case of the Y chromosome
-                if(!paternalChr.getChromosomeName().equals("Y"))
-                {
-                    this.maybeCrossover(chrDesc, maternalChr, paternalChr);
-                }
-                
-                maternalChrs.add(maternalChr);
-                paternalChrs.add(paternalChr);
+                maternalCopies.add(new Chromosome(maternalHaploid.get(chrIndex)));
+                paternalCopies.add(new Chromosome(paternalHaploid.get(chrIndex)));
+            }
+            
+            // we don't do crossover in the case of the Y chromosome
+            if(!paternalHaploid.get(chrIndex).getChromosomeName().equals("Y"))
+            {
+                ChromosomeDescription chrDesc = chrDescMap.get(
+                        maternalHaploid.get(chrIndex).getChromosomeName());
+                this.maybeCrossover(chrDesc, maternalCopies, paternalCopies);
             }
             
             double probNonDisj = maternalHaploid.get(chrIndex).isSexChromosome() ?
@@ -118,24 +114,20 @@ public class MeiosisEngine
                     PROB_AUTOSOMAL_NONDISJUNCTION;
             if(this.rand.nextDouble() < probNonDisj)
             {
-                // nondisjunction has occurred
-                this.shuffle(maternalChrs);
-                this.shuffle(paternalChrs);
-                
                 // pairing up maternal and paternal ensures that chromosomes
                 // will be non-sister at the centromere
-                gametes[0].add(maternalChrs.get(0));
-                gametes[0].add(paternalChrs.get(0));
-                gametes[1].add(maternalChrs.get(1));
-                gametes[1].add(paternalChrs.get(1));
+                gametes[0].add(maternalCopies.get(0));
+                gametes[0].add(paternalCopies.get(0));
+                gametes[1].add(maternalCopies.get(1));
+                gametes[1].add(paternalCopies.get(1));
             }
             else
             {
                 // normal meiosis has occurred
-                gametes[0].add(maternalChrs.get(0));
-                gametes[1].add(maternalChrs.get(1));
-                gametes[2].add(paternalChrs.get(0));
-                gametes[3].add(paternalChrs.get(1));
+                gametes[0].add(maternalCopies.get(0));
+                gametes[1].add(maternalCopies.get(1));
+                gametes[2].add(paternalCopies.get(0));
+                gametes[3].add(paternalCopies.get(1));
             }
             
             this.shuffle(Arrays.asList(gametes));
@@ -165,70 +157,91 @@ public class MeiosisEngine
     }
     
     /**
-     * The crossover algorithm. Each 10cM segment will have a 0.1 chance
-     * of a crossover event
-     * @param chrDesc   the chromosome description
-     * @param chr1      the 1st chromosome
-     * @param chr2      the 2nd chromosome
+     * The per-chromosome crossover algorithm.
+     * @param chrDesc
+     *          the chromosome description shared by all chromosomes being
+     *          crossed (we obviously don't want to cross different chromosome
+     *          numbers)
+     * @param maternalChrs
+     *          the maternal chromosomes. must be the same length as paternal
+     *          and either 1 or 2
+     * @param paternalChrs
+     *          the paternal chromosomes. must be the same length as maternal
+     *          and either 1 or 2
      */
     private void maybeCrossover(
             ChromosomeDescription chrDesc,
-            Chromosome chr1,
-            Chromosome chr2)
+            List<Chromosome> maternalChrs,
+            List<Chromosome> paternalChrs)
     {
-        assert chr1.getChromosomeName().equals(chr2.getChromosomeName());
+        int size = maternalChrs.size();
+        assert size == paternalChrs.size() && (size == 1 || size == 2);
         
-        int[] crossoverIndices = this.getCrossoverIndices(chrDesc);
-        for(int i : crossoverIndices)
+        for(int i = 0; i < size; i++)
         {
-            // randomly place the crossover somewhere in the given 10cM segment
-            double crossoverLocation = (i + this.rand.nextDouble()) * 10.0;
-            
-            // split the chromosomes at the crossover point
-            List<CrossoverPoint> chr1Crossovers = chr1.getCrossovers();
-            int crossoverIndex1 = MeiosisEngine.findCrossoverIndex(
-                    chr1Crossovers,
-                    crossoverLocation);
-            List<CrossoverPoint> newCrossovers1 = new ArrayList<CrossoverPoint>(chr1Crossovers.subList(
-                    0,
-                    crossoverIndex1));
-            List<CrossoverPoint> suffix1 = chr1Crossovers.subList(
-                    crossoverIndex1,
-                    chr1Crossovers.size());
-            
-            List<CrossoverPoint> chr2Crossovers = chr2.getCrossovers();
-            int crossoverIndex2 = MeiosisEngine.findCrossoverIndex(
-                    chr2Crossovers,
-                    crossoverLocation);
-            List<CrossoverPoint> newCrossovers2 = new ArrayList<CrossoverPoint>(chr2Crossovers.subList(
-                    0,
-                    crossoverIndex2));
-            List<CrossoverPoint> suffix2 = chr2Crossovers.subList(
-                    crossoverIndex2,
-                    chr2Crossovers.size());
-            
-            // splice in the new crossover points and append the suffix
-            CrossoverPoint last1 = newCrossovers1.get(newCrossovers1.size() - 1);
-            CrossoverPoint last2 = newCrossovers2.get(newCrossovers2.size() - 1);
-            newCrossovers1.add(new CrossoverPoint(
-                    last2.getDistalHaplotypeId(),
-                    crossoverLocation));
-            newCrossovers2.add(new CrossoverPoint(
-                    last1.getDistalHaplotypeId(),
-                    crossoverLocation));
-            newCrossovers1.addAll(suffix2);
-            newCrossovers2.addAll(suffix1);
-            
-            // keep the centromeres intact
-            if(crossoverLocation < chrDesc.getCentromerePositionCm())
+            int[] crossoverSegments = this.getCrossoverSegments(chrDesc);
+            for(int segIndex : crossoverSegments)
             {
-                chr1.setCrossovers(newCrossovers2);
-                chr2.setCrossovers(newCrossovers1);
-            }
-            else
-            {
-                chr1.setCrossovers(newCrossovers1);
-                chr2.setCrossovers(newCrossovers2);
+                Chromosome mChr = maternalChrs.get(0);
+                Chromosome pChr = paternalChrs.get(0);
+                
+                // randomly place the crossover somewhere in the given 10cM segment
+                double crossoverLocation = (segIndex + this.rand.nextDouble()) * 10.0;
+                
+                // split the chromosomes at the crossover point
+                List<CrossoverPoint> mCrossovers = mChr.getCrossovers();
+                int mCrossoverIndex = MeiosisEngine.findCrossoverIndex(
+                        mCrossovers,
+                        crossoverLocation);
+                List<CrossoverPoint> mPrefix = new ArrayList<CrossoverPoint>(mCrossovers.subList(
+                        0,
+                        mCrossoverIndex));
+                List<CrossoverPoint> mSuffix = mCrossovers.subList(
+                        mCrossoverIndex,
+                        mCrossovers.size());
+                
+                List<CrossoverPoint> pCrossovers = pChr.getCrossovers();
+                int pCrossoverIndex = MeiosisEngine.findCrossoverIndex(
+                        pCrossovers,
+                        crossoverLocation);
+                List<CrossoverPoint> pPrefix = new ArrayList<CrossoverPoint>(pCrossovers.subList(
+                        0,
+                        pCrossoverIndex));
+                List<CrossoverPoint> pSuffix = pCrossovers.subList(
+                        pCrossoverIndex,
+                        pCrossovers.size());
+                
+                // splice in the new crossover points
+                CrossoverPoint lastMCrossover = mPrefix.get(mPrefix.size() - 1);
+                CrossoverPoint lastPCrossover = pPrefix.get(pPrefix.size() - 1);
+                mPrefix.add(new CrossoverPoint(
+                        lastPCrossover.getDistalHaplotypeId(),
+                        crossoverLocation));
+                pPrefix.add(new CrossoverPoint(
+                        lastMCrossover.getDistalHaplotypeId(),
+                        crossoverLocation));
+                
+                // keep the centromeres intact
+                if(crossoverLocation < chrDesc.getCentromerePositionCm())
+                {
+                    mChr.setCrossovers(pPrefix);
+                    mChr.getCrossovers().addAll(mSuffix);
+                    
+                    pChr.setCrossovers(mPrefix);
+                    pChr.getCrossovers().addAll(pSuffix);
+                }
+                else
+                {
+                    mChr.setCrossovers(mPrefix);
+                    mChr.getCrossovers().addAll(pSuffix);
+                    
+                    pChr.setCrossovers(pPrefix);
+                    pChr.getCrossovers().addAll(mSuffix);
+                }
+                
+                // shuffling keeps crossover pairings independent
+                this.shuffle(maternalChrs);
+                this.shuffle(paternalChrs);
             }
         }
     }
@@ -260,7 +273,14 @@ public class MeiosisEngine
         return i;
     }
     
-    private int[] getCrossoverIndices(ChromosomeDescription chrDesc)
+    /**
+     * Randomly chooses between 0 and 3 crossover indices
+     * @param chrDesc
+     *          the description of the chromosome which may undergo crossover
+     * @return
+     *          the crossovers (may be empty)
+     */
+    private int[] getCrossoverSegments(ChromosomeDescription chrDesc)
     {
         int segments = chrDesc.getNumTenCmSegments();
         List<Integer> crossoverIndexList = new ArrayList<Integer>(segments);
