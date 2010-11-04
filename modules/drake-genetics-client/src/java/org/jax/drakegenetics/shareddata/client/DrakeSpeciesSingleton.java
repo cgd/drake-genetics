@@ -33,7 +33,22 @@ public class DrakeSpeciesSingleton
         Map<String, ChromosomeDescription> chromosomeDescriptions =
             new HashMap<String, ChromosomeDescription>();
         
-        // TODO add specifics of drake genome here
+        chromosomeDescriptions.put("2", new ChromosomeDescription(
+                10,
+                30,
+                "2"));
+        chromosomeDescriptions.put("3", new ChromosomeDescription(
+                10,
+                50,
+                "3"));
+        chromosomeDescriptions.put("X", new ChromosomeDescription(
+                7,
+                70,
+                "X"));
+        chromosomeDescriptions.put("Y", new ChromosomeDescription(
+                1,
+                10,
+                "Y"));
         
         drakeSpecies = new SpeciesGenomeDescription(
                 "Drake",

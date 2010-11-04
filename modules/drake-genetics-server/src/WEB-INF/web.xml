@@ -2,6 +2,17 @@
 <!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
 <web-app>
 
+    <!-- GWT drake genetics service -->
+    <servlet>
+        <servlet-name>drakeGeneticsGWTServlet</servlet-name>
+        <servlet-class>org.jax.drakegenetics.server.DrakeGeneticsServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>drakeGeneticsGWTServlet</servlet-name>
+        <url-pattern>/drakegenetics/drakegeneticsservice</url-pattern>
+    </servlet-mapping>
+
     <!-- GWT query servlet -->
     <servlet>
         <servlet-name>helloGWTServlet</servlet-name>

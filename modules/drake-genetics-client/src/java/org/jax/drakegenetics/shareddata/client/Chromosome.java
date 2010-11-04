@@ -49,11 +49,10 @@ public class Chromosome implements Serializable
     public Chromosome(Chromosome chrToCopy)
     {
         this.chromosomeName = chrToCopy.chromosomeName;
-        int crossoverCount = chrToCopy.crossovers.size();
-        this.crossovers = new ArrayList<CrossoverPoint>(crossoverCount);
-        for(int i = 0; i < crossoverCount; i++)
+        this.crossovers = new ArrayList<CrossoverPoint>(chrToCopy.crossovers.size());
+        for(CrossoverPoint crossover : chrToCopy.crossovers)
         {
-            this.crossovers.set(i, new CrossoverPoint(chrToCopy.crossovers.get(i)));
+            this.crossovers.add(new CrossoverPoint(crossover));
         }
     }
     
@@ -137,5 +136,25 @@ public class Chromosome implements Serializable
     public boolean isAutosome()
     {
         return !this.isSexChromosome();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder(this.chromosomeName + ": ");
+        int numCrossovers = this.crossovers.size();
+        for(int i = 0; i < numCrossovers; i++)
+        {
+            sb.append(this.crossovers.get(i));
+            if(i < numCrossovers - 1)
+            {
+                sb.append(", ");
+            }
+        }
+        
+        return sb.toString();
     }
 }

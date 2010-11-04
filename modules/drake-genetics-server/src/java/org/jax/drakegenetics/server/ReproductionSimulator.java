@@ -34,8 +34,11 @@ import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 public class ReproductionSimulator
 {
     private final Random rand;
+    
+    // TODO these constants are species specific. Move to drake description class
     private static final double PROB_AUTOSOMAL_NONDISJUNCTION = 0.002;
     private static final double PROB_SEX_NONDISJUNCTION = 0.01;
+    private static final int OFFSPRING_COUNT = 20;
     
     /**
      * Constructor
@@ -54,6 +57,41 @@ public class ReproductionSimulator
         this.rand = rand;
     }
 
+    /**
+     * Simulate the process of sexual reproduction and creates offspring genomes
+     * @param maternalGenome
+     *          the mothers genome
+     * @param paternalGenome
+     *          the fathers genome
+     * @return
+     *          the child genomes (will be an empty list if the pairing is
+     *          infertile)
+     */
+    public List<DiploidGenome> simulateReproduction(
+            DiploidGenome maternalGenome,
+            DiploidGenome paternalGenome)
+    {
+        List<DiploidGenome> childGenomes = new ArrayList<DiploidGenome>(OFFSPRING_COUNT);
+        
+        // any kind of aneuploidy causes infertility
+        if(!maternalGenome.isAneuploid() && !paternalGenome.isAneuploid())
+        {
+            for(int i = 0; i < OFFSPRING_COUNT; i++)
+            {
+                List<Chromosome> maternalGamete = this.performMeiosis(maternalGenome)[0];
+                List<Chromosome> paternalGamete = this.performMeiosis(paternalGenome)[0];
+                
+                DiploidGenome childGenome = new DiploidGenome(
+                        maternalGamete,
+                        paternalGamete,
+                        maternalGenome.getSpeciesGenomeDescription());
+                childGenomes.add(childGenome);
+            }
+        }
+        
+        return childGenomes;
+    }
+    
     /**
      * Performs meiosis with the given genome and returns the resulting four
      * gametes.
@@ -212,14 +250,13 @@ public class ReproductionSimulator
                         pCrossovers.size());
                 
                 // splice in the new crossover points
-                CrossoverPoint lastMCrossover = mPrefix.get(mPrefix.size() - 1);
-                CrossoverPoint lastPCrossover = pPrefix.get(pPrefix.size() - 1);
-                mPrefix.add(new CrossoverPoint(
-                        lastPCrossover.getDistalHaplotypeId(),
-                        crossoverLocation));
-                pPrefix.add(new CrossoverPoint(
-                        lastMCrossover.getDistalHaplotypeId(),
-                        crossoverLocation));
+                String lastMHap = mPrefix.get(mPrefix.size() - 1).getDistalHaplotypeId();
+                String lastPHap = pPrefix.get(pPrefix.size() - 1).getDistalHaplotypeId();
+                if(!lastMHap.equals(lastPHap))
+                {
+                    mPrefix.add(new CrossoverPoint(lastPHap, crossoverLocation));
+                    pPrefix.add(new CrossoverPoint(lastMHap, crossoverLocation));
+                }
                 
                 // keep the centromeres intact
                 if(crossoverLocation < chrDesc.getCentromerePositionCm())

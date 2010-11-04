@@ -89,4 +89,13 @@ public class CrossoverPoint implements Serializable
     {
         this.centimorganPosition = centimorganPosition;
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return this.distalHaplotypeId + "@" + this.centimorganPosition;
+    }
 }

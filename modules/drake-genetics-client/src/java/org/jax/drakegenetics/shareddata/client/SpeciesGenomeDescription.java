@@ -20,7 +20,6 @@ package org.jax.drakegenetics.shareddata.client;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,9 +34,16 @@ public class SpeciesGenomeDescription implements Serializable
      */
     private static final long serialVersionUID = -4935021442131156304L;
     
-    private final String name;
-    private final Map<String, ChromosomeDescription> chromosomeDescriptions;
-    private final Set<String> autosomeNames;
+    private String name;
+    private Map<String, ChromosomeDescription> chromosomeDescriptions;
+    private int autosomeCount;
+    
+    /**
+     * Constructor
+     */
+    public SpeciesGenomeDescription()
+    {
+    }
     
     /**
      * Constructor
@@ -52,14 +58,12 @@ public class SpeciesGenomeDescription implements Serializable
     {
         this.name = name;
         this.chromosomeDescriptions = chromosomeDescriptions;
-        
-        this.autosomeNames = new HashSet<String>(chromosomeDescriptions.keySet());
-        Iterator<String> iter = this.autosomeNames.iterator();
-        while(iter.hasNext())
+        this.autosomeCount = 0;
+        for(String chrId : chromosomeDescriptions.keySet())
         {
-            if(ChromosomeDescription.isSexChromosome(iter.next()))
+            if(!ChromosomeDescription.isSexChromosome(chrId))
             {
-                iter.remove();
+                this.autosomeCount++;
             }
         }
     }
@@ -74,12 +78,30 @@ public class SpeciesGenomeDescription implements Serializable
     }
     
     /**
+     * Setter for the name
+     * @param name the name to set
+     */
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+    
+    /**
      * Getter for the chromosome descriptions
      * @return the chromosome descriptions
      */
     public Map<String, ChromosomeDescription> getChromosomeDescriptions()
     {
         return this.chromosomeDescriptions;
+    }
+    
+    /**
+     * Setter for the chromosome descriptions
+     * @param chromosomeDescriptions the chromosome descriptions to set
+     */
+    public void setChromosomeDescriptions(Map<String, ChromosomeDescription> chromosomeDescriptions)
+    {
+        this.chromosomeDescriptions = chromosomeDescriptions;
     }
     
     /**
@@ -104,8 +126,7 @@ public class SpeciesGenomeDescription implements Serializable
      *          the haploid chromosomes
      * @return  true if there is any aneuploidy
      */
-    public boolean isHaploidAneuploid(
-            Collection<Chromosome> haploidChromosomes)
+    public boolean isHaploidAneuploid(Collection<Chromosome> haploidChromosomes)
     {
         boolean foundSexChromosome = false;
         Set<String> autosomesFound = new HashSet<String>();
@@ -135,6 +156,6 @@ public class SpeciesGenomeDescription implements Serializable
         }
         
         // a normal haploid must contain all autosomes and one of "X" or "Y"
-        return autosomesFound.size() != this.autosomeNames.size() || !foundSexChromosome;
+        return autosomesFound.size() != this.autosomeCount || !foundSexChromosome;
     }
 }

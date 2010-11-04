@@ -38,6 +38,13 @@ public class ChromosomeDescription implements Serializable
     private String chromosomeName;
     
     /**
+     * 
+     */
+    public ChromosomeDescription()
+    {
+    }
+    
+    /**
      * Constructor
      * @param numTenCmSegments see {@link #getNumTenCmSegments()}
      * @param centromerePositionCm see {@link #getCentromerePositionCm()}
@@ -48,13 +55,6 @@ public class ChromosomeDescription implements Serializable
             int centromerePositionCm,
             String chromosomeName)
     {
-        if(centromerePositionCm > numTenCmSegments  * 10.0)
-        {
-            throw new IllegalArgumentException(
-                    "the given centromere position extends beyond the end " +
-                    "of the chromosome");
-        }
-        
         this.numTenCmSegments = numTenCmSegments;
         this.centromerePositionCm = centromerePositionCm;
         this.chromosomeName = chromosomeName;
@@ -71,6 +71,15 @@ public class ChromosomeDescription implements Serializable
     }
     
     /**
+     * Setter for the number of 10cM segments
+     * @param numTenCmSegments the number of 10cM segments to set
+     */
+    public void setNumTenCmSegments(int numTenCmSegments)
+    {
+        this.numTenCmSegments = numTenCmSegments;
+    }
+    
+    /**
      * Determines the centromere's position in centimorgans
      * @return the position
      */
@@ -80,12 +89,30 @@ public class ChromosomeDescription implements Serializable
     }
     
     /**
+     * Setter for the centromere position in cM
+     * @param centromerePositionCm the centromerePositionCm to set
+     */
+    public void setCentromerePositionCm(int centromerePositionCm)
+    {
+        this.centromerePositionCm = centromerePositionCm;
+    }
+    
+    /**
      * Getter for the name of this chromosome. Eg: "19" "X" "Y" ...
      * @return the chromosome name
      */
     public String getChromosomeName()
     {
         return this.chromosomeName;
+    }
+    
+    /**
+     * Setter for the chromosome name
+     * @param chromosomeName the chromosomeName to set
+     */
+    public void setChromosomeName(String chromosomeName)
+    {
+        this.chromosomeName = chromosomeName;
     }
     
     /**

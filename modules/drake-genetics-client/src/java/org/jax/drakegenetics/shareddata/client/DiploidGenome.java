@@ -17,7 +17,10 @@
 package org.jax.drakegenetics.shareddata.client;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract class representing a diploid genome with maternal and paternal DNA
@@ -39,7 +42,8 @@ public class DiploidGenome implements Serializable
     }
     
     /**
-     * Constructor
+     * Constructor. NOTE: it is expected that the chromosomes given will be
+     * pre-sorted using {@link ChromosomeNameComparator}
      * @param maternalHaploid
      *          see {@link #getMaternalHaploid()}
      * @param paternalHaploid
@@ -56,6 +60,61 @@ public class DiploidGenome implements Serializable
         this.paternalHaploid = paternalHaploid;
         this.speciesGenomeDescription = speciesGenomeDescription;
     }
+    
+    /**
+     * Creates a "pure" inbred genome from the given haplotype and description
+     * @param haplotype
+     *          the inbred haplotype
+     * @param isFemale
+     *          determines if this is a male or female inbred
+     * @param speciesGenomeDescription
+     *          the genome description
+     */
+    public DiploidGenome(
+            String haplotype,
+            boolean isFemale,
+            SpeciesGenomeDescription speciesGenomeDescription)
+    {
+        this.maternalHaploid = new ArrayList<Chromosome>();
+        this.paternalHaploid = new ArrayList<Chromosome>();
+        this.speciesGenomeDescription = speciesGenomeDescription;
+        
+        Map<String, ChromosomeDescription> chrDescs = speciesGenomeDescription.getChromosomeDescriptions();
+        ArrayList<String> sortedChrNames = new ArrayList<String>(chrDescs.keySet());
+        Collections.sort(sortedChrNames, new ChromosomeNameComparator());
+        for(String chrName : sortedChrNames)
+        {
+            // create the chromosome
+            Chromosome currChr = new Chromosome();
+            currChr.setChromosomeName(chrName);
+            ArrayList<CrossoverPoint> crossovers = new ArrayList<CrossoverPoint>(1);
+            crossovers.add(new CrossoverPoint(haplotype, 0.0));
+            currChr.setCrossovers(crossovers);
+            
+            // TODO do we need to worry about "M" chromosomes?
+            if(chrName.equals("X"))
+            {
+                this.maternalHaploid.add(currChr);
+                if(isFemale)
+                {
+                    this.paternalHaploid.add(new Chromosome(currChr));
+                }
+            }
+            else if(chrName.equals("Y"))
+            {
+                if(!isFemale)
+                {
+                    this.paternalHaploid.add(currChr);
+                }
+            }
+            else
+            {
+                // it's an autosome
+                this.maternalHaploid.add(currChr);
+                this.paternalHaploid.add(new Chromosome(currChr));
+            }
+        }
+    }
 
     /**
      * Getter for the maternal haploid (the chromosomes contributed from the
@@ -68,7 +127,9 @@ public class DiploidGenome implements Serializable
     }
     
     /**
-     * Setter for the maternale haploid.
+     * Setter for the maternal haploid. NOTE: it is expected that the
+     * chromosomes given will be pre-sorted using
+     * {@link ChromosomeNameComparator}
      * @param maternalHaploid the maternalHaploid to set
      */
     public void setMaternalHaploid(List<Chromosome> maternalHaploid)
@@ -87,7 +148,9 @@ public class DiploidGenome implements Serializable
     }
     
     /**
-     * Setter for the paternal haploid
+     * Setter for the paternal haploid. NOTE: it is expected that the
+     * chromosomes given will be pre-sorted using
+     * {@link ChromosomeNameComparator}
      * @param paternalHaploid the paternalHaploid to set
      */
     public void setPaternalHaploid(List<Chromosome> paternalHaploid)
@@ -122,5 +185,53 @@ public class DiploidGenome implements Serializable
             SpeciesGenomeDescription speciesGenomeDescription)
     {
         this.speciesGenomeDescription = speciesGenomeDescription;
+    }
+    
+    /**
+     * Determine if this is a male
+     * @return  true if this is a male
+     */
+    public boolean isMale()
+    {
+        // TODO check requirements for what should be done in case of XXY, 0Y, 0X etc
+        for(Chromosome chr: this.paternalHaploid)
+        {
+            if(chr.getChromosomeName().equals("Y"))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder("Diploid Genome: ");
+        sb.append("Sex = ");
+        sb.append(this.isMale() ? "male" : "female");
+        sb.append(", aneuploid = " + this.isAneuploid() + "\n");
+        
+        sb.append("  Species: " + this.speciesGenomeDescription.getName() + "\n");
+        sb.append("  Maternal Chromosomes: count = " + this.maternalHaploid.size() + "\n");
+        appendChromosomeStrings(sb, this.maternalHaploid);
+        sb.append("  Paternal Chromosomes: count = " + this.paternalHaploid.size() + "\n");
+        appendChromosomeStrings(sb, this.paternalHaploid);
+        
+        return sb.toString();
+    }
+    
+    private static void appendChromosomeStrings(StringBuilder sb, List<Chromosome> chromosomes)
+    {
+        for(Chromosome chromosome: chromosomes)
+        {
+            sb.append("    ");
+            sb.append(chromosome);
+            sb.append('\n');
+        }
     }
 }

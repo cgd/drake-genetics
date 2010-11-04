@@ -28,6 +28,8 @@ import com.google.gwt.user.client.ui.RootPanel;
  */
 public class DrakeGeneticsEntryPoint implements EntryPoint
 {
+    private DrakeGeneticsServiceAsync drakeGeneticsService;
+    
     /**
      * {@inheritDoc}
      */
@@ -47,6 +49,12 @@ public class DrakeGeneticsEntryPoint implements EntryPoint
                 DrakeGeneticsEntryPoint.this.setHelloWorldMessage(caught.toString());
             }
         });
+        
+        this.drakeGeneticsService = GWT.create(DrakeGeneticsService.class);
+        DrakeBreedingInterface drakeBreedingInterface = new DrakeBreedingInterface(
+                this.drakeGeneticsService,
+                RootPanel.get("drakeBreedingContainer"));
+        drakeBreedingInterface.init();
     }
     
     /**
