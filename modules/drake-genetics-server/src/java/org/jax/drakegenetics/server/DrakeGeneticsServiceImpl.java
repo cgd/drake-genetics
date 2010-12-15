@@ -114,7 +114,7 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     	nodes.add(article);
         try
         {
-            return this.libraryController.retrieveDocument();
+            return this.libraryController.retrieveDocument(nodes);
         }
         catch(Exception ex)
         {
