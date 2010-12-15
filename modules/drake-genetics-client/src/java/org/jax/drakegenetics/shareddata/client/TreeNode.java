@@ -17,6 +17,7 @@
 
 package org.jax.drakegenetics.shareddata.client;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
  * a node of the Tree<T> class
  * @author gbeane
  */
-public class TreeNode<T> {
+public class TreeNode<T> implements Serializable {
 
     private T data;
     private List<TreeNode<T>> children;

@@ -26,6 +26,7 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
@@ -48,6 +49,25 @@ public class DrakeQuestBaseInterface
     private final Panel panel;
     private final VerticalPanel masterPanel = new VerticalPanel();
     private boolean showSplash;
+    
+    /**
+     * instantiation of a selection listener for the Help Button in the
+     * Toolbar.
+     */
+	private final SelectionListener<ButtonEvent> HelpButtonListener = 
+		new SelectionListener<ButtonEvent>() {  
+    	  
+        @Override  
+        public void componentSelected(ButtonEvent ce) {  
+            Window w = new Window();
+            w.setHeading("Drake Quest User Help");
+            w.setSize(600, 400);
+            w.setMaximizable(true);
+            w.setToolTip("The Drake Quest Help Page...");
+            w.setUrl("Help/index.html");
+            w.show();
+        }};
+
 
     /**
      * Constructor
@@ -118,7 +138,7 @@ public class DrakeQuestBaseInterface
 	  	  
 	    toolBar.add(new SeparatorToolItem());  
 	  
-	    Button item5 = new Button("Help", StubButtonListener);  	      
+	    Button item5 = new Button("Help", this.HelpButtonListener);  	      
  	    toolBar.add(item5);  
         masterPanel.add(toolBar);
 
@@ -165,6 +185,7 @@ public class DrakeQuestBaseInterface
         caught.printStackTrace();
         this.panel.add(new Label(caught.getMessage()));
     }
+    
     
 }
 
