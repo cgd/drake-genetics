@@ -65,10 +65,7 @@ public class TreeNode<T> {
         children.add(child);
     }
 
-        public int getNumberOfChildren() {
-        if (children == null) {
-            return 0;
-        }
+    public int getNumberOfChildren() {    
         return children.size();
     }
 
@@ -89,7 +86,7 @@ public class TreeNode<T> {
         StringBuilder sb = new StringBuilder();
         sb.append("{").append(data.toString()).append(",[");
 
-        for (int i = 0; i < getNumberOfChildren(); i++) {
+        for (int i = 0; i < children.size(); i++) {
             if (i > 0) {
                 sb.append(",");
             }
