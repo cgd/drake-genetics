@@ -14,15 +14,6 @@
     </servlet-mapping>
 
     <!-- GWT query servlet -->
-    <servlet>
-        <servlet-name>helloGWTServlet</servlet-name>
-        <servlet-class>org.jax.drakegenetics.server.HelloServiceImpl</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>helloGWTServlet</servlet-name>
-        <url-pattern>/drakegenetics/helloservice</url-pattern>
-    </servlet-mapping>
 
     <!-- Default page to serve -->
     <welcome-file-list>

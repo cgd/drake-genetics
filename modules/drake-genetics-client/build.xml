@@ -23,7 +23,6 @@
         <!--<mkdir dir="${build}/java"/>-->
 
         <!-- HACK! -->
-        <!--
         <unjar dest="${build}/java">
             <fileset dir="${lib}">
                 <include name="gwt-client-util-src-*.jar"/>
@@ -31,11 +30,10 @@
                 <exclude name="gxt-resources-*.jar"/>
             </fileset>
         </unjar>
-        -->
         
         <javac destdir="${build}/classes" target="1.5" source="1.5" deprecation="true" classpathref="proj.classpath" debug="true">
             <src path="${src}/java"/>
-            <!--<src path="${build}/java"/>-->
+            <src path="${build}/java"/>
             <!--
             <compilerarg value="-Xlint"/>
             <compilerarg value="-Xlint:-serial"/>
@@ -46,13 +44,11 @@
             <fileset dir="${src}/www"/>
         </copy>
         <!-- HACK! -->
-        <!--
         <unjar dest="${build}/www">
             <fileset dir="${lib}">
                 <include name="gxt-resources-*.jar"/>
             </fileset>
         </unjar>
-        -->
 
         <!-- GWT compile the Query application -->
         <java fork="true"

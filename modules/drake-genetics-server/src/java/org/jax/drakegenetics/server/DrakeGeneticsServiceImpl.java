@@ -17,10 +17,13 @@
 
 package org.jax.drakegenetics.server;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsService;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
+import org.jax.drakegenetics.shareddata.client.Tree;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -34,9 +37,18 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
      * every {@link java.io.Serializable} is supposed to have one of these
      */
     private static final long serialVersionUID = -4876385760655645346L;
+    //replace the next two constants with properties...for testing only
+    private static final String LIBRARY_ROOT = "/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-client/src/www/Library";
+    private static final String HELP_ROOT = "/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-client/src/www/Help";
     
+
     private final ReproductionSimulator reproductionSimulator =
         new ReproductionSimulator();
+    private final StaticDocumentLibrary libraryController =
+    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.LIBRARY_ROOT));
+    private final StaticDocumentLibrary helpController =
+    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.HELP_ROOT),
+    			"HelpRoot");
     
     /**
      * {@inheritDoc}
@@ -58,4 +70,57 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
             return null;
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Tree<String> getLibrary()
+    {
+        try
+        {
+            return this.libraryController.getLibraryIndex();
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public Tree<String> getHelp()
+    {
+        try
+        {
+            return this.helpController.getLibraryIndex();
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getPublication(String journal, String volume, String article)
+    {
+    	List<String> nodes = new ArrayList<String>();
+    	nodes.add(journal);
+    	nodes.add(volume);
+    	nodes.add(article);
+        try
+        {
+            return this.libraryController.retrieveDocument();
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
 }

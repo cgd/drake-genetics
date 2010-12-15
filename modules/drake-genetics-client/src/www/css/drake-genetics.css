@@ -53,3 +53,6 @@ tableFileInput {
 div.oddTableGroup {
     background-color: #E0E0E0;
 }
+
+.splash-icon { background: url(images/DQ_Splash.png) no-repeat
+ center left !important; } 
