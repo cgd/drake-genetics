@@ -58,8 +58,6 @@ public class StaticDocumentLibrary {
 
         // scan the library from the root directory and build the tree
         scanLibrary();
-
-        System.out.println(root.treeString());
     }
 
 
