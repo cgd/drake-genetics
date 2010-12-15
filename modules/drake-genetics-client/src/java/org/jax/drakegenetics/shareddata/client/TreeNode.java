@@ -27,8 +27,8 @@ import java.util.List;
  */
 public class TreeNode<T> implements Serializable {
 
-    private T data;
-    private List<TreeNode<T>> children;
+    protected T data;
+    protected List<TreeNode<T>> children;
 
 
     public TreeNode() {
@@ -66,10 +66,17 @@ public class TreeNode<T> implements Serializable {
         children.add(child);
     }
 
-    public int getNumberOfChildren() {    
+    public int getChildCount() {
         return children.size();
     }
 
+    boolean isLeaf() {
+        if (children.size() > 0) {
+            return false;
+        }
+
+        return true;
+    }
 
     public TreeNode<T> findChild(T data) {
         for (TreeNode<T> n : children ) {
@@ -79,6 +86,21 @@ public class TreeNode<T> implements Serializable {
         }
 
         return null;
+    }
+
+    public boolean validatePath(List<T> nodes) {
+
+        TreeNode<T> node = this;
+
+        for (T t : nodes) {
+            // look to see if this String is one of the child nodes of our current node
+            node = node.findChild(t);
+            if (node == null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
@@ -99,5 +121,33 @@ public class TreeNode<T> implements Serializable {
         return sb.toString();
     }
 
+    public String treeString() {
+        return toList().toString();
+    }
+
+   /**
+     * turn the tree rooted at this node into a List by doing a preorder traversal
+     * @return a list of all nodes in the tree rooted at this node
+     */
+    public List<TreeNode<T>> toList() {
+        List<TreeNode<T>> list = new ArrayList<TreeNode<T>>();
+        traversePreOrder(this, list);
+        return list;
+
+    }
+
+    /**
+     * perform a preorder traversal from @param node and add nodes to @param list
+     * @param node
+     * @param list
+     */
+    private void traversePreOrder(TreeNode<T> node, List<TreeNode<T>> list) {
+        list.add(node);
+
+        for (int i = 0; i < node.getChildCount(); i++) {
+            traversePreOrder(node.getChild(i), list);
+        }
+
+    }
 
 }
