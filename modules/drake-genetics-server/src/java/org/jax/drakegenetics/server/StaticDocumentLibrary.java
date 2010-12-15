@@ -45,7 +45,8 @@ public class StaticDocumentLibrary {
 
         if (!libraryRootDir.exists() || !libraryRootDir.isDirectory()) {
             IllegalArgumentException e =
-                    new IllegalArgumentException("Invalid library root directory: "+ libraryRootDir.toString());
+                    new IllegalArgumentException("Invalid library root directory: "
+                    + libraryRootDir.toString());
             
             throw e;
         }
@@ -90,15 +91,15 @@ public class StaticDocumentLibrary {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    public String retrieveDocument(List<String> nodes) throws FileNotFoundException, IOException {
+    public String retrieveDocument(List<String> nodes)
+            throws FileNotFoundException, IOException {
         File file;
 
         if (!index.validateTreePath(nodes)) {
-            FileNotFoundException e = new FileNotFoundException ("Invalid Document Path");
+            FileNotFoundException e = new FileNotFoundException("Invalid Document Path");
             throw e;
         }
 
-        // if we got here then we should have found a node at this path
 
         //build the relative path, the first node is the library root, we can skip that
         StringBuilder relativePath = new StringBuilder();
@@ -110,6 +111,12 @@ public class StaticDocumentLibrary {
         }
         file = new File(libraryRootDir, relativePath.toString());
 
+        if (file.isDirectory()) {
+            //XXX FileNotFound is probably not the best exception
+            FileNotFoundException e = new FileNotFoundException("Node is not a document");
+            throw e;
+        }
+
         return getFileContents(file);
     }
 
@@ -120,7 +127,8 @@ public class StaticDocumentLibrary {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private String getFileContents(File file) throws FileNotFoundException, IOException {
+    private String getFileContents(File file) throws FileNotFoundException,
+            IOException {
         StringBuilder fileContents = new StringBuilder();
 
 
@@ -171,7 +179,7 @@ public class StaticDocumentLibrary {
             TreeNode<String> node = new TreeNode<String>(children[i]);
             File f = new File(dir, children[i]);
 
-            // if the child is a directory we need to recursively call scanLibraryDir
+            // if the child is a directory then call scanLibraryDir on it
             if (f.isDirectory()) {
                 scanLibraryDir(f, node);
             } else { // not a directory, must be a document
