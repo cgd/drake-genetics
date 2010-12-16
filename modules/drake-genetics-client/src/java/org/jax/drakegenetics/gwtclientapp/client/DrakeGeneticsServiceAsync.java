@@ -19,7 +19,7 @@ package org.jax.drakegenetics.gwtclientapp.client;
 import java.util.List;
 
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
-import org.jax.drakegenetics.shareddata.client.Tree;
+import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
@@ -50,7 +50,7 @@ public interface DrakeGeneticsServiceAsync
      *          callback containing tree structure that represents all the 
      *          publications in the Library
      */
-    public void getLibrary(AsyncCallback<Tree<String>> callback);
+    public void getLibrary(AsyncCallback<LibraryNode> callback);
 
     /**
      * For fetching the tree that represents the Help document structure
@@ -59,7 +59,7 @@ public interface DrakeGeneticsServiceAsync
      *          callback containing tree structure that represents all the help 
      *          documents 
      */
-    public void getHelp(AsyncCallback<Tree<String>> callback);
+    public void getHelp(AsyncCallback<LibraryNode> callback);
 
     /**
      * For fetching a specific publication from the library.  

@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsService;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
-import org.jax.drakegenetics.shareddata.client.Tree;
+import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
@@ -74,11 +74,11 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     /**
      * {@inheritDoc}
      */
-    public Tree<String> getLibrary()
+    public LibraryNode getLibrary()
     {
         try
         {
-            return this.libraryController.getLibraryIndex();
+            return this.libraryController.getLibraryRoot();
         }
         catch(Exception ex)
         {
@@ -90,11 +90,11 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     /**
      * {@inheritDoc}
      */
-    public Tree<String> getHelp()
+    public LibraryNode getHelp()
     {
         try
         {
-            return this.helpController.getLibraryIndex();
+            return this.helpController.getLibraryRoot();
         }
         catch(Exception ex)
         {

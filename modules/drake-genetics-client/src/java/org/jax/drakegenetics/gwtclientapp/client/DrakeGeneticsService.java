@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
-import org.jax.drakegenetics.shareddata.client.Tree;
+import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
@@ -52,7 +52,7 @@ public interface DrakeGeneticsService extends RemoteService
      *          a tree structure that represents all the publications in
      *          the Library
      */
-    public Tree<String> getLibrary();
+    public LibraryNode getLibrary();
 
     /**
      * For fetching the tree that represents the Help document structure
@@ -60,7 +60,7 @@ public interface DrakeGeneticsService extends RemoteService
      * @return
      *          a tree structure that represents all the help documents 
      */
-    public Tree<String> getHelp();
+    public LibraryNode getHelp();
 
     /**
      * For fetching a specific publication from the library.  

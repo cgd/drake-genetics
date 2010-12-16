@@ -24,8 +24,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
-import org.jax.drakegenetics.shareddata.client.Tree;
-import org.jax.drakegenetics.shareddata.client.TreeNode;
+import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 /**
  * A simple library to contain a directory 
@@ -33,7 +32,7 @@ import org.jax.drakegenetics.shareddata.client.TreeNode;
  */
 public class StaticDocumentLibrary {
 
-    private Tree<String> index;
+    private LibraryNode root;
     private File libraryRootDir;
     private int numberOfDocuments;
 
@@ -54,8 +53,8 @@ public class StaticDocumentLibrary {
         this.libraryRootDir = libraryRootDir;
 
         // create a root node for the index tree and create the tree
-        TreeNode<String> root = new TreeNode<String>(rootName);
-        index = new Tree<String>(root);
+        root = new LibraryNode(rootName);
+
 
         // scan the library from the root directory and build the tree
         scanLibrary();
@@ -78,10 +77,10 @@ public class StaticDocumentLibrary {
     /**
      * get the index of the library - this is a tree representing the directory
      * structure
-     * @return the Tree index of the library
+     * @return the root LibraryNode of the tree representing the file structure
      */
-    public Tree<String> getLibraryIndex() {
-        return index;
+    public LibraryNode getLibraryRoot() {
+        return root;
     }
 
     /**
@@ -95,10 +94,11 @@ public class StaticDocumentLibrary {
             throws FileNotFoundException, IOException {
         File file;
 
-        if (!index.validateTreePath(nodes)) {
+        if (!root.validatePath(nodes)) {
             FileNotFoundException e = new FileNotFoundException("Invalid Document Path");
             throw e;
         }
+
 
 
         //build the relative path, the first node is the library root, we can skip that
@@ -154,16 +154,16 @@ public class StaticDocumentLibrary {
      */
     private void scanLibrary() {
         numberOfDocuments = 0;
-        scanLibraryDir(libraryRootDir, index.getRoot());
+        scanLibraryDir(libraryRootDir, root);
     }
 
     /**
      * recursively scan the library starting from a specified directory and build
      * a tree representing the structure
      * @param dir           directory to begin scanning at
-     * @param parentNode    TreeNode representing this directory
+     * @param parentNode    LibraryNode representing this directory
      */
-    private void scanLibraryDir(File dir, TreeNode<String> parentNode) {
+    private void scanLibraryDir(File dir, LibraryNode parentNode) {
 
         String[] children = dir.list();
 
@@ -176,13 +176,14 @@ public class StaticDocumentLibrary {
             }
 
             // create a node to represent this child
-            TreeNode<String> node = new TreeNode<String>(children[i]);
+            LibraryNode node = new LibraryNode(children[i]);
             File f = new File(dir, children[i]);
 
             // if the child is a directory then call scanLibraryDir on it
             if (f.isDirectory()) {
                 scanLibraryDir(f, node);
             } else { // not a directory, must be a document
+                node.setIsDocument(true);
                 ++numberOfDocuments;
             }
 
