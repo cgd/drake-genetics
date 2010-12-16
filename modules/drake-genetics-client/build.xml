@@ -33,7 +33,7 @@
         
         <javac destdir="${build}/classes" target="1.5" source="1.5" deprecation="true" classpathref="proj.classpath" debug="true">
             <src path="${src}/java"/>
-            <src path="${build}/java"/>
+            <!--<src path="${build}/java"/>-->
             <!--
             <compilerarg value="-Xlint"/>
             <compilerarg value="-Xlint:-serial"/>
