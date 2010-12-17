@@ -71,7 +71,7 @@ public class TreeNode<T> implements Serializable {
         return children.size();
     }
 
-    boolean isLeaf() {
+    public boolean isLeaf() {
         if (children.size() > 0) {
             return false;
         }
