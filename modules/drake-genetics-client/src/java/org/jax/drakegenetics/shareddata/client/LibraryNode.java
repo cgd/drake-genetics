@@ -30,7 +30,7 @@ public class LibraryNode extends TreeNode<String> {
     }
 
     public void setIsDocument(boolean isDocument) {
-        assert (this.getChildCount() == 0);
+        assert getChildCount() == 0;
         this.isDocument = isDocument;
     }
 
@@ -44,6 +44,10 @@ public class LibraryNode extends TreeNode<String> {
         }
 
         return data.substring(0, data.lastIndexOf("."));
+    }
+
+    public String getFileName() {
+        return getData();
     }
 
     @Override
@@ -68,5 +72,7 @@ public class LibraryNode extends TreeNode<String> {
         }
         return sb.toString();
     }
+
+
 
 }
