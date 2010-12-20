@@ -27,6 +27,7 @@ import java.util.List;
  */
 public class TreeNode<T> implements Serializable {
 
+	private static final long serialVersionUID = 1L;  
     protected T data;
     protected List<TreeNode<T>> children;
 
@@ -70,7 +71,7 @@ public class TreeNode<T> implements Serializable {
         return children.size();
     }
 
-    boolean isLeaf() {
+    public boolean isLeaf() {
         if (children.size() > 0) {
             return false;
         }

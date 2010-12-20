@@ -17,19 +17,19 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
-import java.util.List;
 
-import org.jax.drakegenetics.shareddata.client.DiploidGenome;
-import org.jax.drakegenetics.shareddata.client.DrakeSpeciesSingleton;
-
+import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.extjs.gxt.ui.client.widget.treepanel.TreePanel;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
@@ -48,6 +48,7 @@ public class DrakeQuestBaseInterface
 	private final DrakeGeneticsServiceAsync drakeGeneticsService;
     private final Panel panel;
     private final VerticalPanel masterPanel = new VerticalPanel();
+    private final Window helpWindow = new Window();
     private boolean showSplash;
     
     /**
@@ -59,13 +60,21 @@ public class DrakeQuestBaseInterface
     	  
         @Override  
         public void componentSelected(ButtonEvent ce) {  
-            Window w = new Window();
-            w.setHeading("Drake Quest User Help");
-            w.setSize(600, 400);
-            w.setMaximizable(true);
-            w.setToolTip("The Drake Quest Help Page...");
-            w.setUrl("Help/index.html");
-            w.show();
+        	/*  Keith suggestion for making it all display when content loaded
+        	 * 
+        	 * for each onSuccess you set "this.content1Loaded = true" 
+        	 * for the 1st pane's content and "this.content2Loaded = true" 
+        	 * for the second pane's content. 
+        	 * Then each onSuccess calls "showWindowIfContentLoaded(...)". 
+        	 * This function starts with if(this.content1Loaded && this.content2Loaded){ ...}
+        	 */
+            helpWindow.setHeading("Drake Quest User Help");
+            helpWindow.setSize(600, 400);
+            helpWindow.setMaximizable(true);
+            //helpWindow.setToolTip("The Drake Quest Help Page...");
+			HelpData hd = new HelpData(helpWindow);
+			Folder helpTree = hd.getTreeModel(drakeGeneticsService);
+            	       	
         }};
 
 
