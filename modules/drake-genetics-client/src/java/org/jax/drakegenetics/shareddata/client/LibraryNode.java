@@ -34,8 +34,16 @@ public class LibraryNode extends TreeNode<String> {
         this.isDocument = isDocument;
     }
 
-    public boolean getIsDocument() {
+    public boolean isDocument() {
         return isDocument;
+    }
+
+    public String getDisplayName() {
+        if (!isDocument) {
+            return data;
+        }
+
+        return data.substring(0, data.lastIndexOf("."));
     }
 
     @Override

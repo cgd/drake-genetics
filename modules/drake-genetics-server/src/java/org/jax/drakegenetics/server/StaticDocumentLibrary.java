@@ -36,9 +36,8 @@ public class StaticDocumentLibrary {
     private File libraryRootDir;
     private int numberOfDocuments;
 
-    private static final String DEFAULT_ROOT_NAME = "LibraryRoot";
 
-    public StaticDocumentLibrary(File libraryRootDir, String rootName)
+    public StaticDocumentLibrary(File libraryRootDir)
             throws IllegalArgumentException {
         
 
@@ -53,17 +52,13 @@ public class StaticDocumentLibrary {
         this.libraryRootDir = libraryRootDir;
 
         // create a root node for the index tree and create the tree
-        root = new LibraryNode(rootName);
+        root = new LibraryNode(libraryRootDir.getName());
 
 
         // scan the library from the root directory and build the tree
         scanLibrary();
     }
 
-
-    public StaticDocumentLibrary(File libraryRootDir) {
-        this(libraryRootDir, DEFAULT_ROOT_NAME);
-    }
 
 
     /**
@@ -84,14 +79,13 @@ public class StaticDocumentLibrary {
     }
 
     /**
-     * get the contents of a document
+     * get the URL of a document
      * @param nodes an List containing the path through the child nodes to the document
-     * @return document contents as a String
+     * @return relative path to document
      * @throws FileNotFoundException
-     * @throws IOException
      */
-    public String retrieveDocument(List<String> nodes)
-            throws FileNotFoundException, IOException {
+    public String getDocumentURL(List<String> nodes)
+            throws FileNotFoundException {
         File file;
 
         if (!root.validatePath(nodes)) {
@@ -101,52 +95,20 @@ public class StaticDocumentLibrary {
 
 
 
-        //build the relative path, the first node is the library root, we can skip that
-        StringBuilder relativePath = new StringBuilder();
+        //build the relative path
+
+        StringBuilder relativePath = new StringBuilder(root.getData());
         for (int i = 0; i < nodes.size(); i++) {
+            relativePath.append(File.separator);
             relativePath.append(nodes.get(i));
-            if (i < nodes.size() - 1) {
-                relativePath.append(File.separator);
-            }
+            
         }
-        file = new File(libraryRootDir, relativePath.toString());
+        
 
-        if (file.isDirectory()) {
-            //XXX FileNotFound is probably not the best exception
-            FileNotFoundException e = new FileNotFoundException("Node is not a document");
-            throw e;
-        }
-
-        return getFileContents(file);
+        return relativePath.toString();
     }
 
-    /**
-     * read an entire file and return the contents as a String
-     * @param file
-     * @return the contents of the File as a String
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    private String getFileContents(File file) throws FileNotFoundException,
-            IOException {
-        StringBuilder fileContents = new StringBuilder();
 
-
-        BufferedReader input = new BufferedReader(new FileReader(file));
-        try {
-            String line = null;
-
-            while ((line = input.readLine()) != null) {
-                fileContents.append(line);
-                fileContents.append(System.getProperty("line.separator"));
-            }
-        } finally {
-            input.close();
-        }
-
-
-        return fileContents.toString();
-    }
 
     /**
      * Scan the library starting from the library root directory and build the
@@ -175,9 +137,16 @@ public class StaticDocumentLibrary {
                 continue;
             }
 
+            File f = new File(dir, children[i]);
+            if (!f.isDirectory()) {
+                if (!getFileExtension(children[i]).equalsIgnoreCase("html")
+                        && !getFileExtension(children[i]).equalsIgnoreCase("htm")) {
+                    continue;
+                }
+            }
+
             // create a node to represent this child
             LibraryNode node = new LibraryNode(children[i]);
-            File f = new File(dir, children[i]);
 
             // if the child is a directory then call scanLibraryDir on it
             if (f.isDirectory()) {
@@ -187,10 +156,15 @@ public class StaticDocumentLibrary {
                 ++numberOfDocuments;
             }
 
+
             // add the child node (and its children) to the parent node
             parentNode.addChild(node);
 
         }
+    }
+
+    private String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf(".") + 1,fileName.length());
     }
 
 }
