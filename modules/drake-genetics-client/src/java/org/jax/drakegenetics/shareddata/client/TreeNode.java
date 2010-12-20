@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class TreeNode<T> implements Serializable {
 
-	private static final long serialVersionUID = 1L;  
+    private static final long serialVersionUID = 1L;
     protected T data;
     protected List<TreeNode<T>> children;
 
