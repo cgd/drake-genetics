@@ -43,7 +43,7 @@ public class LibraryNode extends TreeNode<String> {
         this.isDocument = isDocument;
     }
 
-    public boolean isDocument() {
+    public boolean getIsDocument() {
         return isDocument;
     }
 
