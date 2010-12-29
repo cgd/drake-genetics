@@ -56,7 +56,7 @@ public class Gene {
         this.startPosition = startPosition;
     }
 
-    public void setLenght(int lenght)
+    public void setLength(int length)
     {
         this.length = length;
     }
