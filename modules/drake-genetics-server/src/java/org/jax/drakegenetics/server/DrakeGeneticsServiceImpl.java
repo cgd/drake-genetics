@@ -47,8 +47,7 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     private final StaticDocumentLibrary libraryController =
     	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.LIBRARY_ROOT));
     private final StaticDocumentLibrary helpController =
-    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.HELP_ROOT),
-    			"HelpRoot");
+    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.HELP_ROOT));
     
     /**
      * {@inheritDoc}
@@ -114,7 +113,7 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     	nodes.add(article);
         try
         {
-            return this.libraryController.retrieveDocument(nodes);
+            return this.libraryController.getDocumentURL(nodes);
         }
         catch(Exception ex)
         {
@@ -130,7 +129,7 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     {
         try
         {
-            return this.helpController.retrieveDocument(documentTreePath);
+            return this.helpController.getDocumentURL(documentTreePath);
         }
         catch(Exception ex)
         {
