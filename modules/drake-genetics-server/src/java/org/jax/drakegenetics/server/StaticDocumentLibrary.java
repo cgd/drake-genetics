@@ -17,12 +17,12 @@
 
 package org.jax.drakegenetics.server;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.List;
+import java.util.Set;
+
+import javax.servlet.ServletContext;
 
 import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
@@ -33,33 +33,16 @@ import org.jax.drakegenetics.shareddata.client.LibraryNode;
 public class StaticDocumentLibrary {
 
     private LibraryNode root;
-    private File libraryRootDir;
     private int numberOfDocuments;
 
-
-    public StaticDocumentLibrary(File libraryRootDir)
-            throws IllegalArgumentException {
+    public StaticDocumentLibrary(String libraryRoot, ServletContext context) {
         
-
-        if (!libraryRootDir.exists() || !libraryRootDir.isDirectory()) {
-            IllegalArgumentException e =
-                    new IllegalArgumentException("Invalid library root directory: "
-                    + libraryRootDir.toString());
-            
-            throw e;
-        }
-
-        this.libraryRootDir = libraryRootDir;
-
         // create a root node for the index tree and create the tree
-        root = new LibraryNode(libraryRootDir.getName());
-
+        root = new LibraryNode(libraryRoot);
 
         // scan the library from the root directory and build the tree
-        scanLibrary();
+        scanLibrary(context);
     }
-
-
 
     /**
      * Get the number of non-directory nodes in the library tree
@@ -113,44 +96,49 @@ public class StaticDocumentLibrary {
     /**
      * Scan the library starting from the library root directory and build the
      * library index tree
+     * @param context   the servlet context that we use to scan web resources
      */
-    private void scanLibrary() {
+    private void scanLibrary(ServletContext context) {
         numberOfDocuments = 0;
-        scanLibraryDir(libraryRootDir, root);
+        scanLibraryRecursive(context, root.getData(), root);
     }
 
     /**
      * recursively scan the library starting from a specified directory and build
      * a tree representing the structure
-     * @param dir           directory to begin scanning at
+     * @param context       the servlet context that we use to scan web resources
+     * @param resourcePath  web resource path to begin scanning at
      * @param parentNode    LibraryNode representing this directory
      */
-    private void scanLibraryDir(File dir, LibraryNode parentNode) {
+    private void scanLibraryRecursive(
+            ServletContext context,
+            String resourcePath,
+            LibraryNode parentNode) {
 
-        String[] children = dir.list();
+        Set<String> children = context.getResourcePaths(resourcePath);
 
         // for each file in this directory
-        for (int i = 0; i < children.length; i++) {
+        for(String childResource : children) {
 
             // skip over any files that start with a "."
-            if(children[i].startsWith(".")) {
+            if(childResource.startsWith(".")) {
                 continue;
             }
 
-            File f = new File(dir, children[i]);
-            if (!f.isDirectory()) {
-                if (!getFileExtension(children[i]).equalsIgnoreCase("html")
-                        && !getFileExtension(children[i]).equalsIgnoreCase("htm")) {
+            if(!childResource.endsWith("/")) {
+                if (!getFileExtension(childResource).equalsIgnoreCase("html")
+                        && !getFileExtension(childResource).equalsIgnoreCase("htm")) {
                     continue;
                 }
             }
 
             // create a node to represent this child
-            LibraryNode node = new LibraryNode(children[i]);
+            LibraryNode node = new LibraryNode(
+                    childResource.substring(resourcePath.length()));
 
             // if the child is a directory then call scanLibraryDir on it
-            if (f.isDirectory()) {
-                scanLibraryDir(f, node);
+            if (childResource.endsWith("/")) {
+                scanLibraryRecursive(context, childResource, node);
             } else { // not a directory, must be a document
                 node.setIsDocument(true);
                 ++numberOfDocuments;
@@ -164,7 +152,7 @@ public class StaticDocumentLibrary {
     }
 
     private String getFileExtension(String fileName) {
-        return fileName.substring(fileName.lastIndexOf(".") + 1,fileName.length());
+        return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
 }
