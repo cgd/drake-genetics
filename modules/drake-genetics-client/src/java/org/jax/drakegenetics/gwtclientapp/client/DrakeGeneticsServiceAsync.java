@@ -79,7 +79,7 @@ public interface DrakeGeneticsServiceAsync
      *          purposes. 
      */
     public void getPublication(String journal, String volume, String article,
-    		AsyncCallback<String> callback);
+            AsyncCallback<String> callback);
 
     /**
      * For fetching a specific document from the user help.  
@@ -93,6 +93,6 @@ public interface DrakeGeneticsServiceAsync
      *          purposes. 
      */
     public void getHelpDocument(List<String> documentTreePath,
-    		AsyncCallback<String> callback);
+            AsyncCallback<String> callback);
 
 }
