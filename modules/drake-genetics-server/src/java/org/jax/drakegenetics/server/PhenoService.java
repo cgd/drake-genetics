@@ -17,7 +17,9 @@
 package org.jax.drakegenetics.server;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 /**
@@ -43,9 +45,9 @@ public class PhenoService {
         return phenome;
     }
 
-    private Map<String, Map<String, String>> getAlleles(DiploidGenome genome)
+    private Map<String, List<String>> getAlleles(DiploidGenome genome)
     {
-        Map<String, Map<String, String>> alleles = new HashMap<String, Map<String, String>>();
+        Map<String, List<String>> alleles = new HashMap<String, List<String>>();
 
         return alleles;
     }
