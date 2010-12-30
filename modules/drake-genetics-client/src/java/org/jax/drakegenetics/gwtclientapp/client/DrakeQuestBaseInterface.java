@@ -17,22 +17,14 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
-
-import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.extjs.gxt.ui.client.widget.treepanel.TreePanel;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -44,8 +36,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class DrakeQuestBaseInterface
 {
     private static final String BANNER_IMAGE_PATH = "/images/DQ_Banner.png";
-	private static final String SPLASH_IMAGE_PATH = "/images/DQ_Splash.png";
-	private final DrakeGeneticsServiceAsync drakeGeneticsService;
+    private static final String SPLASH_IMAGE_PATH = "/images/DQ_Splash.png";
+    private final DrakeGeneticsServiceAsync drakeGeneticsService;
     private final Panel panel;
     private final VerticalPanel masterPanel = new VerticalPanel();
     private final Window helpWindow = new Window();
@@ -55,26 +47,25 @@ public class DrakeQuestBaseInterface
      * instantiation of a selection listener for the Help Button in the
      * Toolbar.
      */
-	private final SelectionListener<ButtonEvent> HelpButtonListener = 
-		new SelectionListener<ButtonEvent>() {  
-    	  
+    private final SelectionListener<ButtonEvent> HelpButtonListener = 
+        new SelectionListener<ButtonEvent>() {  
+          
         @Override  
         public void componentSelected(ButtonEvent ce) {  
-        	/*  Keith suggestion for making it all display when content loaded
-        	 * 
-        	 * for each onSuccess you set "this.content1Loaded = true" 
-        	 * for the 1st pane's content and "this.content2Loaded = true" 
-        	 * for the second pane's content. 
-        	 * Then each onSuccess calls "showWindowIfContentLoaded(...)". 
-        	 * This function starts with if(this.content1Loaded && this.content2Loaded){ ...}
-        	 */
+            /*  Keith suggestion for making it all display when content loaded
+             * 
+             * for each onSuccess you set "this.content1Loaded = true" 
+             * for the 1st pane's content and "this.content2Loaded = true" 
+             * for the second pane's content. 
+             * Then each onSuccess calls "showWindowIfContentLoaded(...)". 
+             * This function starts with if(this.content1Loaded && this.content2Loaded){ ...}
+             */
             helpWindow.setHeading("Drake Quest User Help");
             helpWindow.setSize(600, 400);
             helpWindow.setMaximizable(true);
             //helpWindow.setToolTip("The Drake Quest Help Page...");
-			HelpData hd = new HelpData(helpWindow);
-			Folder helpTree = hd.getTreeModel(drakeGeneticsService);
-            	       	
+            HelpData hd = new HelpData(helpWindow);
+            Folder helpTree = hd.getTreeModel(drakeGeneticsService);
         }};
 
 
@@ -84,7 +75,7 @@ public class DrakeQuestBaseInterface
      * @param panel                 the panel to update
      */
     public DrakeQuestBaseInterface(DrakeGeneticsServiceAsync drakeGeneticsService, 
-    		Panel panel)
+            Panel panel)
     {
         this.drakeGeneticsService = drakeGeneticsService;
         this.panel = panel;
@@ -95,11 +86,11 @@ public class DrakeQuestBaseInterface
      */
     public void init()
     {
-    	//  Do basic page layout, check login when that is available, etc...
-    	//  Banner, menu, login, splash screen
-    	//  When done add to panel, like below
+        //  Do basic page layout, check login when that is available, etc...
+        //  Banner, menu, login, splash screen
+        //  When done add to panel, like below
         //  this.panel.add(outer panel);
-    	this.showSplash = true;
+        this.showSplash = true;
         final VerticalPanel masterPanel = new VerticalPanel();
         final ContentPanel bannerPanel = new ContentPanel();
         final ContentPanel mainPanel = new ContentPanel();
@@ -115,40 +106,40 @@ public class DrakeQuestBaseInterface
         masterPanel.add(bannerPanel);
         
         // Create and add the tool bar
-	    ToolBar toolBar = new ToolBar();  
-		SelectionListener<ButtonEvent> StubButtonListener = 
-			new SelectionListener<ButtonEvent>() {  
-	    	  
-	        @Override  
-	        public void componentSelected(ButtonEvent ce) {  
-	          Info.display("Not Yet Implemented", "The " + 
-	        		  ce.getButton().getText() + 
-	        		  " functionality has not yet been implemented");  
-	    
-	        }};
-	        
-	    Button item1 = new Button("Account", StubButtonListener);  	      
-	    toolBar.add(item1);  	    
-	  
-	    toolBar.add(new SeparatorToolItem());  
-	  
-	    Button item2 = new Button("Breed Drakes", StubButtonListener);  	      
- 	    toolBar.add(item2);  
-	  
-	    toolBar.add(new SeparatorToolItem());  
-	  
-	    Button item3 = new Button("Laboratory", StubButtonListener);  	      
- 	    toolBar.add(item3);  
-	  
-	    toolBar.add(new SeparatorToolItem());  
-	  
-	    Button item4 = new Button("Library", StubButtonListener);  	      
- 	    toolBar.add(item4);  
-	  	  
-	    toolBar.add(new SeparatorToolItem());  
-	  
-	    Button item5 = new Button("Help", this.HelpButtonListener);  	      
- 	    toolBar.add(item5);  
+        ToolBar toolBar = new ToolBar();  
+        SelectionListener<ButtonEvent> StubButtonListener = 
+            new SelectionListener<ButtonEvent>() {  
+              
+            @Override  
+            public void componentSelected(ButtonEvent ce) {  
+              Info.display("Not Yet Implemented", "The " + 
+                      ce.getButton().getText() + 
+                      " functionality has not yet been implemented");  
+        
+            }};
+            
+        Button item1 = new Button("Account", StubButtonListener);            
+        toolBar.add(item1);          
+      
+        toolBar.add(new SeparatorToolItem());  
+      
+        Button item2 = new Button("Breed Drakes", StubButtonListener);            
+         toolBar.add(item2);  
+      
+        toolBar.add(new SeparatorToolItem());  
+      
+        Button item3 = new Button("Laboratory", StubButtonListener);            
+         toolBar.add(item3);  
+      
+        toolBar.add(new SeparatorToolItem());  
+      
+        Button item4 = new Button("Library", StubButtonListener);            
+         toolBar.add(item4);  
+            
+        toolBar.add(new SeparatorToolItem());  
+      
+        Button item5 = new Button("Help", this.HelpButtonListener);            
+         toolBar.add(item5);  
         masterPanel.add(toolBar);
 
         mainPanel.setHeaderVisible(false);
@@ -179,7 +170,7 @@ public class DrakeQuestBaseInterface
     }
     
     public void showSplashScreen(boolean show) {
-    	this.showSplash = show;
+        this.showSplash = show;
     }
     
     private void blahSucceeded(/* return result here */)

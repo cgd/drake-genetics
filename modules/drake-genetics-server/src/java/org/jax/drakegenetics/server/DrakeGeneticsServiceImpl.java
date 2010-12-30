@@ -123,10 +123,10 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
      */
     public String getPublication(String journal, String volume, String article)
     {
-    	List<String> nodes = new ArrayList<String>();
-    	nodes.add(journal);
-    	nodes.add(volume);
-    	nodes.add(article);
+        List<String> nodes = new ArrayList<String>();
+        nodes.add(journal);
+        nodes.add(volume);
+        nodes.add(article);
         try
         {
             return this.libraryController.getDocumentURL(nodes);
