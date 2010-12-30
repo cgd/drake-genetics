@@ -16,6 +16,8 @@
 */
 package org.jax.drakegenetics.server;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.jax.drakegenetics.shareddata.client.Gene;
 
@@ -30,12 +32,31 @@ public class GeneLookup {
 
     public GeneLookup()
     {
+        nameToGene = new HashMap<String, Gene>();
+        symbolToGene = new HashMap<String, Gene>();
+
         init();
     }
 
     private void init()
     {
+
         //TODO: going to hard code in some Genes and add them to the Maps here for testing...
+    }
+
+    public void addGene(Gene gene)
+    {
+        nameToGene.put(gene.getName(), gene);
+        symbolToGene.put(gene.getSymbol(), gene);
+    }
+
+    public void setGenes(List<Gene> genes)
+    {
+        nameToGene.clear();
+        symbolToGene.clear();
+        for (Gene gene : genes) {
+            addGene(gene);
+        }
     }
 
     public Gene getGeneByName(String name)
