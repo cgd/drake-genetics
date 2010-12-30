@@ -17,9 +17,11 @@
 
 package org.jax.drakegenetics.server;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 
 import org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsService;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
@@ -38,16 +40,30 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
      */
     private static final long serialVersionUID = -4876385760655645346L;
     //replace the next two constants with properties...for testing only
-    private static final String LIBRARY_ROOT = "/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-client/src/www/Library";
-    private static final String HELP_ROOT = "/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-client/src/www/Help";
+    private static final String LIBRARY_ROOT = "/Library/";
+    private static final String HELP_ROOT = "/Help/";
     
 
     private final ReproductionSimulator reproductionSimulator =
         new ReproductionSimulator();
-    private final StaticDocumentLibrary libraryController =
-    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.LIBRARY_ROOT));
-    private final StaticDocumentLibrary helpController =
-    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.HELP_ROOT));
+    private StaticDocumentLibrary libraryController = null;
+    private StaticDocumentLibrary helpController = null;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init(ServletConfig config) throws ServletException
+    {
+        super.init(config);
+        
+        this.libraryController = new StaticDocumentLibrary(
+                DrakeGeneticsServiceImpl.LIBRARY_ROOT,
+                config.getServletContext());
+        this.helpController = new StaticDocumentLibrary(
+                DrakeGeneticsServiceImpl.HELP_ROOT,
+                config.getServletContext());
+    }
     
     /**
      * {@inheritDoc}
