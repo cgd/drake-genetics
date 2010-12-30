@@ -16,6 +16,7 @@
 */
 package org.jax.drakegenetics.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,5 +68,10 @@ public class GeneLookup {
     public Gene getGeneBySymbol(String symbol)
     {
         return symbolToGene.get(symbol);
+    }
+
+    public List<Gene> getGenes()
+    {
+        return new ArrayList<Gene>(nameToGene.values());
     }
 }
