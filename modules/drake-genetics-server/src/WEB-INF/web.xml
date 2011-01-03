@@ -12,17 +12,6 @@
         <servlet-name>drakeGeneticsGWTServlet</servlet-name>
         <url-pattern>/drakegenetics/drakegeneticsservice</url-pattern>
     </servlet-mapping>
-
-    <context-param>
-        <description>Location of the Drake Quest Library documents</description> 
-        <param-name>library.home</param-name>
-        <param-value>/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-server/build/www/Library</param-value>
-    </context-param>
-    <context-param>
-        <description>Location of the Drake Quest Help documents</description> 
-        <param-name>help.home</param-name>
-        <param-value>/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-server/build/www/Help</param-value>
-    </context-param>
     <!-- GWT query servlet -->
 
     <!-- Default page to serve -->

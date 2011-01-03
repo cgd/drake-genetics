@@ -125,7 +125,8 @@ public class StaticDocumentLibrary {
                 continue;
             }
 
-            if(!childResource.endsWith("/")) {
+            boolean isDir = childResource.endsWith("/");
+            if(! isDir) {
                 if (!getFileExtension(childResource).equalsIgnoreCase("html")
                         && !getFileExtension(childResource).equalsIgnoreCase("htm")) {
                     continue;
@@ -133,14 +134,22 @@ public class StaticDocumentLibrary {
             }
 
             // create a node to represent this child
-            LibraryNode node = new LibraryNode(
-                    childResource.substring(resourcePath.length()));
+            String nodeName = childResource.substring(resourcePath.length());
+            if (nodeName.endsWith("/")) {
+                nodeName = nodeName.substring(0,nodeName.length() - 1);
+            }
+            if (nodeName.startsWith("/")) {
+                nodeName = nodeName.substring(1);
+            }
+            //LibraryNode node = new LibraryNode(
+            //        childResource.substring(resourcePath.length()));
+            LibraryNode node = new LibraryNode(nodeName);
 
             // if the child is a directory then call scanLibraryDir on it
-            if (childResource.endsWith("/")) {
+            if (isDir) {
                 scanLibraryRecursive(context, childResource, node);
             } else { // not a directory, must be a document
-                node.setIsDocument(true);
+                node.setDocument(true);
                 ++numberOfDocuments;
             }
 

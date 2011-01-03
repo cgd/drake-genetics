@@ -24,7 +24,7 @@ package org.jax.drakegenetics.shareddata.client;
 public class LibraryNode extends TreeNode<String> {
     
     private static final long serialVersionUID = 1L;
-    private boolean isDocument;
+    private boolean document;
 
     /**
      * This constructor is to support inherited Serializable interface.
@@ -35,20 +35,20 @@ public class LibraryNode extends TreeNode<String> {
     
     public LibraryNode(String name) {
         super(name);
-        isDocument = false;
+        document = false;
     }
 
-    public void setIsDocument(boolean isDocument) {
+    public void setDocument(boolean isDocument) {
         assert getChildCount() == 0;
-        this.isDocument = isDocument;
+        this.document = isDocument;
     }
 
-    public boolean getIsDocument() {
-        return isDocument;
+    public boolean isDocument() {
+        return document;
     }
 
     public String getDisplayName() {
-        if (!isDocument) {
+        if (!document) {
             return data;
         }
 
@@ -64,7 +64,7 @@ public class LibraryNode extends TreeNode<String> {
         StringBuilder sb = new StringBuilder();
         sb.append("{").append(data);
 
-        if (isDocument) {
+        if (document) {
             sb.append("}");
         }
         else {
