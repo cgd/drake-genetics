@@ -14,9 +14,9 @@ import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Window;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.treepanel.TreePanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -24,20 +24,18 @@ import com.google.gwt.user.client.ui.Label;
 
 public class HelpData {
 
-	private Label failMessage = null;
-	private Folder root = null;
-	private Window displayWindow;
-	private final ContentPanel helpDocumentPanel = new ContentPanel();
-	
-	public HelpData (Window w) {
-		this.displayWindow = w;
-	}
-	
-	public Folder getTreeModel(DrakeGeneticsServiceAsync drakeGeneticsService)   
-	  {  
-		  final DrakeGeneticsServiceAsync dgs = drakeGeneticsService;
-	      drakeGeneticsService.getHelp(new AsyncCallback<LibraryNode> ()
-          {
+    private Label failMessage = null;
+    private Folder root = null;
+    private Window displayWindow;
+    private final ContentPanel helpDocumentPanel = new ContentPanel();
+    
+    public HelpData(Window w) {
+        this.displayWindow = w;
+    }
+
+    public Folder getTreeModel(DrakeGeneticsServiceAsync drakeGeneticsService) {
+        final DrakeGeneticsServiceAsync dgs = drakeGeneticsService;
+        drakeGeneticsService.getHelp(new AsyncCallback<LibraryNode>() {
               public void onSuccess(LibraryNode results)
               {
             	  getTreeModelSucceeded(results, dgs);
@@ -48,31 +46,31 @@ public class HelpData {
                   getTreeModelFailed(caught);
               }
           });
-	      		  
-		  return this.root;  
-	  }
+                    
+          return this.root;  
+      }
 
-	private void getTreeModelSucceeded(LibraryNode results, 
-			DrakeGeneticsServiceAsync drakeGeneticsService) {
+    private void getTreeModelSucceeded(LibraryNode results,
+            DrakeGeneticsServiceAsync drakeGeneticsService) {
 
-		this.root = (Folder)parseLibraryNode(results, null, 
-				drakeGeneticsService);
-    	TreeStore<ModelData> store = new TreeStore<ModelData>();    
-    	store.add(this.root.getChildren(), true);   
-    	final TreePanel<ModelData> tree = new TreePanel<ModelData>(store);    
+        this.root = (Folder) parseLibraryNode(results, null,
+                drakeGeneticsService);
+        TreeStore<ModelData> store = new TreeStore<ModelData>();
+        store.add(this.root.getChildren(), true);
+        final TreePanel<ModelData> tree = new TreePanel<ModelData>(store);
         tree.setDisplayProperty("name");    
         tree.setWidth(200); 
         tree.setAutoHeight(true);
         tree.addListener(Events.OnClick, new Listener<TreePanelEvent<ModelData>>() {
 
-			public void handleEvent(TreePanelEvent<ModelData> be) {
-				ModelData item = be.getItem();
-				String url = (String)item.get("url");
-				if (url != null && ! url.equals("")) {
-					helpDocumentPanel.setUrl(url);
-				}
-			}
-		});
+                    public void handleEvent(TreePanelEvent<ModelData> be) {
+                        ModelData item = be.getItem();
+                        String url = (String) item.get("url");
+                        if (url != null && !url.equals("")) {
+                            helpDocumentPanel.setUrl(url);
+                        }
+                    }
+                });
         HorizontalPanel displayPanel = new HorizontalPanel();
         displayPanel.setLayout(new FitLayout());
         //displayPanel.setTableWidth("100%");
@@ -86,96 +84,99 @@ public class HelpData {
         
         displayPanel.add(treePanel);
         
-    	helpDocumentPanel.setHeaderVisible(false);
-    	helpDocumentPanel.setAutoHeight(true);
-    	helpDocumentPanel.setUrl("Help/index.html");
-    	
-    	displayPanel.add(helpDocumentPanel);
-		displayWindow.add(displayPanel);
-		displayWindow.show();
-		  
-	}
+        helpDocumentPanel.setHeaderVisible(false);
+        helpDocumentPanel.setAutoHeight(true);
+        helpDocumentPanel.setUrl("Help/index.html");
 
-	private void getTreeModelFailed(Throwable caught) {
-		caught.printStackTrace();
-		this.failMessage = new Label(caught.getMessage());
-    	this.displayWindow.add(failMessage);
-    	this.displayWindow.show();
-	}
-	
-	/**
-	 * Method used to transfer the nodes of a LibrayNode based tree to
-	 * a BaseTreeModel based tree of Folder and Document objects for use
-	 * in a GXT display
-	 * @param node 
-	 * 		A LibraryNode object that was returned from the server
-	 * @return 
-	 * 		The equivalent BaseTreeModel node (Folder or Document) for display
-	 * 		in a GXT Widget.
-	 */
-	private BaseTreeModel parseLibraryNode(LibraryNode node, TreeModel parent,
-			DrakeGeneticsServiceAsync drakeGeneticsService) {
-		BaseTreeModel displayNode = null;
-		final LibraryNode fNode = node;
-		if (node.isDocument()) {
-			
-			final Document document = new Document(node.getDisplayName(), node.getFileName());
-			if (parent != null) {
-				document.setParent(parent);
-			}
-			
-			//  Add code here to actually fetch the document and add it to
-			//  the Document object
-			List<String> path = new ArrayList<String>();
-			path.add(document.getDocument());
-			Folder fParent = (Folder)parent;
-			path.add(fParent.getName());
-			Folder curParent = (Folder)parent.getParent();
-			while (curParent != null) {
-				if (! curParent.getName().equals("Help"))
-					path.add(curParent.getName());
-				curParent = (Folder)curParent.getParent();
-			}
-			Collections.reverse(path);
-			
-			drakeGeneticsService.getHelpDocument(path, new AsyncCallback<String>() {
-				public void onSuccess(String documentUrl) {
-					document.setUrl(documentUrl);
-				}
+        displayPanel.add(helpDocumentPanel);
+        displayWindow.add(displayPanel);
+        displayWindow.show();
 
-				public void onFailure(Throwable caught) {
-					getTreeModelFailed(caught);
-				}
-			});
-			displayNode = document;
-		
-		}
-		else if (node.isLeaf()) {
-			displayNode = new Folder(node.getData());
-			if (parent != null) {
-				displayNode.setParent(parent);
-			}
-			
-		}
-		else {
-			displayNode = new Folder(node.getData());
-			if (parent != null) {
-				displayNode.setParent(parent);
-			}
-			for (int i = 0; i < node.getChildCount(); i++) {
-				if (node.getChild(i).getData().equals("index.html") &&
-						displayNode.get("name").equals("Help"))
-					continue;
-				displayNode.add(parseLibraryNode((LibraryNode)node.getChild(i),
-						displayNode,
-						drakeGeneticsService));
-			}
-		}
-		
-		return displayNode;		
-	}
-	
-	public Label getFailMessage() {
-		return this.failMessage;
-	}
+    }
+
+    private void getTreeModelFailed(Throwable caught) {
+        caught.printStackTrace();
+        this.failMessage = new Label(caught.getMessage());
+        this.displayWindow.add(failMessage);
+        this.displayWindow.show();
+    }
+
+    /**
+     * Method used to transfer the nodes of a LibrayNode based tree to a
+     * BaseTreeModel based tree of Folder and Document objects for use in a GXT
+     * display
+     * 
+     * @param node
+     *            A LibraryNode object that was returned from the server
+     * @return The equivalent BaseTreeModel node (Folder or Document) for
+     *         display in a GXT Widget.
+     */
+    private BaseTreeModel parseLibraryNode(LibraryNode node, TreeModel parent,
+            DrakeGeneticsServiceAsync drakeGeneticsService) {
+        BaseTreeModel displayNode = null;
+
+        if (node.isDocument()) {
+
+            final Document document = new Document(node.getDisplayName(),
+                    node.getFileName());
+            if (parent != null) {
+                document.setParent(parent);
+            }
+
+            // Add code here to actually fetch the document and add it to
+            // the Document object
+            List<String> path = new ArrayList<String>();
+            path.add(document.getDocument());
+            Folder fParent = (Folder) parent;
+            if (! fParent.getName().equals("/Help/")) {
+                path.add(fParent.getName());
+                Folder curParent = (Folder) parent.getParent();
+                while (curParent != null) {
+                    if (!curParent.getName().equals("/Help/"))
+                        path.add(curParent.getName());
+                    curParent = (Folder) curParent.getParent();
+                }
+            }
+            Collections.reverse(path);
+            GWT.log(path.toString());
+
+            drakeGeneticsService.getHelpDocument(path,
+                    new AsyncCallback<String>() {
+                        public void onSuccess(String documentUrl) {
+                            document.setUrl(documentUrl);
+                        }
+
+                        public void onFailure(Throwable caught) {
+                            getTreeModelFailed(caught);
+                        }
+                    });
+            displayNode = document;
+
+        } else if (node.isLeaf()) {
+            displayNode = new Folder(node.getData());
+            if (parent != null) {
+                displayNode.setParent(parent);
+            }
+
+        } else {
+            displayNode = new Folder(node.getData());
+            if (parent != null) {
+                displayNode.setParent(parent);
+            }
+            for (int i = 0; i < node.getChildCount(); i++) {
+                /*if (node.getChild(i).getData().equals("index.html")
+                        && displayNode.get("name").equals("/Help/"))
+                    continue;*/
+                displayNode.add(parseLibraryNode(
+                        (LibraryNode) node.getChild(i), displayNode,
+                        drakeGeneticsService));
+            }
+        }
+
+        return displayNode;
+    }
+
+    public Label getFailMessage() {
+        return this.failMessage;
+    }
 }

@@ -95,6 +95,30 @@ public class Chromosome implements Serializable
     {
         this.crossovers = crossovers;
     }
+
+    /**
+     * Return the HaplotypeId string at a position on the chromosome
+     * @param cm position in centimorgans
+     * @return haplotypeId at this position
+     */
+    public String getHaplotypeAtPosition(double cm)
+    {
+        String haplotypeId = null;
+        
+        for (CrossoverPoint crossover : crossovers) {
+           if (crossover.getCentimorganPosition() <= cm) {
+               haplotypeId = crossover.getDistalHaplotypeId();
+           }
+           else {
+               /* we've gone past the CrossoverPoint containing this position,
+                * we're done.
+                */
+               break;
+           }
+        }
+
+        return haplotypeId;        
+    }
     
     /**
      * Hash all of the given chromosomes by their chromosome name

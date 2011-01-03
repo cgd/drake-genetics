@@ -17,10 +17,12 @@
 
 package org.jax.drakegenetics.server;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsService;
@@ -40,21 +42,29 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
      */
     private static final long serialVersionUID = -4876385760655645346L;
     //replace the next two constants with properties...for testing only
-    private static final String LIBRARY_ROOT = "/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-client/src/www/Library";
-    private static final String HELP_ROOT = "/Users/dow/Documents/workspace/CGDEDU/drake-genetics/modules/drake-genetics-client/src/www/Help";
+    private static final String LIBRARY_ROOT = "/Library/";
+    private static final String HELP_ROOT = "/Help/";
     
 
     private final ReproductionSimulator reproductionSimulator =
         new ReproductionSimulator();
-    private StaticDocumentLibrary libraryController;
-    private StaticDocumentLibrary helpController;
- 
-    public void init() throws ServletException {
-        ServletContext context = this.getServletContext();
-        libraryController =
-        	new StaticDocumentLibrary(new File(context.getInitParameter("library.home")));
-        helpController =
-        	new StaticDocumentLibrary(new File(context.getInitParameter("help.home")));        
+    private StaticDocumentLibrary libraryController = null;
+    private StaticDocumentLibrary helpController = null;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void init(ServletConfig config) throws ServletException
+    {
+        super.init(config);
+        
+        this.libraryController = new StaticDocumentLibrary(
+                DrakeGeneticsServiceImpl.LIBRARY_ROOT,
+                config.getServletContext());
+        this.helpController = new StaticDocumentLibrary(
+                DrakeGeneticsServiceImpl.HELP_ROOT,
+                config.getServletContext());
     }
     
     /**
@@ -115,10 +125,10 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
      */
     public String getPublication(String journal, String volume, String article)
     {
-    	List<String> nodes = new ArrayList<String>();
-    	nodes.add(journal);
-    	nodes.add(volume);
-    	nodes.add(article);
+        List<String> nodes = new ArrayList<String>();
+        nodes.add(journal);
+        nodes.add(volume);
+        nodes.add(article);
         try
         {
             return this.libraryController.getDocumentURL(nodes);

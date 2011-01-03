@@ -26,11 +26,11 @@ public class LibraryNode extends TreeNode<String> {
     private static final long serialVersionUID = 1L;
     private boolean isDocument;
 
-    /** This constructor is to support inherited Serializable interface.
-     * 
+    /**
+     * This constructor is to support inherited Serializable interface.
      */
     public LibraryNode() {
-    	super();
+        super();
     }
     
     public LibraryNode(String name) {
@@ -43,7 +43,7 @@ public class LibraryNode extends TreeNode<String> {
         this.isDocument = isDocument;
     }
 
-    public boolean isDocument() {
+    public boolean getIsDocument() {
         return isDocument;
     }
 
@@ -81,7 +81,4 @@ public class LibraryNode extends TreeNode<String> {
         }
         return sb.toString();
     }
-
-
-
 }

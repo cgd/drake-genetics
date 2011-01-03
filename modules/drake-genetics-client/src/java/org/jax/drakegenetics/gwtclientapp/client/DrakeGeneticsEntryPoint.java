@@ -44,8 +44,8 @@ public class DrakeGeneticsEntryPoint implements EntryPoint
 
         this.drakeGeneticsService = GWT.create(DrakeGeneticsService.class);
         DrakeQuestBaseInterface drakeQuestBaseInterface = 
-        	new DrakeQuestBaseInterface(this.drakeGeneticsService, 
-        			RootPanel.get("drakeQuestContainer"));
+            new DrakeQuestBaseInterface(this.drakeGeneticsService, 
+                    RootPanel.get("drakeQuestContainer"));
         drakeQuestBaseInterface.init();
         
         DrakeBreedingInterface drakeBreedingInterface = new DrakeBreedingInterface(
