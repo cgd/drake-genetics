@@ -1,6 +1,7 @@
 package org.jax.drakegenetics.gwtclientapp.client;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 

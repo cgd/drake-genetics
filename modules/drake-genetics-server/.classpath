@@ -7,8 +7,8 @@
 	<classpathentry kind="lib" path="lib/jersey-server-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/jsr311-api-1.0.3.jar"/>
 	<classpathentry kind="lib" path="lib/jersey-multipart-1.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/gwt-servlet-2.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/servlet-api-2.5.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/drake-genetics-client"/>
 	<classpathentry kind="output" path="eclipse-output"/>
 </classpath>

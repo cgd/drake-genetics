@@ -22,21 +22,21 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 
-public class HelpData {
+public class LibraryData {
 
 	private Label failMessage = null;
 	private Folder root = null;
-	private Window displayWindow;
-	private final ContentPanel helpDocumentPanel = new ContentPanel();
+	private ContentPanel displayPanel;
+	private final ContentPanel libraryDocumentPanel = new ContentPanel();
 	
-	public HelpData (Window w) {
-		this.displayWindow = w;
+	public LibraryData (ContentPanel p) {
+		this.displayPanel = p;
 	}
 	
 	public Folder getTreeModel(DrakeGeneticsServiceAsync drakeGeneticsService)   
 	  {  
 		  final DrakeGeneticsServiceAsync dgs = drakeGeneticsService;
-	      drakeGeneticsService.getHelp(new AsyncCallback<LibraryNode> ()
+	      drakeGeneticsService.getLibrary(new AsyncCallback<LibraryNode> ()
           {
               public void onSuccess(LibraryNode results)
               {
@@ -69,12 +69,12 @@ public class HelpData {
 				ModelData item = be.getItem();
 				String url = (String)item.get("url");
 				if (url != null && ! url.equals("")) {
-					helpDocumentPanel.setUrl(url);
+					libraryDocumentPanel.setUrl(url);
 				}
 			}
 		});
-        HorizontalPanel displayPanel = new HorizontalPanel();
-        displayPanel.setLayout(new FitLayout());
+        HorizontalPanel displaySubPanel = new HorizontalPanel();
+        displaySubPanel.setLayout(new FitLayout());
         //displayPanel.setTableWidth("100%");
         //displayPanel.setTableHeight("100%");
         //displayPanel.setHorizontalAlign(HorizontalAlignment.LEFT);
@@ -86,21 +86,21 @@ public class HelpData {
         
         displayPanel.add(treePanel);
         
-    	helpDocumentPanel.setHeaderVisible(false);
-    	helpDocumentPanel.setAutoHeight(true);
-    	helpDocumentPanel.setUrl("Help/index.html");
+    	libraryDocumentPanel.setHeaderVisible(false);
+    	libraryDocumentPanel.setAutoHeight(true);
+    	libraryDocumentPanel.setUrl("Library/index.html");
     	
-    	displayPanel.add(helpDocumentPanel);
-		displayWindow.add(displayPanel);
-		displayWindow.show();
+    	displaySubPanel.add(libraryDocumentPanel);
+		displayPanel.add(displaySubPanel);
+		displayPanel.show();
 		  
 	}
 
 	private void getTreeModelFailed(Throwable caught) {
 		caught.printStackTrace();
 		this.failMessage = new Label(caught.getMessage());
-    	this.displayWindow.add(failMessage);
-    	this.displayWindow.show();
+    	this.displayPanel.add(failMessage);
+    	this.displayPanel.show();
 	}
 	
 	/**
@@ -119,6 +119,7 @@ public class HelpData {
 		final LibraryNode fNode = node;
 		if (node.isDocument()) {
 			
+			GWT.log(node.getDisplayName() + "--" + node.getFileName());
 			final Document document = new Document(node.getDisplayName(), node.getFileName());
 			if (parent != null) {
 				document.setParent(parent);
@@ -126,20 +127,17 @@ public class HelpData {
 			
 			//  Add code here to actually fetch the document and add it to
 			//  the Document object
-			List<String> path = new ArrayList<String>();
-			path.add(document.getDocument());
+			String pub = document.getDocument();
+			GWT.log(pub);
 			Folder fParent = (Folder)parent;
-			path.add(fParent.getName());
-			Folder curParent = (Folder)parent.getParent();
-			while (curParent != null) {
-				if (! curParent.getName().equals("Help"))
-					path.add(curParent.getName());
-				curParent = (Folder)curParent.getParent();
-			}
-			Collections.reverse(path);
-			
-			drakeGeneticsService.getHelpDocument(path, new AsyncCallback<String>() {
+			String vol = fParent.getName();
+			GWT.log(vol);
+			Folder grandParent = (Folder)parent.getParent();
+			String journal = grandParent.getName();
+			drakeGeneticsService.getPublication(journal, vol, pub, new AsyncCallback<String>() {
 				public void onSuccess(String documentUrl) {
+					GWT.log(document.getName());
+					GWT.log(" Node URL = " + documentUrl);
 					document.setUrl(documentUrl);
 				}
 
@@ -164,7 +162,7 @@ public class HelpData {
 			}
 			for (int i = 0; i < node.getChildCount(); i++) {
 				if (node.getChild(i).getData().equals("index.html") &&
-						displayNode.get("name").equals("Help"))
+						displayNode.get("name").equals("Library"))
 					continue;
 				displayNode.add(parseLibraryNode((LibraryNode)node.getChild(i),
 						displayNode,

@@ -8,21 +8,33 @@ public class Document extends BaseTreeModel {
 	 public Document() {  
 	   }  
 	   
-	   public Document(String name) {  
+	   public Document(String name, String document) {  
 	     set("name", name);  
-	     set("document", "");  
+	     set("document", document);
+	     set("url", "");  
 	   }  
 	   
+	   public Document(String name, String document, 
+			   String documentUrl) {  
+		     set("name", name);  
+		     set("document", document);
+		     set("url", documentUrl);  
+		   }  
+		   
 	   public String getName() {  
 	     return (String) get("name");  
 	   }  
 	   
-	   public void setDoucment(String document) {
-		   set("document",document);
+	   public String getDocument() {  
+		     return (String) get("document");  
+		   }  
+		   
+	   public void setUrl(String documentUrl) {
+		   set("url",documentUrl);
 	   }
 	   
-	   public String getDocument() {  
-		   return (String) get("document");  
+	   public String getUrl() {  
+		   return (String) get("url");  
 	   }  
 		   
 	   public String toString() {  

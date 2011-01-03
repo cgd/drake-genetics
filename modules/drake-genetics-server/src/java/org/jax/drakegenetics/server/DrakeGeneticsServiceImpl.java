@@ -20,6 +20,8 @@ package org.jax.drakegenetics.server;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsService;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
@@ -44,11 +46,16 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
 
     private final ReproductionSimulator reproductionSimulator =
         new ReproductionSimulator();
-    private final StaticDocumentLibrary libraryController =
-    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.LIBRARY_ROOT));
-    private final StaticDocumentLibrary helpController =
-    	new StaticDocumentLibrary(new File(DrakeGeneticsServiceImpl.HELP_ROOT),
-    			"HelpRoot");
+    private StaticDocumentLibrary libraryController;
+    private StaticDocumentLibrary helpController;
+ 
+    public void init() throws ServletException {
+        ServletContext context = this.getServletContext();
+        libraryController =
+        	new StaticDocumentLibrary(new File(context.getInitParameter("library.home")));
+        helpController =
+        	new StaticDocumentLibrary(new File(context.getInitParameter("help.home")));        
+    }
     
     /**
      * {@inheritDoc}
@@ -114,7 +121,7 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     	nodes.add(article);
         try
         {
-            return this.libraryController.retrieveDocument(nodes);
+            return this.libraryController.getDocumentURL(nodes);
         }
         catch(Exception ex)
         {
@@ -130,7 +137,7 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     {
         try
         {
-            return this.helpController.retrieveDocument(documentTreePath);
+            return this.helpController.getDocumentURL(documentTreePath);
         }
         catch(Exception ex)
         {
