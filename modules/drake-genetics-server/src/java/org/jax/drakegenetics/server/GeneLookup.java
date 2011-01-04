@@ -31,6 +31,9 @@ public class GeneLookup {
     private Map<String, Gene> nameToGene;
     private Map<String, Gene> symbolToGene;
 
+    /**
+     * Constructor
+     */
     public GeneLookup()
     {
         nameToGene = new HashMap<String, Gene>();
@@ -109,12 +112,20 @@ public class GeneLookup {
         
     }
 
+    /**
+     * add a Gene to the internal directory
+     * @param gene
+     */
     public void addGene(Gene gene)
     {
         nameToGene.put(gene.getName(), gene);
         symbolToGene.put(gene.getSymbol(), gene);
     }
 
+    /**
+     * Set the genes referenced by this GeneLookup
+     * @param genes
+     */
     public void setGenes(List<Gene> genes)
     {
         nameToGene.clear();
@@ -124,16 +135,30 @@ public class GeneLookup {
         }
     }
 
+    /**
+     * Lookup a Gene by the gene name
+     * @param name of Gene to lookup
+     * @return Gene with this name
+     */
     public Gene getGeneByName(String name)
     {
         return nameToGene.get(name);
     }
 
+    /**
+     * Lookup a Gene by gene symbol
+     * @param symbol the gene symbol to lookup
+     * @return Gene with this gene symbol
+     */
     public Gene getGeneBySymbol(String symbol)
     {
         return symbolToGene.get(symbol);
     }
 
+    /**
+     * Get a list of all Genes
+     * @return a List of all Genes
+     */
     public List<Gene> getGenes()
     {
         return new ArrayList<Gene>(nameToGene.values());
