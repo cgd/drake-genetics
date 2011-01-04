@@ -82,13 +82,27 @@ public interface DrakeGeneticsServiceAsync
             AsyncCallback<String> callback);
 
     /**
+     * For fetching a specific publication from the library. 
+     * 
+     * @param documentTreePath
+     *          A list representing the path in the tree structure to the
+     *          specific publication.
+     * @param callback 
+     *          callback containing specific publication as a URL.  
+     *          Expected that these are html based documents for formatting 
+     *          purposes. 
+     */
+    public void getPublication(List<String> documentTreePath,
+            AsyncCallback<String> callback);
+
+    /**
      * For fetching a specific document from the user help.  
      * 
      * @param documentTreePath
      *          A list representing the path in the tree structure to the
      *          specific help page.
      * @param callback 
-     *          callback containing specific help document as a string.  
+     *          callback containing specific help document as a URL.  
      *          Expected that these are html based documents for formatting 
      *          purposes. 
      */

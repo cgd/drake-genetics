@@ -143,6 +143,21 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     /**
      * {@inheritDoc}
      */
+    public String getPublication(List<String> documentTreePath)
+    {
+        try
+        {
+            return this.libraryController.getDocumentURL(documentTreePath);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+    /**
+     * {@inheritDoc}
+     */
     public String getHelpDocument(List<String> documentTreePath)
     {
         try

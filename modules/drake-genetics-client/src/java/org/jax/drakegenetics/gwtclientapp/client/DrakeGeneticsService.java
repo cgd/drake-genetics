@@ -81,13 +81,25 @@ public interface DrakeGeneticsService extends RemoteService
     public String getPublication(String journal, String volume, String article);
 
     /**
+     * For fetching a specific publication from the library.  
+     * 
+     * @param documentTreePath
+     *          A list representing the path in the tree structure to the
+     *          specific publication.
+     * @return
+     *          a specific publication as a URL.  Expected that these
+     *          are html based documents for formatting purposes. 
+     */
+    public String getPublication(List<String> documentTreePath);
+
+    /**
      * For fetching a specific document from the user help.  
      * 
      * @param documentTreePath
      *          A list representing the path in the tree structure to the
      *          specific help page.
      * @return
-     *          a specific help document as a string.  Expected that these
+     *          a specific help document as a URL.  Expected that these
      *          are html based documents for formatting purposes. 
      */
     public String getHelpDocument(List<String> documentTreePath);

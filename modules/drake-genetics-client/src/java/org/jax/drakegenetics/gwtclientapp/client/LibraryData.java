@@ -14,9 +14,8 @@ import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
-import com.extjs.gxt.ui.client.widget.Window;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.treepanel.TreePanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -26,11 +25,56 @@ public class LibraryData {
 
     private Label failMessage = null;
     private Folder root = null;
-    private ContentPanel displayPanel;
+    private HorizontalPanel libraryPanel = new HorizontalPanel();
     private final ContentPanel libraryDocumentPanel = new ContentPanel();
+    private ContentPanel treePanel = new ContentPanel();
+    private TreeStore<ModelData> store = new TreeStore<ModelData>();
+    private TreePanel<ModelData> tree = new TreePanel<ModelData>(store);
 
-    public LibraryData(ContentPanel p) {
-        this.displayPanel = p;
+    public LibraryData(HorizontalPanel lp, 
+            DrakeGeneticsServiceAsync drakeGeneticsService) {
+        this.libraryPanel = lp;
+
+        final DrakeGeneticsServiceAsync dgs = drakeGeneticsService;
+        drakeGeneticsService.getLibrary(new AsyncCallback<LibraryNode>() {
+            public void onSuccess(LibraryNode results) {
+                getTreeModelSucceeded(results, dgs);
+            }
+
+            public void onFailure(Throwable caught) {
+                getTreeModelFailed(caught);
+            }
+        });
+
+        treePanel.setHeaderVisible(true);
+        treePanel.setLayout(new FitLayout());
+        treePanel.setHeading("Publications");
+
+        tree.setDisplayProperty("name");
+        tree.setWidth(200);
+        tree.setHeight(450);
+        tree.addListener(Events.OnClick,
+                new Listener<TreePanelEvent<ModelData>>() {
+
+                    public void handleEvent(TreePanelEvent<ModelData> be) {
+                        ModelData item = be.getItem();
+                        String url = (String) item.get("url");
+                        if (url != null && !url.equals("")) {
+                            libraryDocumentPanel.setUrl(url);
+                        }
+                    }
+                });
+
+        treePanel.add(tree);
+
+        libraryPanel.add(treePanel);
+
+        libraryDocumentPanel.setHeaderVisible(false);
+        libraryDocumentPanel.setWidth(494);
+        libraryDocumentPanel.setHeight(451);
+        libraryDocumentPanel.setUrl("Library/index.html");
+        libraryPanel.add(libraryDocumentPanel);
+
     }
 
     public Folder getTreeModel(DrakeGeneticsServiceAsync drakeGeneticsService) {
@@ -53,51 +97,15 @@ public class LibraryData {
 
         this.root = (Folder) parseLibraryNode(results, null,
                 drakeGeneticsService);
-        TreeStore<ModelData> store = new TreeStore<ModelData>();
         store.add(this.root.getChildren(), true);
-        final TreePanel<ModelData> tree = new TreePanel<ModelData>(store);
-        tree.setDisplayProperty("name");
-        tree.setWidth(200);
-        tree.setAutoHeight(true);
-        tree.addListener(Events.OnClick,
-                new Listener<TreePanelEvent<ModelData>>() {
-
-                    public void handleEvent(TreePanelEvent<ModelData> be) {
-                        ModelData item = be.getItem();
-                        String url = (String) item.get("url");
-                        if (url != null && !url.equals("")) {
-                            libraryDocumentPanel.setUrl(url);
-                        }
-                    }
-                });
-        HorizontalPanel displaySubPanel = new HorizontalPanel();
-        displaySubPanel.setLayout(new FitLayout());
-        // displayPanel.setTableWidth("100%");
-        // displayPanel.setTableHeight("100%");
-        // displayPanel.setHorizontalAlign(HorizontalAlignment.LEFT);
-        // displayPanel.setSpacing(1);
-
-        ContentPanel treePanel = new ContentPanel();
-        treePanel.setHeaderVisible(false);
-        treePanel.add(tree);
-
-        displayPanel.add(treePanel);
-
-        libraryDocumentPanel.setHeaderVisible(false);
-        libraryDocumentPanel.setAutoHeight(true);
-        libraryDocumentPanel.setUrl("Library/index.html");
-
-        displaySubPanel.add(libraryDocumentPanel);
-        displayPanel.add(displaySubPanel);
-        displayPanel.show();
-
+        //tree.show();
     }
 
     private void getTreeModelFailed(Throwable caught) {
         caught.printStackTrace();
         this.failMessage = new Label(caught.getMessage());
-        this.displayPanel.add(failMessage);
-        this.displayPanel.show();
+        this.libraryPanel.add(failMessage);
+        //this.libraryPanel.show();
     }
 
     /**
@@ -113,7 +121,7 @@ public class LibraryData {
     private BaseTreeModel parseLibraryNode(LibraryNode node, TreeModel parent,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         BaseTreeModel displayNode = null;
-        final LibraryNode fNode = node;
+        
         if (node.isDocument()) {
 
             GWT.log(node.getDisplayName() + "--" + node.getFileName());
@@ -125,19 +133,28 @@ public class LibraryData {
 
             // Add code here to actually fetch the document and add it to
             // the Document object
-            String pub = document.getDocument();
-            GWT.log(pub);
+            List<String> path = new ArrayList<String>();
+            path.add(document.getDocument());
             Folder fParent = (Folder) parent;
-            String vol = fParent.getName();
-            GWT.log(vol);
-            Folder grandParent = (Folder) parent.getParent();
-            String journal = grandParent.getName();
-            drakeGeneticsService.getPublication(journal, vol, pub,
+            if (! fParent.getName().equals("/Library/")) {
+                path.add(fParent.getName());
+                Folder curParent = (Folder) parent.getParent();
+                while (curParent != null) {
+                    if (!curParent.getName().equals("/Library/"))
+                        path.add(curParent.getName());
+                    curParent = (Folder) curParent.getParent();
+                }
+            }
+            Collections.reverse(path);
+            GWT.log(path.toString());
+            
+            drakeGeneticsService.getPublication(path,
                     new AsyncCallback<String>() {
                         public void onSuccess(String documentUrl) {
                             GWT.log(document.getName());
                             GWT.log(" Node URL = " + documentUrl);
                             document.setUrl(documentUrl);
+                            tree.repaint();
                         }
 
                         public void onFailure(Throwable caught) {
@@ -158,9 +175,6 @@ public class LibraryData {
                 displayNode.setParent(parent);
             }
             for (int i = 0; i < node.getChildCount(); i++) {
-                if (node.getChild(i).getData().equals("index.html")
-                        && displayNode.get("name").equals("Library"))
-                    continue;
                 displayNode.add(parseLibraryNode(
                         (LibraryNode) node.getChild(i), displayNode,
                         drakeGeneticsService));
@@ -173,4 +187,5 @@ public class LibraryData {
     public Label getFailMessage() {
         return this.failMessage;
     }
+    
 }

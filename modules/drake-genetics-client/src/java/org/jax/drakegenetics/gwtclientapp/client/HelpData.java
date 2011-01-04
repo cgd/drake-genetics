@@ -91,6 +91,8 @@ public class HelpData {
         displayPanel.add(helpDocumentPanel);
         displayWindow.add(displayPanel);
         displayWindow.show();
+        GWT.log("Showing Display Window");
+
 
     }
 
@@ -143,6 +145,8 @@ public class HelpData {
             drakeGeneticsService.getHelpDocument(path,
                     new AsyncCallback<String>() {
                         public void onSuccess(String documentUrl) {
+                            GWT.log(document.getName());
+                            GWT.log(" Node URL = " + documentUrl);
                             document.setUrl(documentUrl);
                         }
 
@@ -164,9 +168,6 @@ public class HelpData {
                 displayNode.setParent(parent);
             }
             for (int i = 0; i < node.getChildCount(); i++) {
-                /*if (node.getChild(i).getData().equals("index.html")
-                        && displayNode.get("name").equals("/Help/"))
-                    continue;*/
                 displayNode.add(parseLibraryNode(
                         (LibraryNode) node.getChild(i), displayNode,
                         drakeGeneticsService));

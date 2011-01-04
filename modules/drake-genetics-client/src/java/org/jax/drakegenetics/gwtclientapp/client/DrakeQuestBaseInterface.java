@@ -18,18 +18,24 @@
 package org.jax.drakegenetics.gwtclientapp.client;
 
 
+import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <A HREF="mailto:dave.walton@jax.org">Dave Walton</A>
@@ -41,10 +47,15 @@ public class DrakeQuestBaseInterface
     private final DrakeGeneticsServiceAsync drakeGeneticsService;
     private final Panel panel;
     private final VerticalPanel masterPanel = new VerticalPanel();
+    private final HorizontalPanel libraryPanel = new HorizontalPanel();
+    private boolean libraryInitialized = false;
     private final Window helpWindow = new Window();
+    private boolean helpInitialized = false;
     private boolean showSplash;
     private final ContentPanel bannerPanel = new ContentPanel();
     private final ContentPanel mainPanel = new ContentPanel();
+    private final ContentPanel mainBackground = new ContentPanel();
+
    
     /**
      * instantiation of a selection listener for the Help Button in the
@@ -63,32 +74,49 @@ public class DrakeQuestBaseInterface
              * Then each onSuccess calls "showWindowIfContentLoaded(...)". 
              * This function starts with if(this.content1Loaded && this.content2Loaded){ ...}
              */
-            helpWindow.setHeading("Drake Quest User Help");
-            helpWindow.setSize(600, 400);
-            helpWindow.setMaximizable(true);
-            //helpWindow.setToolTip("The Drake Quest Help Page...");
-            HelpData hd = new HelpData(helpWindow);
-            Folder helpTree = hd.getTreeModel(drakeGeneticsService);
-        }};
+            if (! helpInitialized) {
+                helpWindow.setHeading("Drake Quest User Help");
+                helpWindow.setSize(600, 400);
+                helpWindow.setMaximizable(true);
+                // helpWindow.setToolTip("The Drake Quest Help Page...");
+                HelpData hd = new HelpData(helpWindow);
+                Folder helpTree = hd.getTreeModel(drakeGeneticsService);
+                helpInitialized = true;
+            } else {
+                helpWindow.show();
+            }
+            
+            }
+        };
 
-    	private final SelectionListener<ButtonEvent> LibraryButtonListener = 
-    		new SelectionListener<ButtonEvent>() {  
-        	  
-            @Override  
-            public void componentSelected(ButtonEvent ce) {  
-            	/*  Keith suggestion for making it all display when content loaded
-            	 * 
-            	 * for each onSuccess you set "this.content1Loaded = true" 
-            	 * for the 1st pane's content and "this.content2Loaded = true" 
-            	 * for the second pane's content. 
-            	 * Then each onSuccess calls "showWindowIfContentLoaded(...)". 
-            	 * This function starts with if(this.content1Loaded && this.content2Loaded){ ...}
-            	 */
-    			LibraryData ld = new LibraryData(mainPanel);
-    			Folder libraryTree = ld.getTreeModel(drakeGeneticsService);
-                	       	
-            }};
+    private final SelectionListener<ButtonEvent> LibraryButtonListener = new SelectionListener<ButtonEvent>() {
 
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+            /*
+             * Keith suggestion for making it all display when content loaded
+             * 
+             * for each onSuccess you set "this.content1Loaded = true" for the
+             * 1st pane's content and "this.content2Loaded = true" for the
+             * second pane's content. Then each onSuccess calls
+             * "showWindowIfContentLoaded(...)". This function starts with
+             * if(this.content1Loaded && this.content2Loaded){ ...}
+             */
+            // First I have to remove the image widget from the panel so the
+            // panel will be empty.
+            //mainPanel.removeAll();
+            if (! libraryInitialized) {
+                mainBackground.hide();
+                libraryPanel.show();
+
+                libraryInitialized = true;
+            } else {
+                mainBackground.hide();
+                libraryPanel.show();
+            }
+            libraryPanel.layout(true);
+        }
+    };
 
     /**
      * Constructor
@@ -128,6 +156,8 @@ public class DrakeQuestBaseInterface
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                libraryPanel.hide();
+                mainBackground.show();
                 Info.display("Not Yet Implemented", "The "
                         + ce.getButton().getText()
                         + " functionality has not yet been implemented");
@@ -162,8 +192,19 @@ public class DrakeQuestBaseInterface
         mainPanel.setHeaderVisible(false);
         mainPanel.setSize(694, 451);
         mainPanel.setBodyStyle("backgroundColor: #ede9e3");
+
+        libraryPanel.hide();
+        LibraryData ld = new LibraryData(libraryPanel, drakeGeneticsService);
+        //Folder libraryTree = ld.getTreeModel(drakeGeneticsService);
+
+        mainPanel.add(libraryPanel);
+        
+        mainBackground.setHeaderVisible(false);
+        mainBackground.setBodyStyle("backgroundColor: #ede9e3");
+        mainBackground.setBodyBorder(false);
+        mainBackground.add(new Image(SPLASH_IMAGE_PATH));
         if (this.showSplash) {
-            mainPanel.add(new Image(SPLASH_IMAGE_PATH));
+            mainPanel.add(mainBackground);
         }
 
         masterPanel.add(mainPanel);
