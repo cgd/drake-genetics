@@ -64,7 +64,7 @@ public class StaticDocumentLibrary {
     /**
      * get the URL of a document
      * @param nodes an List containing the path through the child nodes to the document
-     * @return relative path to document
+     * @return URL for the document
      * @throws FileNotFoundException
      */
     public String getDocumentURL(List<String> nodes)
@@ -78,17 +78,15 @@ public class StaticDocumentLibrary {
 
 
 
-        //build the relative path
-
-        StringBuilder relativePath = new StringBuilder(root.getData());
+        //build the url path
+        StringBuilder url = new StringBuilder(root.getData());
         for (int i = 0; i < nodes.size(); i++) {
-            relativePath.append(File.separator);
-            relativePath.append(nodes.get(i));
+            url.append(File.separator);
+            url.append(nodes.get(i));
             
         }
-        
 
-        return relativePath.toString();
+        return url.toString();
     }
 
 
