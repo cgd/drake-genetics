@@ -1,3 +1,20 @@
+/*
+ * Copyright (c) 2010 The Jackson Laboratory
+ * 
+ * This is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this software.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package org.jax.drakegenetics.gwtclientapp.client;
 
 import java.util.ArrayList;
@@ -13,6 +30,7 @@ import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.store.TreeStore;
+import com.extjs.gxt.ui.client.widget.BoxComponent;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Window;
@@ -22,6 +40,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Label;
 
+/**
+ * @author <A HREF="mailto:dave.walton@jax.org">Dave Walton</A>
+ */
 public class HelpData {
 
     private Label failMessage = null;
@@ -59,8 +80,8 @@ public class HelpData {
         store.add(this.root.getChildren(), true);
         final TreePanel<ModelData> tree = new TreePanel<ModelData>(store);
         tree.setDisplayProperty("name");    
-        tree.setWidth(200); 
-        tree.setAutoHeight(true);
+        tree.setWidth(175); 
+        tree.setHeight(368);
         tree.addListener(Events.OnClick, new Listener<TreePanelEvent<ModelData>>() {
 
                     public void handleEvent(TreePanelEvent<ModelData> be) {
@@ -73,10 +94,6 @@ public class HelpData {
                 });
         HorizontalPanel displayPanel = new HorizontalPanel();
         displayPanel.setLayout(new FitLayout());
-        //displayPanel.setTableWidth("100%");
-        //displayPanel.setTableHeight("100%");
-        //displayPanel.setHorizontalAlign(HorizontalAlignment.LEFT);
-        //displayPanel.setSpacing(1);
         
         ContentPanel treePanel = new ContentPanel();
         treePanel.setHeaderVisible(false);
@@ -85,12 +102,14 @@ public class HelpData {
         displayPanel.add(treePanel);
         
         helpDocumentPanel.setHeaderVisible(false);
-        helpDocumentPanel.setAutoHeight(true);
+        helpDocumentPanel.setWidth(410);
+        helpDocumentPanel.setHeight(370);
         helpDocumentPanel.setUrl("Help/index.html");
 
         displayPanel.add(helpDocumentPanel);
         displayWindow.add(displayPanel);
         displayWindow.show();
+        GWT.log("Window size = " + displayWindow.getSize().toString());
         GWT.log("Showing Display Window");
 
 

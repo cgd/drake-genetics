@@ -18,7 +18,6 @@
 package org.jax.drakegenetics.gwtclientapp.client;
 
 
-import com.extjs.gxt.ui.client.Style.HorizontalAlignment;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
@@ -26,16 +25,12 @@ import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import com.google.gwt.user.client.ui.Widget;
 
 /**
  * @author <A HREF="mailto:dave.walton@jax.org">Dave Walton</A>
@@ -48,10 +43,8 @@ public class DrakeQuestBaseInterface
     private final Panel panel;
     private final VerticalPanel masterPanel = new VerticalPanel();
     private final HorizontalPanel libraryPanel = new HorizontalPanel();
-    private boolean libraryInitialized = false;
     private final Window helpWindow = new Window();
     private boolean helpInitialized = false;
-    private boolean showSplash;
     private final ContentPanel bannerPanel = new ContentPanel();
     private final ContentPanel mainPanel = new ContentPanel();
     private final ContentPanel mainBackground = new ContentPanel();
@@ -87,8 +80,12 @@ public class DrakeQuestBaseInterface
             }
             
             }
-        };
+    };
 
+    /**
+     * instantiation of a selection listener for the Library Button in the
+     * Toolbar.
+     */
     private final SelectionListener<ButtonEvent> LibraryButtonListener = new SelectionListener<ButtonEvent>() {
 
         @Override
@@ -102,18 +99,8 @@ public class DrakeQuestBaseInterface
              * "showWindowIfContentLoaded(...)". This function starts with
              * if(this.content1Loaded && this.content2Loaded){ ...}
              */
-            // First I have to remove the image widget from the panel so the
-            // panel will be empty.
-            //mainPanel.removeAll();
-            if (! libraryInitialized) {
-                mainBackground.hide();
-                libraryPanel.show();
-
-                libraryInitialized = true;
-            } else {
-                mainBackground.hide();
-                libraryPanel.show();
-            }
+            mainBackground.hide();
+            libraryPanel.show();
             libraryPanel.layout(true);
         }
     };
@@ -138,7 +125,6 @@ public class DrakeQuestBaseInterface
         // Banner, menu, login, splash screen
         // When done add to panel, like below
         // this.panel.add(outer panel);
-        this.showSplash = true;
 
         // Place the logo banner first.
         bannerPanel.setHeaderVisible(false);
@@ -203,9 +189,7 @@ public class DrakeQuestBaseInterface
         mainBackground.setBodyStyle("backgroundColor: #ede9e3");
         mainBackground.setBodyBorder(false);
         mainBackground.add(new Image(SPLASH_IMAGE_PATH));
-        if (this.showSplash) {
-            mainPanel.add(mainBackground);
-        }
+        mainPanel.add(mainBackground);
 
         masterPanel.add(mainPanel);
 
@@ -225,10 +209,6 @@ public class DrakeQuestBaseInterface
                     }
                 });*/
         this.panel.add(masterPanel);
-    }
-    
-    public void showSplashScreen(boolean show) {
-        this.showSplash = show;
     }
     
     private void blahSucceeded(/* return result here */)
