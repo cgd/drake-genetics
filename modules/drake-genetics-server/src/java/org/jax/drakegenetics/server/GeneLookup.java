@@ -41,8 +41,72 @@ public class GeneLookup {
 
     private void init()
     {
+        //hard coded in some Genes for now...
+        Gene gene;
+        List<String> alleles;
 
-        //TODO: going to hard code in some Genes and add them to the Maps here for testing...
+        alleles = new ArrayList<String>();
+        alleles.add("B");
+        alleles.add("b");
+        gene = new Gene("Brown", "Tyrp1", "X", 20.0, 17596, alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("Bog");
+        alleles.add("bog");
+        gene = new Gene("Bog Breath", "Otc", "X", 22.0, 68719, alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("D");
+        alleles.add("d");
+        alleles.add("dl");
+        gene = new Gene("Dilute", "Myo5a", "X", 40.0, 152673, alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("Tr");
+        alleles.add("tr");
+        gene = new Gene("Transformer", "Ar", "X", 53.0, 173494, alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("T");
+        alleles.add("t");
+        gene = new Gene("Tail", "Dll3", "X", 60.0, 10584, alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("Mt");
+        alleles.add("M");
+        alleles.add("m");
+        gene = new Gene("Metalic", "M", "2", 20.0, 259610, alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("F");
+        alleles.add("f");
+        gene = new Gene("Flame", "Xdh", "2", 50.0, 66274, alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("C");
+        alleles.add("c");
+        gene = new Gene("Colorless", "Tyr", "3", 50.0, 64572 , alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("N");
+        alleles.add("n");
+        gene = new Gene("Nick", "Pax6", "3", 70.0, 29514 , alleles);
+        addGene(gene);
+
+        alleles = new ArrayList<String>();
+        alleles.add("A1");
+        alleles.add("A2");
+        gene = new Gene("Armor", "Eda", "3", 90.0, 425156 , alleles);
+        addGene(gene);
+        
     }
 
     public void addGene(Gene gene)

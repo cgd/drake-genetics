@@ -16,13 +16,14 @@
 */
 package org.jax.drakegenetics.shareddata.client;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author gbeane
  */
-public class Gene {
+public class Gene implements Serializable {
 
     private String symbol;
     private String name;
@@ -34,6 +35,17 @@ public class Gene {
 
     public Gene()
     {
+    }
+
+    public Gene(String name, String symbol, String chromosomeName,
+            double startPosition, int length, List<String> alleles)
+    {
+        this.symbol = symbol;
+        this.name = name;
+        this.chromosomeName = chromosomeName;
+        this.startPosition = startPosition;
+        this.length = length;
+        this.alleles = alleles;
     }
 
     public void setSymbol(String symbol)
