@@ -34,6 +34,12 @@ public class PhenoService {
     private GeneLookup geneLookup;
     private GenotypeService genotypeService;
 
+
+    /**
+     *
+     * @param geneLookup
+     * @param genotypeService
+     */
     public PhenoService(GeneLookup geneLookup, GenotypeService genotypeService)
     {
         this.geneLookup = geneLookup;
@@ -41,19 +47,36 @@ public class PhenoService {
     }
 
 
+    /**
+     * 
+     * @param genome
+     * @return
+     */
     public Map<String, String> getPhenome(DiploidGenome genome)
     {
         Map<String, String> phenome = new HashMap<String, String>();
 
         Map<String, List<String>> alleles = getAlleles(genome);
-        phenome.put("Metabolic", getMetabolicPhenotype(alleles));
-        phenome.put("Eye Color", getEyeColor(alleles));
-        phenome.put("Scale Color", getScaleColor(alleles));
-        //TODO add other phenotypes to phenome
 
+        try {
+            phenome.put("Metabolic", getMetabolicPhenotype(alleles));
+            phenome.put("Eye Color", getEyeColor(alleles));
+            phenome.put("Scale Color", getScaleColor(alleles));
+            phenome.put("Eye Morphology", getEyeMorphology(alleles));
+            //TODO add other phenotypes to phenome
+        }
+        catch (LethalAlleleCombination e) {
+            phenome.clear();
+            phenome.put("Lethal", "true");
+        }
         return phenome;
     }
 
+    /**
+     * get the alleles for this genome
+     * @param genome
+     * @return a map of gene symbols to list of alleles for that gene
+     */
     private Map<String, List<String>> getAlleles(DiploidGenome genome)
     {
         Map<String, List<String>> allAlleles = new HashMap<String, List<String>>();
@@ -80,22 +103,29 @@ public class PhenoService {
                 }
             }
 
+            allAlleles.put(gene.getSymbol(), alleles);
+
         }
 
         return allAlleles;
     }
 
+    /**
+     * 
+     * @param alleles
+     * @return
+     */
     private String getMetabolicPhenotype(Map<String, List<String>> alleles)
     {
 
-        List bogBreathAlleles = alleles.get("Bog Breath");
+        List<String> bogBreathAlleles = alleles.get("Otc");
 
         /*
-          Bog/Bog - healthy
-          Bog/bog - healthy
-          bog/bog - bog breath
-          Bog/Y - healthy
-          bog/Y - bog breath
+         * Bog/Bog - healthy
+         * Bog/bog - healthy
+         * bog/bog - bog breath
+         * Bog/Y - healthy
+         * bog/Y - bog breath
         */
 
         /* if the first allele in the list is "bog" ... */
@@ -112,16 +142,82 @@ public class PhenoService {
         return "healthy";
     }
 
+    /**
+     *
+     * @param alleles
+     * @return
+     */
     private String getEyeColor(Map<String, List<String>> alleles)
     {
-        //TODO
-        return "red";
+        List<String> flameAlleles = alleles.get("Xdh");
+
+        /*
+         * F/F - red eye
+         * F/f - gold eye
+         * f/f - white eye
+         */
+
+        if (flameAlleles.get(0).equals("F")) {
+            if (flameAlleles.get(1).equals("F")) {
+                // F/F
+                return "red";
+            }
+            else {
+                // F/f
+                return "gold";
+            }
+        }
+        else if (flameAlleles.get(0).equals("f") && flameAlleles.get(0).equals("F")) {
+            // f/F
+            return "gold";
+        }
+        // f/f
+        return "white";
     }
 
+    private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombination
+    {
+        List<String> nickAlleles = alleles.get("Pax6");
+
+        /*
+         * N/N - lethal
+         * N/n - nicked iris
+         * n/n - normal eye
+         */
+
+        if(nickAlleles.get(0).equals("N")) {
+            if (nickAlleles.get(1).equals("N")) {
+                // N/N
+                throw new LethalAlleleCombination();
+            }
+            else {
+                // N/n
+                return "nicked iris";
+            }
+        }
+        else if (nickAlleles.get(1).equals("N")) {
+            // n/N
+            return "nicked iris";
+        }
+
+        // n/n
+        return "normal eye";
+
+    }
+
+    /**
+    *
+    * @param alleles
+    * @return
+    */
     private String getScaleColor(Map<String, List<String>> alleles)
     {
         //TODO
         return "Frost";
+    }
+
+    private class LethalAlleleCombination extends Exception {
+
     }
 
 }
