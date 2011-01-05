@@ -22,6 +22,8 @@ import java.util.List;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.DrakeSpeciesSingleton;
 
+import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
@@ -33,14 +35,15 @@ import com.google.gwt.user.client.ui.Panel;
 public class DrakeBreedingInterface
 {
     private final DrakeGeneticsServiceAsync drakeGeneticsService;
-    private final Panel panel;
+    private final ContentPanel panel;
 
     /**
      * Constructor
      * @param drakeGeneticsService  the service interface
      * @param panel                 the panel to update
      */
-    public DrakeBreedingInterface(DrakeGeneticsServiceAsync drakeGeneticsService, Panel panel)
+    public DrakeBreedingInterface(DrakeGeneticsServiceAsync drakeGeneticsService, 
+            ContentPanel panel)
     {
         this.drakeGeneticsService = drakeGeneticsService;
         this.panel = panel;
@@ -51,13 +54,32 @@ public class DrakeBreedingInterface
      */
     public void init()
     {
-        DiploidGenome c3hFemale = new DiploidGenome(
-                "C3H", true, DrakeSpeciesSingleton.getInstance());
-        DiploidGenome b6Male = new DiploidGenome(
-                "B6", false, DrakeSpeciesSingleton.getInstance());
+        DiploidGenome female = new DiploidGenome(
+                "P1_M", "P1_P", true, DrakeSpeciesSingleton.getInstance());
+        DiploidGenome male = new DiploidGenome(
+                "P2_M", "P2_P", false, DrakeSpeciesSingleton.getInstance());
         this.drakeGeneticsService.breedPair(
-                c3hFemale,
-                b6Male,
+                female,
+                male,
+                new AsyncCallback<List<DiploidGenome>>()
+                {
+                    public void onSuccess(List<DiploidGenome> offspring)
+                    {
+                        DrakeBreedingInterface.this.f1BreedingSucceeded(offspring);
+                    }
+                    
+                    public void onFailure(Throwable caught)
+                    {
+                        DrakeBreedingInterface.this.breedingFailed(caught);
+                    }
+                });
+    }
+    
+    public void breed(DiploidGenome female, DiploidGenome male)
+    {
+        this.drakeGeneticsService.breedPair(
+                female,
+                male,
                 new AsyncCallback<List<DiploidGenome>>()
                 {
                     public void onSuccess(List<DiploidGenome> offspring)
@@ -137,6 +159,8 @@ public class DrakeBreedingInterface
         offspringText.append("</pre>");
         
         this.panel.add(new HTML(offspringText.toString()));
+        GWT.log(offspringText.toString());
+        this.panel.layout(true);
     }
 
     private void f2BreedingSucceeded(List<DiploidGenome> offspring)
@@ -155,11 +179,14 @@ public class DrakeBreedingInterface
         offspringText.append("</pre>");
         
         this.panel.add(new HTML(offspringText.toString()));
+        GWT.log(offspringText.toString());
+        this.panel.layout(true);
     }
 
     private void breedingFailed(Throwable caught)
     {
         caught.printStackTrace();
         this.panel.add(new Label(caught.getMessage()));
+        this.panel.layout(true);
     }
 }

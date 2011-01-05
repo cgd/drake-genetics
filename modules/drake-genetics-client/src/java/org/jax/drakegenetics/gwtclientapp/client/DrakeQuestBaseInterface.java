@@ -43,6 +43,7 @@ public class DrakeQuestBaseInterface
     private final Panel panel;
     private final VerticalPanel masterPanel = new VerticalPanel();
     private final HorizontalPanel libraryPanel = new HorizontalPanel();
+    private final HorizontalPanel breedingPanel = new HorizontalPanel();
     private final Window helpWindow = new Window();
     private boolean helpInitialized = false;
     private final ContentPanel bannerPanel = new ContentPanel();
@@ -100,8 +101,34 @@ public class DrakeQuestBaseInterface
              * if(this.content1Loaded && this.content2Loaded){ ...}
              */
             mainBackground.hide();
+            breedingPanel.hide();
             libraryPanel.show();
             libraryPanel.layout(true);
+        }
+    };
+
+    /**
+     * instantiation of a selection listener for the Breeding Button in the
+     * Toolbar.
+     */
+    private final SelectionListener<ButtonEvent> BreedingButtonListener = 
+        new SelectionListener<ButtonEvent>() {
+
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+            /*
+             * Keith suggestion for making it all display when content loaded
+             * 
+             * for each onSuccess you set "this.content1Loaded = true" for the
+             * 1st pane's content and "this.content2Loaded = true" for the
+             * second pane's content. Then each onSuccess calls
+             * "showWindowIfContentLoaded(...)". This function starts with
+             * if(this.content1Loaded && this.content2Loaded){ ...}
+             */
+            mainBackground.hide();
+            libraryPanel.hide();
+            breedingPanel.show();
+            breedingPanel.layout(true);
         }
     };
 
@@ -142,6 +169,7 @@ public class DrakeQuestBaseInterface
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                breedingPanel.hide();
                 libraryPanel.hide();
                 mainBackground.show();
                 Info.display("Not Yet Implemented", "The "
@@ -156,7 +184,7 @@ public class DrakeQuestBaseInterface
 
         toolBar.add(new SeparatorToolItem());
 
-        Button item2 = new Button("Breed Drakes", StubButtonListener);
+        Button item2 = new Button("Breed Drakes", this.BreedingButtonListener);
         toolBar.add(item2);
 
         toolBar.add(new SeparatorToolItem());
@@ -179,6 +207,10 @@ public class DrakeQuestBaseInterface
         mainPanel.setSize(694, 451);
         mainPanel.setBodyStyle("backgroundColor: #ede9e3");
 
+        breedingPanel.hide();
+        BreedingPanel bp = new BreedingPanel(breedingPanel, drakeGeneticsService);
+        mainPanel.add(breedingPanel);
+        
         libraryPanel.hide();
         LibraryData ld = new LibraryData(libraryPanel, drakeGeneticsService);
         //Folder libraryTree = ld.getTreeModel(drakeGeneticsService);

@@ -48,10 +48,10 @@ public class DrakeGeneticsEntryPoint implements EntryPoint
                     RootPanel.get("drakeQuestContainer"));
         drakeQuestBaseInterface.init();
         
-        DrakeBreedingInterface drakeBreedingInterface = new DrakeBreedingInterface(
-                this.drakeGeneticsService,
-                RootPanel.get("drakeBreedingContainer"));
-        drakeBreedingInterface.init();
+        //DrakeBreedingInterface drakeBreedingInterface = new DrakeBreedingInterface(
+        //        this.drakeGeneticsService,
+        //        RootPanel.get("drakeBreedingContainer"));
+        //drakeBreedingInterface.init();
     }
     
 }
