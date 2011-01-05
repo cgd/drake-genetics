@@ -17,6 +17,7 @@
 package org.jax.drakegenetics.gwtclientapp.client;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.LibraryNode;
@@ -43,6 +44,22 @@ public interface DrakeGeneticsServiceAsync
             DiploidGenome paternalGenome,
             AsyncCallback<List<DiploidGenome>> callback);
 
+    /**
+     * Get the metabolic test results 
+     * @param genome
+     *          the genome object
+     * @param diet
+     *          the diet consumed by the drake
+     * @param callback
+     *          callback containing the metabolic test results time course.
+     *          the key is the name of the metabolite and the value is the
+     *          metabolite measures over time
+     */
+    public void getMetabolicTestResults(
+            DiploidGenome genome,
+            String diet,
+            AsyncCallback<Map<String, double[]>> callback);
+    
     /**
      * For fetching the tree that represents the Library
      * 

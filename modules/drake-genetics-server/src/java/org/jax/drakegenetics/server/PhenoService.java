@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jax.drakegenetics.shareddata.client.Chromosome;
 
+import org.jax.drakegenetics.shareddata.client.Chromosome;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.Gene;
 
@@ -31,10 +31,9 @@ import org.jax.drakegenetics.shareddata.client.Gene;
  */
 public class PhenoService {
 
-    private GeneLookup geneLookup;
-    private GenotypeService genotypeService;
-
-
+    private final GeneLookup geneLookup;
+    private final GenotypeService genotypeService;
+    
     /**
      * Constructor
      * @param geneLookup
@@ -70,12 +69,30 @@ public class PhenoService {
             phenome.put("Sex", getSex(genome));
             phenome.put("Sex Reversal", getSexReversal(alleles));
             phenome.put("Scale Color", getScaleColor(alleles));
+            phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombination e) {
             phenome.clear();
             phenome.put("Lethal", "true");
         }
         return phenome;
+    }
+
+    /**
+     * get the alleles for this genome
+     * @param genome
+     * @return a map of gene symbols to list of alleles for that gene
+     */
+    private String getDiabetesPredisposition(Map<String, List<String>> alleles)
+    {
+        List<String> diabetesAlleles = alleles.get("Dia");
+
+        if (diabetesAlleles.contains("d")) {
+            return "no predisposition for diabetes";
+        }
+        else {
+            return "predisposition for diabetes";
+        }
     }
 
     /**

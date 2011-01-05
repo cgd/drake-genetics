@@ -16,8 +16,8 @@
  */
 package org.jax.drakegenetics.gwtclientapp.client;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.LibraryNode;
@@ -44,6 +44,21 @@ public interface DrakeGeneticsService extends RemoteService
     public List<DiploidGenome> breedPair(
             DiploidGenome maternalGenome,
             DiploidGenome paternalGenome);
+    
+    /**
+     * Get the metabolic test results 
+     * @param genome
+     *          the genome object
+     * @param diet
+     *          the diet consumed by the drake
+     * @return
+     *          the metabolic test results time course. the key is the
+     *          name of the metabolite and the value is the metabolite measures
+     *          over time
+     */
+    public Map<String, double[]> getMetabolicTestResults(
+            DiploidGenome genome,
+            String diet);
 
     /**
      * For fetching the tree that represents the Library
