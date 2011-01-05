@@ -117,6 +117,70 @@ public class DiploidGenome implements Serializable
     }
 
     /**
+     * Creates a "pure" inbred genome from the given haplotype and description
+     * @param maternalHaplotype
+     *          the maternal haplotype to use
+     * @param paternalHaplotype
+     *          the paternal haplotype to useS
+     * @param isFemale
+     *          determines if this is a male or female inbred
+     * @param speciesGenomeDescription
+     *          the genome description
+     */
+    public DiploidGenome(
+            String maternalHaplotype,
+            String paternalHaplotype,
+            boolean isFemale,
+            SpeciesGenomeDescription speciesGenomeDescription)
+    {
+        this.maternalHaploid = new ArrayList<Chromosome>();
+        this.paternalHaploid = new ArrayList<Chromosome>();
+        this.speciesGenomeDescription = speciesGenomeDescription;
+        
+        Map<String, ChromosomeDescription> chrDescs = speciesGenomeDescription.getChromosomeDescriptions();
+        ArrayList<String> sortedChrNames = new ArrayList<String>(chrDescs.keySet());
+        Collections.sort(sortedChrNames, new ChromosomeNameComparator());
+        for(String chrName : sortedChrNames)
+        {
+            // create the maternal and paternal chromosomes
+            Chromosome currMaternalChr = new Chromosome();
+            currMaternalChr.setChromosomeName(chrName);
+            ArrayList<CrossoverPoint> maternalCrossovers = new ArrayList<CrossoverPoint>(1);
+            maternalCrossovers.add(new CrossoverPoint(maternalHaplotype, 0.0));
+            currMaternalChr.setCrossovers(maternalCrossovers);
+            
+            Chromosome currPaternalChr = new Chromosome();
+            currPaternalChr.setChromosomeName(chrName);
+            ArrayList<CrossoverPoint> paternalCrossovers = new ArrayList<CrossoverPoint>(1);
+            paternalCrossovers.add(new CrossoverPoint(paternalHaplotype, 0.0));
+            currPaternalChr.setCrossovers(paternalCrossovers);
+            
+            // TODO do we need to worry about "M" chromosomes?
+            if(chrName.equals("X"))
+            {
+                this.maternalHaploid.add(currMaternalChr);
+                if(isFemale)
+                {
+                    this.paternalHaploid.add(new Chromosome(currPaternalChr));
+                }
+            }
+            else if(chrName.equals("Y"))
+            {
+                if(!isFemale)
+                {
+                    this.paternalHaploid.add(currPaternalChr);
+                }
+            }
+            else
+            {
+                // it's an autosome
+                this.maternalHaploid.add(currMaternalChr);
+                this.paternalHaploid.add(currPaternalChr);
+            }
+        }
+    }
+
+    /**
      * Getter for the maternal haploid (the chromosomes contributed from the
      * mother's egg)
      * @return the maternalHaploid
