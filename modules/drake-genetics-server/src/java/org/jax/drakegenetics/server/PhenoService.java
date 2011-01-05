@@ -296,7 +296,7 @@ public class PhenoService {
             return "Sex-reversed male";
         }
 
-        // Tr/Tr Tr/tr
+        // Tr/Tr Tr/tr,  tr/tr not possible?
         return "normal female";
 
 
@@ -392,7 +392,7 @@ public class PhenoService {
                 }
             }
             else if (metalicAlleles.get(0).equals("M")
-                    || metalicAlleles.get(1).equals("M")) {
+                    || metalicAlleles.get(1).equals("M")) { // M/*
 
                 // B/* or B/Y
                 if (brownAlleles.get(0).equals("B")
@@ -418,7 +418,7 @@ public class PhenoService {
 
             }
             else if (metalicAlleles.get(0).equals("m")
-                    && metalicAlleles.get(1).equals("m")) {
+                    && metalicAlleles.get(1).equals("m")) { // m/*
 
                 // */* for Brown...
 
@@ -432,6 +432,9 @@ public class PhenoService {
             else {
                 return "Frost";
             }
+        }
+        else { // C/*
+
         }
         
             
