@@ -337,14 +337,92 @@ public class PhenoService {
     }
 
     /**
-    *
-    * @param alleles
-    * @return
+    * get the scale color phenotype
+    * @param alleles all alleles for a genome
+    * @return String description of scale color
     */
-    private String getScaleColor(Map<String, List<String>> alleles)
+    private String getScaleColor(Map<String, List<String>> alleles) throws LethalAlleleCombination
     {
-        //TODO
-        return "Frost";
+        List<String> colorlessAlleles = alleles.get("Tyr");
+        List<String> metalicAlleles = alleles.get("M");
+        List<String> diluteAlleles = alleles.get("Myo5a");
+        List<String> brownAlleles = alleles.get("Tyrp1");
+
+        // We've tried to collapse as many of these rules as possible
+        // and also take advantage that combinations like B/Y dl/dl or B/b dl/Y are impossible
+
+
+        // if c/c drake is either Frost or inviable
+        if (colorlessAlleles.get(0).equals("c")
+                && colorlessAlleles.get(1).equals("c")) {
+            
+            // lets check for all inviable combinations
+            
+            // Mt/* 
+            if (metalicAlleles.get(0).equals("Mt")
+                    || metalicAlleles.get(1).equals("Mt")) {
+
+                // B/* or B/Y
+                if (brownAlleles.get(0).equals("B")
+                        || (brownAlleles.size() == 2 && brownAlleles.get(1).equals("B"))) {
+
+                    
+                    // dl/dl, dl/Y
+                    if (diluteAlleles.get(0).equals("dl")
+                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                        throw new LethalAlleleCombination();
+                    }
+                }
+            }
+            else if (metalicAlleles.get(0).equals("M")
+                    || metalicAlleles.get(1).equals("M")) {
+
+                // B/* or B/Y
+                if (brownAlleles.get(0).equals("B")
+                        || (brownAlleles.size() == 2 && brownAlleles.get(1).equals("B"))) {
+
+                    // dl/dl or dl/Y
+                    if (diluteAlleles.get(0).equals("dl")
+                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                        throw new LethalAlleleCombination();
+                    }
+
+                }
+                else if (brownAlleles.get(0).equals("b")
+                        && (brownAlleles.size() == 1 || brownAlleles.get(1).equals("b"))) { // b/b or b/Y
+
+                   
+                    // dl/dl or dl/Y
+                    if (diluteAlleles.get(0).equals("dl")
+                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                        throw new LethalAlleleCombination();
+                    }
+                }
+
+            }
+            else if (metalicAlleles.get(0).equals("m")
+                    && metalicAlleles.get(1).equals("m")) {
+
+                // */* for Brown...
+
+                // dl/dl dl/Y
+                if (diluteAlleles.get(0).equals("dl")
+                        && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                    throw new LethalAlleleCombination();
+                }
+
+            }
+            else {
+                return "Frost";
+            }
+        }
+        
+            
+            
+
+        
+
+        return "TODO";
     }
 
     /*
