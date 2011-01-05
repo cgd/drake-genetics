@@ -61,8 +61,10 @@ public class PhenoService {
         try {
             phenome.put("Metabolic", getMetabolicPhenotype(alleles));
             phenome.put("Eye Color", getEyeColor(alleles));
-            phenome.put("Scale Color", getScaleColor(alleles));
             phenome.put("Eye Morphology", getEyeMorphology(alleles));
+            phenome.put("Scale Color", getScaleColor(alleles));
+            phenome.put("Tail Morphology", getTailMorphology(alleles));
+
             //TODO add other phenotypes to phenome
         }
         catch (LethalAlleleCombination e) {
@@ -139,6 +141,7 @@ public class PhenoService {
             }
         }
 
+        // every other combination is healty
         return "healthy";
     }
 
@@ -157,22 +160,16 @@ public class PhenoService {
          * f/f - white eye
          */
 
-        if (flameAlleles.get(0).equals("F")) {
-            if (flameAlleles.get(1).equals("F")) {
-                // F/F
-                return "red";
-            }
-            else {
-                // F/f
-                return "gold";
-            }
+        if (flameAlleles.get(0).equals("F") && flameAlleles.get(1).equals("F")) {
+            // F/F
+            return "red";
         }
-        else if (flameAlleles.get(0).equals("f") && flameAlleles.get(0).equals("F")) {
-            // f/F
-            return "gold";
+        else if (flameAlleles.get(0).equals("f") && flameAlleles.get(1).equals("f")) {
+            // f/f
+            return "white";
         }
-        // f/f
-        return "white";
+        // F/f
+        return "gold";
     }
 
     private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombination
@@ -185,24 +182,60 @@ public class PhenoService {
          * n/n - normal eye
          */
 
-        if(nickAlleles.get(0).equals("N")) {
-            if (nickAlleles.get(1).equals("N")) {
+        if(nickAlleles.get(0).equals("N") && nickAlleles.get(1).equals("N")) {
                 // N/N
                 throw new LethalAlleleCombination();
-            }
-            else {
-                // N/n
-                return "nicked iris";
-            }
         }
-        else if (nickAlleles.get(1).equals("N")) {
-            // n/N
-            return "nicked iris";
+        else if (nickAlleles.get(0).equals("n") && nickAlleles.get(1).equals("n")) {
+                // n/n
+                return "normal eye";
+        }
+        
+        // N/n
+        return "nicked iris";
+
+    }
+
+    /**
+     * 
+     * @param alleles
+     * @return
+     */
+    private String getTailMorphology(Map<String, List<String>> alleles)
+    {
+        List<String> tailAlleles = alleles.get("Dll3");
+
+        /*
+         * T/T - long tail with barb
+         * T/t - long tail with barb
+         * t/t - short tail, no barb
+         */
+
+        if (tailAlleles.get(0).equals("t") && tailAlleles.get(1).equals("t")) {
+            return "short no barb";
         }
 
-        // n/n
-        return "normal eye";
+        return "long with barb";
+    }
 
+    private String getArmor(Map<String, List<String>> alleles) {
+        
+        List<String> armorAlleles = alleles.get("Eda");
+
+        /*
+         * A1/A1 - five lateral plates
+         * A1/A2 - three lateral plates
+         * A2/A2 - one lateral plate
+         */
+
+        if (armorAlleles.get(0).equals("A1") && armorAlleles.get(1).equals("A1")) {
+            return "five lateral plates";
+        }
+        else if (armorAlleles.get(0).equals("A2") && armorAlleles.get(1).equals("A2")) {
+            return "one lateral plate";
+        }
+
+        return "three lateral plates";
     }
 
     /**
@@ -216,6 +249,10 @@ public class PhenoService {
         return "Frost";
     }
 
+    /*
+     * private class used to bail out of phenotyping if we find a lethal
+     * combination of alleles
+     */
     private class LethalAlleleCombination extends Exception {
 
     }
