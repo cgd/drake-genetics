@@ -36,7 +36,7 @@ public class PhenoService {
 
 
     /**
-     *
+     * Constructor
      * @param geneLookup
      * @param genotypeService
      */
@@ -48,9 +48,11 @@ public class PhenoService {
 
 
     /**
-     * 
+     * Get all phenotypes for this genome.
      * @param genome
-     * @return
+     * @return A Map of phenotypes to values. If the genome is inviable 
+     * then a single special phenotype of "Lethal" will be returned with value
+     * "true"
      */
     public Map<String, String> getPhenome(DiploidGenome genome)
     {
@@ -64,8 +66,10 @@ public class PhenoService {
             phenome.put("Eye Morphology", getEyeMorphology(alleles));
             phenome.put("Scale Color", getScaleColor(alleles));
             phenome.put("Tail Morphology", getTailMorphology(alleles));
-
-            //TODO add other phenotypes to phenome
+            phenome.put("Armor", getArmor(alleles));
+            phenome.put("Sex", getSex(genome));
+            phenome.put("Sex Reversal", getSexReversal(alleles));
+            phenome.put("Scale Color", getScaleColor(alleles));
         }
         catch (LethalAlleleCombination e) {
             phenome.clear();
@@ -172,6 +176,12 @@ public class PhenoService {
         return "gold";
     }
 
+    /**
+     * 
+     * @param alleles
+     * @return
+     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombination
+     */
     private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombination
     {
         List<String> nickAlleles = alleles.get("Pax6");
@@ -218,6 +228,11 @@ public class PhenoService {
         return "long with barb";
     }
 
+    /**
+     * 
+     * @param alleles
+     * @return
+     */
     private String getArmor(Map<String, List<String>> alleles) {
         
         List<String> armorAlleles = alleles.get("Eda");
@@ -236,6 +251,78 @@ public class PhenoService {
         }
 
         return "three lateral plates";
+    }
+
+    private String getSexReversal(Map<String, List<String>> alleles)
+    {
+
+        List<String> transformerAlleles = alleles.get("Ar");
+
+        /*
+         * Tr/Tr - normal female
+         * Tr/tr - normal female
+         * Tr/Y - normal male
+         * tr/Y - sex-reversed male (sterile female)
+         */
+
+        if (transformerAlleles.size() == 1) {
+            if (transformerAlleles.get(0).equals("Tr")) {
+                // Tr/Y
+                return "normal male";
+            }
+            // tr/Y
+            return "Sex-reversed male";
+        }
+
+        // Tr/Tr Tr/tr
+        return "normal female";
+
+
+    }
+
+    private String getSex(DiploidGenome genome) throws LethalAlleleCombination
+    {
+        int xCount = 0;
+        int yCount = 0;
+
+        List<Chromosome> maternalHaploid = genome.getMaternalHaploid();
+        List<Chromosome> paternalHaploid = genome.getPaternalHaploid();
+
+        for (Chromosome c : maternalHaploid) {
+            if (c.getChromosomeName().equals("X")) {
+                xCount++;
+            }
+        }
+
+        for (Chromosome c : paternalHaploid) {
+            if (c.getChromosomeName().equals("X")) {
+                xCount++;
+            }
+            else if (c.getChromosomeName().equals("Y")) {
+                yCount++;
+            }
+        }
+
+        if (xCount == 0 || xCount == 3) {
+            // YO or XXX
+            throw new LethalAlleleCombination();
+        }
+        else if (xCount == 1 && yCount == 0) {
+            // XO
+            return "Scruffy female";
+        }
+        else if (xCount == 2 && yCount == 1) {
+            // XXY
+            return "Scruffy male";
+        }
+        else if (xCount ==1 && yCount == 1) {
+            // XY
+            return "male";
+        }
+
+        // XY
+        return "female";
+
     }
 
     /**
