@@ -19,8 +19,7 @@ package org.jax.drakegenetics.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -46,10 +45,11 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     private static final String HELP_ROOT = "/Help/";
     
 
-    private final ReproductionSimulator reproductionSimulator =
-        new ReproductionSimulator();
-    private StaticDocumentLibrary libraryController = null;
-    private StaticDocumentLibrary helpController = null;
+    private ReproductionSimulator reproductionSimulator;
+    private StaticDocumentLibrary libraryController;
+    private StaticDocumentLibrary helpController;
+    private PhenoService phenoService;
+    private MetabolismService metoService;
     
     /**
      * {@inheritDoc}
@@ -59,12 +59,35 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     {
         super.init(config);
         
+        this.reproductionSimulator = new ReproductionSimulator();
         this.libraryController = new StaticDocumentLibrary(
                 DrakeGeneticsServiceImpl.LIBRARY_ROOT,
                 config.getServletContext());
         this.helpController = new StaticDocumentLibrary(
                 DrakeGeneticsServiceImpl.HELP_ROOT,
                 config.getServletContext());
+        this.phenoService = new PhenoService(
+                new GeneLookup(),
+                new GenotypeService());
+        this.metoService = new MetabolismService(this.phenoService);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public Map<String, double[]> getMetabolicTestResults(
+            DiploidGenome genome,
+            String diet)
+    {
+        try
+        {
+            return this.metoService.getMetabolicTestResults(genome, diet);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
     }
     
     /**
