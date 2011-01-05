@@ -117,9 +117,9 @@ public class PhenoService {
     }
 
     /**
-     * 
+     * get the metabolic phenotype
      * @param alleles
-     * @return
+     * @return string describing metabolic phenotype
      */
     private String getMetabolicPhenotype(Map<String, List<String>> alleles)
     {
@@ -150,9 +150,9 @@ public class PhenoService {
     }
 
     /**
-     *
-     * @param alleles
-     * @return
+     * get the eye color determined by this set of alleles
+     * @param alleles all alleles for this genome
+     * @return String describing eye color phenotype
      */
     private String getEyeColor(Map<String, List<String>> alleles)
     {
@@ -177,9 +177,9 @@ public class PhenoService {
     }
 
     /**
-     * 
-     * @param alleles
-     * @return
+     * Get the eye morphology determined by this set of alleles
+     * @param alleles all alleles for this genome
+     * @return String describing the eye morphology
      * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombination
      */
     private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombination
@@ -207,9 +207,9 @@ public class PhenoService {
     }
 
     /**
-     * 
-     * @param alleles
-     * @return
+     * get the tail morphology determined by this set of alleles
+     * @param alleles all alleles for this genome
+     * @return String describing the tail morphology
      */
     private String getTailMorphology(Map<String, List<String>> alleles)
     {
@@ -229,9 +229,9 @@ public class PhenoService {
     }
 
     /**
-     * 
-     * @param alleles
-     * @return
+     * Get the armor phenotype determined by this set of alleles
+     * @param alleles all alleles for this genome
+     * @return String describing the armor phenotype
      */
     private String getArmor(Map<String, List<String>> alleles) {
         
@@ -253,6 +253,11 @@ public class PhenoService {
         return "three lateral plates";
     }
 
+    /**
+     * Get the sex reversal phenotype
+     * @param alleles all alleles for this genome
+     * @return String description of the sex reversal phenotype
+     */
     private String getSexReversal(Map<String, List<String>> alleles)
     {
 
@@ -280,6 +285,12 @@ public class PhenoService {
 
     }
 
+    /**
+     * Get the sex of the individual with this genome
+     * @param genome
+     * @return String description of the sex: (Scruffy) [male, female]
+     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombination
+     */
     private String getSex(DiploidGenome genome) throws LethalAlleleCombination
     {
         int xCount = 0;
