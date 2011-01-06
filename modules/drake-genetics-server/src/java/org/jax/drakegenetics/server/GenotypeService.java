@@ -34,7 +34,7 @@ public class GenotypeService {
     }
 
     public String getAllele(String haplotype, String geneSymbol) {
-        return "TODO";
+        return haplotypeToAlleles.get(haplotype).get(geneSymbol);
     }
 
 }
