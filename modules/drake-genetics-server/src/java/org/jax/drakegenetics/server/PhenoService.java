@@ -17,6 +17,7 @@
 package org.jax.drakegenetics.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +139,7 @@ public class PhenoService {
      * @param alleles
      * @return string describing metabolic phenotype
      */
-    private String getMetabolicPhenotype(Map<String, List<String>> alleles)
+    private static String getMetabolicPhenotype(Map<String, List<String>> alleles)
     {
 
         List<String> bogBreathAlleles = alleles.get("Otc");
@@ -171,7 +172,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String describing eye color phenotype
      */
-    private String getEyeColor(Map<String, List<String>> alleles)
+    private static String getEyeColor(Map<String, List<String>> alleles)
     {
         List<String> flameAlleles = alleles.get("Xdh");
 
@@ -228,7 +229,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String describing the tail morphology
      */
-    private String getTailMorphology(Map<String, List<String>> alleles)
+    private static String getTailMorphology(Map<String, List<String>> alleles)
     {
         List<String> tailAlleles = alleles.get("Dll3");
 
@@ -250,7 +251,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String describing the armor phenotype
      */
-    private String getArmor(Map<String, List<String>> alleles) {
+    private static String getArmor(Map<String, List<String>> alleles) {
         
         List<String> armorAlleles = alleles.get("Eda");
 
@@ -275,7 +276,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String description of the sex reversal phenotype
      */
-    private String getSexReversal(Map<String, List<String>> alleles)
+    private static String getSexReversal(Map<String, List<String>> alleles)
     {
 
         List<String> transformerAlleles = alleles.get("Ar");
@@ -370,61 +371,49 @@ public class PhenoService {
 
 
         // if c/c drake is either Frost or inviable
-        if (colorlessAlleles.get(0).equals("c")
-                && colorlessAlleles.get(1).equals("c")) {
+        if (numMatches(colorlessAlleles, "c") == 2) {
             
             // lets check for all inviable combinations
             
             // Mt/* 
-            if (metalicAlleles.get(0).equals("Mt")
-                    || metalicAlleles.get(1).equals("Mt")) {
+            if (numMatches(metalicAlleles, "Mt") >= 1) {
 
                 // B/* or B/Y
-                if (brownAlleles.get(0).equals("B")
-                        || (brownAlleles.size() == 2 && brownAlleles.get(1).equals("B"))) {
-
+                if (numMatches(brownAlleles, "B") >= 1) {
                     
                     // dl/dl, dl/Y
-                    if (diluteAlleles.get(0).equals("dl")
-                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                    if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                         throw new LethalAlleleCombination();
                     }
                 }
             }
-            else if (metalicAlleles.get(0).equals("M")
-                    || metalicAlleles.get(1).equals("M")) { // M/*
+            else if (numMatches(metalicAlleles, "M") >= 1) { // M/*
 
                 // B/* or B/Y
-                if (brownAlleles.get(0).equals("B")
-                        || (brownAlleles.size() == 2 && brownAlleles.get(1).equals("B"))) {
+                if (numMatches(brownAlleles, "B") >= 1) {
 
                     // dl/dl or dl/Y
-                    if (diluteAlleles.get(0).equals("dl")
-                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                    if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                         throw new LethalAlleleCombination();
                     }
 
                 }
-                else if (brownAlleles.get(0).equals("b")
-                        && (brownAlleles.size() == 1 || brownAlleles.get(1).equals("b"))) { // b/b or b/Y
+                else if (numMatches(brownAlleles, "b") == brownAlleles.size()) { // b/b or b/Y
 
                    
                     // dl/dl or dl/Y
-                    if (diluteAlleles.get(0).equals("dl")
-                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                    if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                         throw new LethalAlleleCombination();
                     }
                 }
 
             }
-            else if (metalicAlleles.get(0).equals("m")
-                    && metalicAlleles.get(1).equals("m")) { // m/*
+            else if (numMatches(metalicAlleles, "m") >= 1) { // m/*
 
                 // */* for Brown...
 
                 // dl/dl dl/Y
-                if (diluteAlleles.get(0).equals("dl")
-                        && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
+                if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                     throw new LethalAlleleCombination();
                 }
 
@@ -452,5 +441,14 @@ public class PhenoService {
     private class LethalAlleleCombination extends Exception {
 
     }
+
+    private static <E> int numMatches(Collection<E> items, E itemToCheck) {
+        int count = 0;
+        for(E item : items)
+         if(itemToCheck.equals(item))
+            count++;
+        return count;
+    }
+
 
 }
