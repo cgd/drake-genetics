@@ -374,53 +374,85 @@ public class PhenoService {
         if (numMatches(colorlessAlleles, "c") == 2) {           
             // lets check for all inviable combinations
             
-            // Mt/* 
-            if (numMatches(metalicAlleles, "Mt") >= 1) {
-
-                // B/* or B/Y
-                if (numMatches(brownAlleles, "B") >= 1) {
-
-                    // dl/dl, dl/Y
-                    if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+            // c/c Mt/* B/* dl/dl || c/c Mt/* B/Y dl/Y
+            if (numMatches(metalicAlleles, "Mt") >= 1
+                && numMatches(brownAlleles, "B") >= 1
+                && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                         throw new LethalAlleleCombinationException();
-                    }
-                }
             }
-            else if (numMatches(metalicAlleles, "M") >= 1) { // M/*
 
-                // B/* or B/Y
-                if (numMatches(brownAlleles, "B") >= 1) {
+            if (numMatches(metalicAlleles, "M") >= 1) { 
 
-                    // dl/dl or dl/Y
-                    if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
-                        throw new LethalAlleleCombinationException();
-                    }
-                }
-                else if (numMatches(brownAlleles, "b") == brownAlleles.size()) { // b/b or b/Y
-
-                    // dl/dl or dl/Y
-                    if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
-                        throw new LethalAlleleCombinationException();
-                    }
-                }
-
-            }
-            else if (numMatches(metalicAlleles, "m")== 2) { // m/m
-
-                // */* for Brown...
-
-                // dl/dl dl/Y
-                if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+                // c/c M/* B/* dl/dl || c/c M/* B/Y dl/Y
+                if (numMatches(brownAlleles, "B") >= 1
+                        && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                     throw new LethalAlleleCombinationException();
                 }
+                // c/c M/* b/b dl/dl || c/c M/* b/Y dl/Y
+                else if (numMatches(brownAlleles, "b") == brownAlleles.size()
+                        && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
 
+                    throw new LethalAlleleCombinationException();
+                }
             }
-            else {
-                return "Frost";
+
+            // c/c m/m dl/dl || c/c m/m dl/Y (*/* for Brown)
+            if (numMatches(metalicAlleles, "m")== 2 
+                    && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+                throw new LethalAlleleCombinationException();
             }
+
+            // any other c/c is Frost
+            return "Frost";
+            
         }
         else { // C/*
 
+            // C/* Mt/*
+            if (numMatches(metalicAlleles, "Mt") >= 1) {
+                // check for lethal combinations B/* dl/dl or dl/Y
+                if (numMatches(brownAlleles, "B") >=1 
+                        && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+                    throw new LethalAlleleCombinationException();
+                }
+                
+                // everything else Mt/* is Tawny
+                return "Tawny";    
+            }
+            // C/* M/*
+            else if(numMatches(metalicAlleles, "M") >= 1) {
+
+                // C/* M/* B/*
+                if (numMatches(brownAlleles, "B") >= 1) {
+                    // C/* M/* B/* D/*
+                    if (numMatches(diluteAlleles, "D") >= 1) {
+                        return "Steel";
+                    }
+                    // C/* M/* B/* d/d || C/* M/* B/Y d/Y || C/* M/* B/* d/dl
+                    else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1
+                                && numMatches(diluteAlleles, "dl") == 1)) {
+                        return "Argent";
+                    }
+                }
+
+                // C/* M/* b/b || C/* M/* b/Y
+                if (numMatches(brownAlleles, "b") == brownAlleles.size()) {
+                    // C/* M/* b/b D/* || C/* M/* b/Y D/*
+                    if (numMatches(diluteAlleles, "D") >= 1) {
+                        return "Copper";
+                    }
+                    // C/* M/* b/b d/d || C/* M/* b/Y d/Y ||  C/* M/* b/b d/dl
+                    else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1
+                                && numMatches(diluteAlleles, "dl") == 1)) {
+                        return "Gold";
+                    }
+                }
+
+                // everything else inviable
+                throw new LethalAlleleCombinationException();
+            }
         }
         
             
