@@ -405,7 +405,7 @@ public class PhenoService {
                 }
 
             }
-            else if (numMatches(metalicAlleles, "m") >= 1) { // m/*
+            else if (numMatches(metalicAlleles, "m")== 2) { // m/m
 
                 // */* for Brown...
 
