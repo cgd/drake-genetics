@@ -72,7 +72,7 @@ public class PhenoService {
             phenome.put("Scale Color", getScaleColor(alleles));
             phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
-        catch (LethalAlleleCombination e) {
+        catch (LethalAlleleCombinationException e) {
             phenome.clear();
             phenome.put("Lethal", "true");
         }
@@ -198,9 +198,9 @@ public class PhenoService {
      * Get the eye morphology determined by this set of alleles
      * @param alleles all alleles for this genome
      * @return String describing the eye morphology
-     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombination
+     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombinationException
      */
-    private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombination
+    private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombinationException
     {
         List<String> nickAlleles = alleles.get("Pax6");
 
@@ -212,7 +212,7 @@ public class PhenoService {
 
         if(nickAlleles.get(0).equals("N") && nickAlleles.get(1).equals("N")) {
                 // N/N
-                throw new LethalAlleleCombination();
+                throw new LethalAlleleCombinationException();
         }
         else if (nickAlleles.get(0).equals("n") && nickAlleles.get(1).equals("n")) {
                 // n/n
@@ -307,9 +307,9 @@ public class PhenoService {
      * Get the sex of the individual with this genome
      * @param genome
      * @return String description of the sex: (Scruffy) [male, female]
-     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombination
+     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombinationException
      */
-    private String getSex(DiploidGenome genome) throws LethalAlleleCombination
+    private String getSex(DiploidGenome genome) throws LethalAlleleCombinationException
     {
         int xCount = 0;
         int yCount = 0;
@@ -334,7 +334,7 @@ public class PhenoService {
 
         if (xCount == 0 || xCount == 3) {
             // YO or XXX
-            throw new LethalAlleleCombination();
+            throw new LethalAlleleCombinationException();
         }
         else if (xCount == 1 && yCount == 0) {
             // XO
@@ -359,7 +359,7 @@ public class PhenoService {
     * @param alleles all alleles for a genome
     * @return String description of scale color
     */
-    private String getScaleColor(Map<String, List<String>> alleles) throws LethalAlleleCombination
+    private String getScaleColor(Map<String, List<String>> alleles) throws LethalAlleleCombinationException
     {
         List<String> colorlessAlleles = alleles.get("Tyr");
         List<String> metalicAlleles = alleles.get("M");
@@ -371,8 +371,7 @@ public class PhenoService {
 
 
         // if c/c drake is either Frost or inviable
-        if (numMatches(colorlessAlleles, "c") == 2) {
-            
+        if (numMatches(colorlessAlleles, "c") == 2) {           
             // lets check for all inviable combinations
             
             // Mt/* 
@@ -380,10 +379,10 @@ public class PhenoService {
 
                 // B/* or B/Y
                 if (numMatches(brownAlleles, "B") >= 1) {
-                    
+
                     // dl/dl, dl/Y
                     if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
-                        throw new LethalAlleleCombination();
+                        throw new LethalAlleleCombinationException();
                     }
                 }
             }
@@ -394,16 +393,14 @@ public class PhenoService {
 
                     // dl/dl or dl/Y
                     if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
-                        throw new LethalAlleleCombination();
+                        throw new LethalAlleleCombinationException();
                     }
-
                 }
                 else if (numMatches(brownAlleles, "b") == brownAlleles.size()) { // b/b or b/Y
 
-                   
                     // dl/dl or dl/Y
                     if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
-                        throw new LethalAlleleCombination();
+                        throw new LethalAlleleCombinationException();
                     }
                 }
 
@@ -414,7 +411,7 @@ public class PhenoService {
 
                 // dl/dl dl/Y
                 if (numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
-                    throw new LethalAlleleCombination();
+                    throw new LethalAlleleCombinationException();
                 }
 
             }
@@ -435,10 +432,10 @@ public class PhenoService {
     }
 
     /*
-     * private class used to bail out of phenotyping if we find a lethal
+     * private exception used to bail out of phenotyping if we find a lethal
      * combination of alleles
      */
-    private class LethalAlleleCombination extends Exception {
+    private class LethalAlleleCombinationException extends Exception {
 
     }
 
