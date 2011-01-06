@@ -59,6 +59,8 @@ public class BreedingPanel {
         this.breedingPanel = lp;
         final BreedingForm breedingForm = new BreedingForm(formPanel, 
                 drakeGeneticsService);
+        final DrakeDetailPanel drakeDetail = new DrakeDetailPanel(detailPanel,
+                drakeGeneticsService);
 
         treePanel.setHeaderVisible(true);
         treePanel.setLayout(new FitLayout());
@@ -66,7 +68,8 @@ public class BreedingPanel {
 
         tree.setDisplayProperty("name");
         tree.setWidth(150);
-        tree.setHeight(450);
+        //tree.setHeight(450);
+        tree.setHeight(670);
         tree.addListener(Events.OnClick,
                 new Listener<TreePanelEvent<ModelData>>() {
 
@@ -75,9 +78,11 @@ public class BreedingPanel {
                         if ("org.jax.drakegenetics.gwtclientapp.client.Drake".equals(item.getClass().getName())) {
                             Drake drake = (Drake)item;
                             GWT.log("Clicked on drake = " + drake.toString());
-                            breedingForm.setBreedingDrake(drake);
-                            //  Need code here to send drake to parent
-                            //  component of form Panel and to detail Panel
+                            //  Send drake to parent component of form Panel 
+                            //  and to detail Panel
+                            breedingForm.sendDrake(drake);
+                            drakeDetail.sendDrake(drake);
+                            
                         }
                     }
                 });
@@ -88,9 +93,6 @@ public class BreedingPanel {
 
         workPanel.add(formPanel);
         
-        detailPanel.setHeaderVisible(false);
-        detailPanel.setWidth(544);
-        detailPanel.setHeight(100);
         workPanel.add(detailPanel);
         
         breedingPanel.add(workPanel);

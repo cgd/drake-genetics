@@ -31,17 +31,19 @@ public class DrakeSetGenerator  {
 
 
     public static Folder getTreeModel() {
-        Image small_example = new Image("/images/eyes/SEF11520.jpg");
-        Image large_example = new Image("/images/eyes/LEF11520.jpg");
+        Image f_small_example = new Image("/images/eyes/SEF11520.jpg");
+        Image f_large_example = new Image("/images/eyes/LEF11520.jpg");
+        Image m_small_example = new Image("/images/eyes/SEM00500.jpg");
+        Image m_large_example = new Image("/images/eyes/LEM00500.jpg");
         Folder[] folders = new Folder[] {
                 new Folder("Females", new Drake[] { new Drake("P1", "F",
                         new DiploidGenome("P1_M", "P1_P", true,
                                 DrakeSpeciesSingleton.getInstance()),
-                        small_example, large_example), }),
+                        f_small_example, f_large_example), }),
                 new Folder("Males", new Drake[] { new Drake("P2", "M",
                         new DiploidGenome("P2_M", "P2_P", false,
                                 DrakeSpeciesSingleton.getInstance()),
-                        small_example, large_example), }) };
+                        m_small_example, m_large_example), }) };
 
         Folder root = new Folder("root");
         for (int i = 0; i < folders.length; i++) {

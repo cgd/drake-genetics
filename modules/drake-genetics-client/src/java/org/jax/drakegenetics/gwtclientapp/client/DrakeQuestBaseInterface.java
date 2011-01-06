@@ -204,7 +204,8 @@ public class DrakeQuestBaseInterface
         masterPanel.add(toolBar);
 
         mainPanel.setHeaderVisible(false);
-        mainPanel.setSize(694, 451);
+        //mainPanel.setSize(694, 451);
+        mainPanel.setSize(694, 671);
         mainPanel.setBodyStyle("backgroundColor: #ede9e3");
 
         breedingPanel.hide();
