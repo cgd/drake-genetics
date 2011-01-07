@@ -45,6 +45,16 @@ public interface DrakeGeneticsServiceAsync
             AsyncCallback<List<DiploidGenome>> callback);
 
     /**
+     * For fetching the phenotype of a diploid genome
+     * @param genome
+     *          the diploid genome for which you want a phenotype
+     * @param callback
+     *          callback containing the phenotype mapping for this genome.
+     */
+    public void getPhenome(DiploidGenome genome, 
+            AsyncCallback<Map<String, String>> callback);
+
+    /**
      * Get the metabolic test results 
      * @param genome
      *          the genome object

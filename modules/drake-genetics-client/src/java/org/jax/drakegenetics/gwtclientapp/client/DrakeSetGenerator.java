@@ -17,9 +17,15 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.DrakeSpeciesSingleton;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 
 /**  This is a class solely for generating a demo set of drakes
@@ -29,22 +35,71 @@ import com.google.gwt.user.client.ui.Image;
  */
 public class DrakeSetGenerator  {
 
+    private Map<String, String> femalePhenome = new HashMap<String,String>();
+    private Map<String, String> malePhenome = new HashMap<String,String>();
 
-    public static Folder getTreeModel() {
+    private void setFemalePhenome(Map<String,String> phenome) {
+        Set<String> keys = phenome.keySet();
+        for (String key: keys) {
+            femalePhenome.put(key,phenome.get(key));
+        }
+    }
+    
+    private void setMalePhenome(Map<String,String> phenome) {
+        Set<String> keys = phenome.keySet();
+        for (String key: keys) {
+            malePhenome.put(key,phenome.get(key));
+        }
+    }
+    
+    public Folder getTreeModel(DrakeGeneticsServiceAsync dgs) {
         Image f_small_example = new Image("/images/eyes/SEF11520.jpg");
         Image f_large_example = new Image("/images/eyes/LEF11520.jpg");
         Image m_small_example = new Image("/images/eyes/SEM00500.jpg");
         Image m_large_example = new Image("/images/eyes/LEM00500.jpg");
+        DiploidGenome female_genome = new DiploidGenome("P1_M", "P1_P", true,
+                DrakeSpeciesSingleton.getInstance());
+        DiploidGenome male_genome = new DiploidGenome("P2_M", "P2_P", false,
+                DrakeSpeciesSingleton.getInstance());
+        
+        dgs.getPhenome(female_genome,
+                new AsyncCallback<Map<String, String>>() {
+                    public void onSuccess(Map<String, String> phenome) {
+                        GWT.log("Have Female Phenotype!");
+                        GWT.log(phenome.toString());
+                        setFemalePhenome(phenome);
+                    }
+
+                    public void onFailure(Throwable caught) {
+                        caught.printStackTrace();
+                        GWT.log(caught.getMessage());
+                    }
+                });
+
+        dgs.getPhenome(male_genome,
+                new AsyncCallback<Map<String, String>>() {
+                    public void onSuccess(Map<String, String> phenome) {
+                        GWT.log("Have Male Phenotype!");
+                        setMalePhenome(phenome);
+                    }
+
+                    public void onFailure(Throwable caught) {
+                        caught.printStackTrace();
+                        GWT.log(caught.getMessage());
+                    }
+                });
+        
         Folder[] folders = new Folder[] {
                 new Folder("Females", new Drake[] { new Drake("P1", "F",
-                        new DiploidGenome("P1_M", "P1_P", true,
-                                DrakeSpeciesSingleton.getInstance()),
+                        female_genome, femalePhenome,
                         f_small_example, f_large_example), }),
                 new Folder("Males", new Drake[] { new Drake("P2", "M",
-                        new DiploidGenome("P2_M", "P2_P", false,
-                                DrakeSpeciesSingleton.getInstance()),
+                        male_genome, malePhenome,
                         m_small_example, m_large_example), }) };
 
+        for (Folder folder: folders) {
+            
+        }
         Folder root = new Folder("root");
         for (int i = 0; i < folders.length; i++) {
             root.add((Folder) folders[i]);

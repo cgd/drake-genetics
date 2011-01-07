@@ -22,14 +22,26 @@ import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 import com.extjs.gxt.ui.client.Style.VerticalAlignment;
 
+import com.extjs.gxt.ui.client.data.ModelData;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.DomEvent;
+import com.extjs.gxt.ui.client.event.Events;
+import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
@@ -44,25 +56,24 @@ public class BreedingForm implements DrakeReceiver {
 
     private Label failMessage = null;
     private ContentPanel formPanel = new ContentPanel();
-    // Once the detail panel is working we have this so we can send it
-    // drakes for detail display
-    private ContentPanel detailPanel = new ContentPanel();
     // The female drake being bred
     private Drake female;
     // Image for display in the panel which displays the "pair"
-    private Image femaleImage;
+    private Image femaleImage = new Image();
     // The male drake being bred
     private Drake male;
     // Image for display in the panel which displays the "pair"
-    private Image maleImage;
+    private Image maleImage = new Image();
     // The panel where the female image is displayed
     private ContentPanel femalePanel = new ContentPanel();
     // The panel where the male image is displayed
     private ContentPanel malePanel = new ContentPanel();
+    private final Window spinnerWindow = new Window();
 
-    public BreedingForm(ContentPanel fp, 
+    public BreedingForm(ContentPanel fp, DrakeDetailPanel dp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.formPanel = fp;
+        final DrakeDetailPanel detailPanel = dp;
 
         formPanel.setHeaderVisible(false);
         formPanel.setBodyStyle("backgroundColor: #ede9e3");
@@ -92,21 +103,47 @@ public class BreedingForm implements DrakeReceiver {
         femalePanel.setLayout(new BorderLayout());
         femalePanel.setHeaderVisible(false);
         femalePanel.setSize(80, 80);
+        femalePanel.sinkEvents(Event.ONCLICK);
+        femalePanel.addListener(Events.OnClick,
+                new Listener<BaseEvent>() {
+            public void handleEvent(BaseEvent be) {
+                GWT.log("In event for selecting female panel " + be.toString());
+                if (female != null) {
+                    detailPanel.sendDrake(female);
+                    
+                }
+            }
+        });
+
         malePanel.setLayout(new BorderLayout());
         malePanel.setHeaderVisible(false);
         malePanel.setSize(80, 80);
+        malePanel.sinkEvents(Event.ONCLICK);
+        malePanel.addListener(Events.OnClick,
+                new Listener<BaseEvent>() {
+            public void handleEvent(BaseEvent be) {
+                GWT.log("In event for selecting male panel " + be.toString());
+                if (male != null) {
+                    detailPanel.sendDrake(male);
+                    
+                }
+            }
+        });
 
         HorizontalPanel thePair = new HorizontalPanel();
         thePair.add(femalePanel);
         thePair.add(malePanel);
         breedingPair.add(thePair);
         
-        
+
         SelectionListener<ButtonEvent> BreedingButtonListener = 
             new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                //if ( ce.isShiftKey()) {
+                    GWT.log("in shift " + ce.getKeyCode());
+                //}
                 DiploidGenome fg = female.getDiploidgenome();
                 DiploidGenome mg = female.getDiploidgenome();
                 

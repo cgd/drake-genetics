@@ -57,10 +57,10 @@ public class BreedingPanel {
     public BreedingPanel(HorizontalPanel lp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.breedingPanel = lp;
-        final BreedingForm breedingForm = new BreedingForm(formPanel, 
-                drakeGeneticsService);
         final DrakeDetailPanel drakeDetail = new DrakeDetailPanel(detailPanel,
                 drakeGeneticsService);
+        final BreedingForm breedingForm = new BreedingForm(formPanel, 
+                drakeDetail, drakeGeneticsService);
 
         treePanel.setHeaderVisible(true);
         treePanel.setLayout(new FitLayout());
@@ -97,7 +97,8 @@ public class BreedingPanel {
         
         breedingPanel.add(workPanel);
         
-        Folder model = DrakeSetGenerator.getTreeModel();
+        DrakeSetGenerator dg = new DrakeSetGenerator();
+        Folder model = dg.getTreeModel(drakeGeneticsService);
         store.add(model.getChildren(), true);
 
     }
@@ -107,6 +108,7 @@ public class BreedingPanel {
 
         this.root = (Folder) parseLibraryNode(results, null,
                 drakeGeneticsService);
+        
         store.add(this.root.getChildren(), true);
         //tree.show();
     }
