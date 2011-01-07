@@ -31,9 +31,70 @@ public class GenotypeService {
     public GenotypeService()
     {
         haplotypeToAlleles = new HashMap<String, Map<String, String>>();
+
+        init();
     }
 
-    public String getAllele(String haplotype, String geneSymbol) {
+    private void init()
+    {
+        //XXX hard code in some haplotypes for testing
+
+        Map<String, String> genotypeMap;
+
+        //P1_M
+        genotypeMap = new HashMap<String, String>();
+        genotypeMap.put("Otc", "B");
+        genotypeMap.put("Tyrp1", "Bog");
+        genotypeMap.put("Myo5a", "D");
+        genotypeMap.put("Ar", "Tr");
+        genotypeMap.put("Dll3", "T");
+        genotypeMap.put("M", "M");
+        genotypeMap.put("Xdh","F");
+        genotypeMap.put("Tyr", "C");
+        genotypeMap.put("Pax6", "N");
+        genotypeMap.put("Eda", "A1");
+        haplotypeToAlleles.put("P1_M", genotypeMap);
+
+        //P1_P
+        genotypeMap = new HashMap<String, String>();
+        genotypeMap.put("Otc", "b");
+        genotypeMap.put("Tyrp1", "bog");
+        genotypeMap.put("Myo5a", "d");
+        genotypeMap.put("Ar", "Tr");
+        genotypeMap.put("Dll3", "t");
+        genotypeMap.put("M", "m");
+        genotypeMap.put("Xdh","f");
+        genotypeMap.put("Tyr", "C");
+        genotypeMap.put("Pax6", "n");
+        genotypeMap.put("Eda", "A2");
+        haplotypeToAlleles.put("P1_P", genotypeMap);
+
+        //P2_M
+        genotypeMap = new HashMap<String, String>();
+        genotypeMap.put("Otc", "b");
+        genotypeMap.put("Tyrp1", "Bog");
+        genotypeMap.put("Myo5a", "d");
+        genotypeMap.put("Ar", "Tr");
+        genotypeMap.put("Dll3", "t");
+        genotypeMap.put("M", "m");
+        genotypeMap.put("Xdh","f");
+        genotypeMap.put("Tyr", "C");
+        genotypeMap.put("Pax6", "n");
+        genotypeMap.put("Eda", "A2");
+        haplotypeToAlleles.put("P2_M", genotypeMap);
+
+        //P2_P
+        genotypeMap = new HashMap<String, String>();
+        genotypeMap.put("M", "m");
+        genotypeMap.put("Xdh","f");
+        genotypeMap.put("Tyr", "C");
+        genotypeMap.put("Pax6", "n");
+        genotypeMap.put("Eda", "A2");
+        haplotypeToAlleles.put("P2_P", genotypeMap);
+    }
+
+    public String getAllele(String haplotype, String geneSymbol)
+    {
         return haplotypeToAlleles.get(haplotype).get(geneSymbol);
     }
 
