@@ -68,7 +68,6 @@ public class BreedingForm implements DrakeReceiver {
     private ContentPanel femalePanel = new ContentPanel();
     // The panel where the male image is displayed
     private ContentPanel malePanel = new ContentPanel();
-    private final Window spinnerWindow = new Window();
 
     public BreedingForm(ContentPanel fp, DrakeDetailPanel dp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {

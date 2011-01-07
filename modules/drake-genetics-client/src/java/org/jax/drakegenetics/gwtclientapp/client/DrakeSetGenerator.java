@@ -80,6 +80,7 @@ public class DrakeSetGenerator  {
                 new AsyncCallback<Map<String, String>>() {
                     public void onSuccess(Map<String, String> phenome) {
                         GWT.log("Have Male Phenotype!");
+                        GWT.log(phenome.toString());
                         setMalePhenome(phenome);
                     }
 

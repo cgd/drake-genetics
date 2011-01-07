@@ -79,9 +79,9 @@ public class DrakeBreedingInterface
     
     public void breed(DiploidGenome female, DiploidGenome male)
     {
-        Image spinnerImage = new Image("/images/drakeSpinner.gif");
-        panel.add(spinnerImage);
-        panel.layout(true);
+        //Image spinnerImage = new Image("/images/drakeSpinner.gif");
+        //panel.add(spinnerImage);
+        //panel.layout(true);
 
         this.drakeGeneticsService.breedPair(
                 female,
