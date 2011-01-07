@@ -493,6 +493,11 @@ public class PhenoService {
      */
     private class LethalAlleleCombinationException extends Exception {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -774596453717935441L;
+
     }
 
     private static <E> int numMatches(Collection<E> items, E itemToCheck) {

@@ -69,7 +69,6 @@ public class StaticDocumentLibrary {
      */
     public String getDocumentURL(List<String> nodes)
             throws FileNotFoundException {
-        File file;
 
         if (!root.validatePath(nodes)) {
             FileNotFoundException e = new FileNotFoundException("Invalid Document Path");
@@ -113,7 +112,8 @@ public class StaticDocumentLibrary {
             String resourcePath,
             LibraryNode parentNode) {
 
-        Set<String> children = context.getResourcePaths(resourcePath);
+        @SuppressWarnings("unchecked")
+		Set<String> children = context.getResourcePaths(resourcePath);
 
         // for each file in this directory
         for(String childResource : children) {

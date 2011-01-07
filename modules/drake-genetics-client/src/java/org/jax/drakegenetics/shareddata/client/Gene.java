@@ -25,7 +25,11 @@ import java.util.List;
  */
 public class Gene implements Serializable {
 
-    private String symbol;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6792023507990460200L;
+	private String symbol;
     private String name;
     private String chromosomeName;
     private double startPosition;
