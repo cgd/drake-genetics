@@ -17,6 +17,7 @@
 package org.jax.drakegenetics.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,7 +72,7 @@ public class PhenoService {
             phenome.put("Scale Color", getScaleColor(alleles));
             phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
-        catch (LethalAlleleCombination e) {
+        catch (LethalAlleleCombinationException e) {
             phenome.clear();
             phenome.put("Lethal", "true");
         }
@@ -83,16 +84,16 @@ public class PhenoService {
      * @param genome
      * @return a map of gene symbols to list of alleles for that gene
      */
-    private String getDiabetesPredisposition(Map<String, List<String>> alleles)
+    private static String getDiabetesPredisposition(Map<String, List<String>> alleles)
     {
         List<String> diabetesAlleles = alleles.get("Dia");
 
         if (diabetesAlleles.contains("d")) {
             return "no predisposition for diabetes";
         }
-        else {
-            return "predisposition for diabetes";
-        }
+
+        return "predisposition for diabetes";
+        
     }
 
     /**
@@ -138,7 +139,7 @@ public class PhenoService {
      * @param alleles
      * @return string describing metabolic phenotype
      */
-    private String getMetabolicPhenotype(Map<String, List<String>> alleles)
+    private static String getMetabolicPhenotype(Map<String, List<String>> alleles)
     {
 
         List<String> bogBreathAlleles = alleles.get("Otc");
@@ -171,7 +172,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String describing eye color phenotype
      */
-    private String getEyeColor(Map<String, List<String>> alleles)
+    private static String getEyeColor(Map<String, List<String>> alleles)
     {
         List<String> flameAlleles = alleles.get("Xdh");
 
@@ -197,9 +198,9 @@ public class PhenoService {
      * Get the eye morphology determined by this set of alleles
      * @param alleles all alleles for this genome
      * @return String describing the eye morphology
-     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombination
+     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombinationException
      */
-    private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombination
+    private String getEyeMorphology(Map<String, List<String>> alleles) throws LethalAlleleCombinationException
     {
         List<String> nickAlleles = alleles.get("Pax6");
 
@@ -211,7 +212,7 @@ public class PhenoService {
 
         if(nickAlleles.get(0).equals("N") && nickAlleles.get(1).equals("N")) {
                 // N/N
-                throw new LethalAlleleCombination();
+                throw new LethalAlleleCombinationException();
         }
         else if (nickAlleles.get(0).equals("n") && nickAlleles.get(1).equals("n")) {
                 // n/n
@@ -228,7 +229,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String describing the tail morphology
      */
-    private String getTailMorphology(Map<String, List<String>> alleles)
+    private static String getTailMorphology(Map<String, List<String>> alleles)
     {
         List<String> tailAlleles = alleles.get("Dll3");
 
@@ -250,7 +251,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String describing the armor phenotype
      */
-    private String getArmor(Map<String, List<String>> alleles) {
+    private static String getArmor(Map<String, List<String>> alleles) {
         
         List<String> armorAlleles = alleles.get("Eda");
 
@@ -275,7 +276,7 @@ public class PhenoService {
      * @param alleles all alleles for this genome
      * @return String description of the sex reversal phenotype
      */
-    private String getSexReversal(Map<String, List<String>> alleles)
+    private static String getSexReversal(Map<String, List<String>> alleles)
     {
 
         List<String> transformerAlleles = alleles.get("Ar");
@@ -296,7 +297,7 @@ public class PhenoService {
             return "Sex-reversed male";
         }
 
-        // Tr/Tr Tr/tr
+        // Tr/Tr Tr/tr,  tr/tr not possible
         return "normal female";
 
 
@@ -306,9 +307,9 @@ public class PhenoService {
      * Get the sex of the individual with this genome
      * @param genome
      * @return String description of the sex: (Scruffy) [male, female]
-     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombination
+     * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombinationException
      */
-    private String getSex(DiploidGenome genome) throws LethalAlleleCombination
+    private String getSex(DiploidGenome genome) throws LethalAlleleCombinationException
     {
         int xCount = 0;
         int yCount = 0;
@@ -333,7 +334,7 @@ public class PhenoService {
 
         if (xCount == 0 || xCount == 3) {
             // YO or XXX
-            throw new LethalAlleleCombination();
+            throw new LethalAlleleCombinationException();
         }
         else if (xCount == 1 && yCount == 0) {
             // XO
@@ -358,7 +359,7 @@ public class PhenoService {
     * @param alleles all alleles for a genome
     * @return String description of scale color
     */
-    private String getScaleColor(Map<String, List<String>> alleles) throws LethalAlleleCombination
+    private String getScaleColor(Map<String, List<String>> alleles) throws LethalAlleleCombinationException
     {
         List<String> colorlessAlleles = alleles.get("Tyr");
         List<String> metalicAlleles = alleles.get("M");
@@ -370,84 +371,144 @@ public class PhenoService {
 
 
         // if c/c drake is either Frost or inviable
-        if (colorlessAlleles.get(0).equals("c")
-                && colorlessAlleles.get(1).equals("c")) {
-            
+        if (numMatches(colorlessAlleles, "c") == 2) {           
             // lets check for all inviable combinations
             
-            // Mt/* 
-            if (metalicAlleles.get(0).equals("Mt")
-                    || metalicAlleles.get(1).equals("Mt")) {
+            // c/c Mt/* B/* dl/dl || c/c Mt/* B/Y dl/Y
+            if (numMatches(metalicAlleles, "Mt") >= 1
+                && numMatches(brownAlleles, "B") >= 1
+                && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+                        throw new LethalAlleleCombinationException();
+            }
 
-                // B/* or B/Y
-                if (brownAlleles.get(0).equals("B")
-                        || (brownAlleles.size() == 2 && brownAlleles.get(1).equals("B"))) {
+            if (numMatches(metalicAlleles, "M") >= 1) { 
 
-                    
-                    // dl/dl, dl/Y
-                    if (diluteAlleles.get(0).equals("dl")
-                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
-                        throw new LethalAlleleCombination();
-                    }
+                // c/c M/* B/* dl/dl || c/c M/* B/Y dl/Y
+                if (numMatches(brownAlleles, "B") >= 1
+                        && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+                    throw new LethalAlleleCombinationException();
+                }
+                // c/c M/* b/b dl/dl || c/c M/* b/Y dl/Y
+                else if (numMatches(brownAlleles, "b") == brownAlleles.size()
+                        && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+
+                    throw new LethalAlleleCombinationException();
                 }
             }
-            else if (metalicAlleles.get(0).equals("M")
-                    || metalicAlleles.get(1).equals("M")) {
 
-                // B/* or B/Y
-                if (brownAlleles.get(0).equals("B")
-                        || (brownAlleles.size() == 2 && brownAlleles.get(1).equals("B"))) {
-
-                    // dl/dl or dl/Y
-                    if (diluteAlleles.get(0).equals("dl")
-                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
-                        throw new LethalAlleleCombination();
-                    }
-
-                }
-                else if (brownAlleles.get(0).equals("b")
-                        && (brownAlleles.size() == 1 || brownAlleles.get(1).equals("b"))) { // b/b or b/Y
-
-                   
-                    // dl/dl or dl/Y
-                    if (diluteAlleles.get(0).equals("dl")
-                            && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
-                        throw new LethalAlleleCombination();
-                    }
-                }
-
+            // c/c m/m dl/dl || c/c m/m dl/Y (*/* for Brown)
+            if (numMatches(metalicAlleles, "m")== 2 
+                    && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+                throw new LethalAlleleCombinationException();
             }
-            else if (metalicAlleles.get(0).equals("m")
-                    && metalicAlleles.get(1).equals("m")) {
 
-                // */* for Brown...
+            // any other c/c is Frost
+            return "Frost";
+            
+        }
+        else { // C/*
 
-                // dl/dl dl/Y
-                if (diluteAlleles.get(0).equals("dl")
-                        && (diluteAlleles.size() == 1 || diluteAlleles.get(1).equals("dl"))) {
-                    throw new LethalAlleleCombination();
+            // C/* Mt/*
+            if (numMatches(metalicAlleles, "Mt") >= 1) {
+                // check for lethal combinations B/* dl/dl || B/Y dl/Y
+                if (numMatches(brownAlleles, "B") >=1 
+                        && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
+                    throw new LethalAlleleCombinationException();
+                }
+                
+                // everything else Mt/* is Tawny
+                return "Tawny";    
+            }
+            // C/* M/*
+            else if(numMatches(metalicAlleles, "M") >= 1) {
+
+                // C/* M/* B/*
+                if (numMatches(brownAlleles, "B") >= 1) {
+                    // C/* M/* B/* D/*
+                    if (numMatches(diluteAlleles, "D") >= 1) {
+                        return "Steel";
+                    }
+                    // C/* M/* B/* d/d || C/* M/* B/Y d/Y || C/* M/* B/* d/dl
+                    else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1
+                                && numMatches(diluteAlleles, "dl") == 1)) {
+                        return "Argent";
+                    }
                 }
 
+                // C/* M/* b/b || C/* M/* b/Y
+                if (numMatches(brownAlleles, "b") == brownAlleles.size()) {
+                    // C/* M/* b/b D/* || C/* M/* b/Y D/*
+                    if (numMatches(diluteAlleles, "D") >= 1) {
+                        return "Copper";
+                    }
+                    // C/* M/* b/b d/d || C/* M/* b/Y d/Y ||  C/* M/* b/b d/dl
+                    else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1
+                                && numMatches(diluteAlleles, "dl") == 1)) {
+                        return "Gold";
+                    }
+                }
+
+                // everything else inviable
+                throw new LethalAlleleCombinationException();
             }
+            // C/* m/m
             else {
-                return "Frost";
+                // C/* m/m B/* || C/* m/m B/Y
+                if (numMatches(brownAlleles, "B") >= 1) {
+                    // C/* m/m B/* D/* || C/* m/m B/Y D/Y
+                    if (numMatches(diluteAlleles, "D") >= 1) {
+                        return "Charcoal";
+                    }
+                    // C/* m/m B/* d/d || C/* m/m B/Y d/Y || C/* m/m B/* d/dl
+                    else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1 && numMatches(diluteAlleles, "dl") == 1)) {
+                         return "Dust";
+                    }
+                    // all other C/* m/m B/*
+                    throw new LethalAlleleCombinationException();
+                }
+
+                //else must be  C/* m/m b/b || C/* m/m b/Y
+
+                // C/* m/m b/b D/* || C/* m/m b/Y D/Y
+                if (numMatches(diluteAlleles, "D") >= 1) {
+                    return "Earth";
+                }
+                // C/* m/m b/b d/d || C/* m/m b/Y d/Y || C/* m/m b/b d/dl
+                else if(numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1 && numMatches(diluteAlleles, "dl") == 1)) {
+                    return "Sand";
+                }
+
+                throw new LethalAlleleCombinationException();
             }
         }
-        
-            
-            
-
-        
-
-        return "TODO";
     }
 
     /*
-     * private class used to bail out of phenotyping if we find a lethal
+     * private exception used to bail out of phenotyping if we find a lethal
      * combination of alleles
      */
-    private class LethalAlleleCombination extends Exception {
+    private class LethalAlleleCombinationException extends Exception {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -774596453717935441L;
 
     }
+
+    private static <E> int numMatches(Collection<E> items, E itemToCheck) {
+        int count = 0;
+        for(E item : items) {
+            if(itemToCheck.equals(item)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 
 }
