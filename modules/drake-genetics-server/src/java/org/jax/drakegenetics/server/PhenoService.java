@@ -84,16 +84,16 @@ public class PhenoService {
      * @param genome
      * @return a map of gene symbols to list of alleles for that gene
      */
-    private String getDiabetesPredisposition(Map<String, List<String>> alleles)
+    private static String getDiabetesPredisposition(Map<String, List<String>> alleles)
     {
         List<String> diabetesAlleles = alleles.get("Dia");
 
         if (diabetesAlleles.contains("d")) {
             return "no predisposition for diabetes";
         }
-        else {
-            return "predisposition for diabetes";
-        }
+
+        return "predisposition for diabetes";
+        
     }
 
     /**
@@ -297,7 +297,7 @@ public class PhenoService {
             return "Sex-reversed male";
         }
 
-        // Tr/Tr Tr/tr,  tr/tr not possible?
+        // Tr/Tr Tr/tr,  tr/tr not possible
         return "normal female";
 
 
@@ -410,7 +410,7 @@ public class PhenoService {
 
             // C/* Mt/*
             if (numMatches(metalicAlleles, "Mt") >= 1) {
-                // check for lethal combinations B/* dl/dl or dl/Y
+                // check for lethal combinations B/* dl/dl || B/Y dl/Y
                 if (numMatches(brownAlleles, "B") >=1 
                         && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                     throw new LethalAlleleCombinationException();
@@ -453,14 +453,38 @@ public class PhenoService {
                 // everything else inviable
                 throw new LethalAlleleCombinationException();
             }
+            // C/* m/m
+            else {
+                // C/* m/m B/* || C/* m/m B/Y
+                if (numMatches(brownAlleles, "B") >= 1) {
+                    // C/* m/m B/* D/* || C/* m/m B/Y D/Y
+                    if (numMatches(diluteAlleles, "D") >= 1) {
+                        return "Charcoal";
+                    }
+                    // C/* m/m B/* d/d || C/* m/m B/Y d/Y || C/* m/m B/* d/dl
+                    else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1 && numMatches(diluteAlleles, "dl") == 1)) {
+                         return "Dust";
+                    }
+                    // all other C/* m/m B/*
+                    throw new LethalAlleleCombinationException();
+                }
+
+                //else must be  C/* m/m b/b || C/* m/m b/Y
+
+                // C/* m/m b/b D/* || C/* m/m b/Y D/Y
+                if (numMatches(diluteAlleles, "D") >= 1) {
+                    return "Earth";
+                }
+                // C/* m/m b/b d/d || C/* m/m b/Y d/Y || C/* m/m b/b d/dl
+                else if(numMatches(diluteAlleles, "d") == diluteAlleles.size()
+                            || (numMatches(diluteAlleles, "d") == 1 && numMatches(diluteAlleles, "dl") == 1)) {
+                    return "Sand";
+                }
+
+                throw new LethalAlleleCombinationException();
+            }
         }
-        
-            
-            
-
-        
-
-        return "TODO";
     }
 
     /*
@@ -473,9 +497,11 @@ public class PhenoService {
 
     private static <E> int numMatches(Collection<E> items, E itemToCheck) {
         int count = 0;
-        for(E item : items)
-         if(itemToCheck.equals(item))
-            count++;
+        for(E item : items) {
+            if(itemToCheck.equals(item)) {
+                count++;
+            }
+        }
         return count;
     }
 
