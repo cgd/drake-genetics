@@ -75,55 +75,18 @@ public class DiploidGenome implements Serializable
             boolean isFemale,
             SpeciesGenomeDescription speciesGenomeDescription)
     {
-        this.maternalHaploid = new ArrayList<Chromosome>();
-        this.paternalHaploid = new ArrayList<Chromosome>();
-        this.speciesGenomeDescription = speciesGenomeDescription;
-        
-        Map<String, ChromosomeDescription> chrDescs = speciesGenomeDescription.getChromosomeDescriptions();
-        ArrayList<String> sortedChrNames = new ArrayList<String>(chrDescs.keySet());
-        Collections.sort(sortedChrNames, new ChromosomeNameComparator());
-        for(String chrName : sortedChrNames)
-        {
-            // create the chromosome
-            Chromosome currChr = new Chromosome();
-            currChr.setChromosomeName(chrName);
-            ArrayList<CrossoverPoint> crossovers = new ArrayList<CrossoverPoint>(1);
-            crossovers.add(new CrossoverPoint(haplotype, 0.0));
-            currChr.setCrossovers(crossovers);
-            
-            // TODO do we need to worry about "M" chromosomes?
-            if(chrName.equals("X"))
-            {
-                this.maternalHaploid.add(currChr);
-                if(isFemale)
-                {
-                    this.paternalHaploid.add(new Chromosome(currChr));
-                }
-            }
-            else if(chrName.equals("Y"))
-            {
-                if(!isFemale)
-                {
-                    this.paternalHaploid.add(currChr);
-                }
-            }
-            else
-            {
-                // it's an autosome
-                this.maternalHaploid.add(currChr);
-                this.paternalHaploid.add(new Chromosome(currChr));
-            }
-        }
+        this(haplotype, haplotype, isFemale, speciesGenomeDescription);
     }
 
     /**
-     * Creates a "pure" inbred genome from the given haplotype and description
+     * Creates an "F1" genome where the maternal and paternal haplotypes each
+     * appear with a single copy.
      * @param maternalHaplotype
      *          the maternal haplotype to use
      * @param paternalHaplotype
-     *          the paternal haplotype to useS
+     *          the paternal haplotype to use
      * @param isFemale
-     *          determines if this is a male or female inbred
+     *          determines if this is a male or female
      * @param speciesGenomeDescription
      *          the genome description
      */
