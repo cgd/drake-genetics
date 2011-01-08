@@ -70,7 +70,7 @@ public class PhenoService {
             phenome.put("Sex", getSex(genome));
             phenome.put("Sex Reversal", getSexReversal(alleles));
             phenome.put("Scale Color", getScaleColor(alleles));
-            phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
+            //phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombinationException e) {
             phenome.clear();
@@ -86,12 +86,13 @@ public class PhenoService {
      */
     private static String getDiabetesPredisposition(Map<String, List<String>> alleles)
     {
+         
         List<String> diabetesAlleles = alleles.get("Dia");
 
         if (diabetesAlleles.contains("d")) {
             return "no predisposition for diabetes";
         }
-
+        
         return "predisposition for diabetes";
         
     }
@@ -154,7 +155,7 @@ public class PhenoService {
 
         /* if the first allele in the list is "bog" ... */
         if (numMatches(bogBreathAlleles, "bog") == bogBreathAlleles.size()) {
-        	return "Bog Breath";
+            return "Bog Breath";
         }
 
         // every other combination is healthy
@@ -232,8 +233,8 @@ public class PhenoService {
          * T/t - long tail with barb
          * t/t - short tail, no barb
          * 
-         * t/Y - short tail, no barb ?
-         * T/Y - long tail with barb ?
+         * t/Y - short tail, no barb 
+         * T/Y - long tail with barb 
          */
 
         if (numMatches(tailAlleles, "t") == tailAlleles.size()) {
@@ -361,7 +362,7 @@ public class PhenoService {
         List<String> colorlessAlleles = alleles.get("Tyr");
         List<String> metalicAlleles = alleles.get("M");
         List<String> diluteAlleles = alleles.get("Myo5a");
-        List<String> brownAlleles = alleles.get("Tyrp1");
+        List<String> brownAlleles = alleles.get("Otc");
 
         // We've tried to collapse as many of these rules as possible
         // and also take advantage that combinations like B/Y dl/dl or B/b dl/Y are impossible
@@ -407,7 +408,7 @@ public class PhenoService {
             // C/* Mt/*
             if (metalicAlleles.contains("Mt")) {
                 // check for lethal combinations B/* dl/dl || B/Y dl/Y
-                if (numMatches(brownAlleles, "B") >=1 
+                if (brownAlleles.contains("B") 
                         && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                     throw new LethalAlleleCombinationException();
                 }
@@ -421,7 +422,7 @@ public class PhenoService {
                 // C/* M/* B/*
                 if (brownAlleles.contains("B")) {
                     // C/* M/* B/* D/*
-                    if (numMatches(diluteAlleles, "D") >= 1) {
+                    if (diluteAlleles.contains("D")) {
                         return "Steel";
                     }
                     // C/* M/* B/* d/d || C/* M/* B/Y d/Y || C/* M/* B/* d/dl
@@ -435,7 +436,7 @@ public class PhenoService {
                 // C/* M/* b/b || C/* M/* b/Y
                 if (numMatches(brownAlleles, "b") == brownAlleles.size()) {
                     // C/* M/* b/b D/* || C/* M/* b/Y D/*
-                    if (numMatches(diluteAlleles, "D") >= 1) {
+                    if (diluteAlleles.contains("D")) {
                         return "Copper";
                     }
                     // C/* M/* b/b d/d || C/* M/* b/Y d/Y ||  C/* M/* b/b d/dl
@@ -469,7 +470,7 @@ public class PhenoService {
                 //else must be  C/* m/m b/b || C/* m/m b/Y
 
                 // C/* m/m b/b D/* || C/* m/m b/Y D/Y
-                if (numMatches(diluteAlleles, "D") >= 1) {
+                if (diluteAlleles.contains("D")) {
                     return "Earth";
                 }
                 // C/* m/m b/b d/d || C/* m/m b/Y d/Y || C/* m/m b/b d/dl
@@ -489,10 +490,10 @@ public class PhenoService {
      */
     private class LethalAlleleCombinationException extends Exception {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -774596453717935441L;
+        /**
+        *
+        */
+        private static final long serialVersionUID = -774596453717935441L;
 
     }
 
