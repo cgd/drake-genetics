@@ -72,7 +72,8 @@ public class LibraryData {
 
         tree.setDisplayProperty("name");
         tree.setWidth(200);
-        tree.setHeight(450);
+        //tree.setHeight(450);
+        tree.setHeight(670);
         tree.addListener(Events.OnClick,
                 new Listener<TreePanelEvent<ModelData>>() {
 
@@ -91,7 +92,8 @@ public class LibraryData {
 
         libraryDocumentPanel.setHeaderVisible(false);
         libraryDocumentPanel.setWidth(494);
-        libraryDocumentPanel.setHeight(451);
+        //libraryDocumentPanel.setHeight(451);
+        libraryDocumentPanel.setHeight(671);
         libraryDocumentPanel.setUrl("Library/index.html");
         libraryPanel.add(libraryDocumentPanel);
 

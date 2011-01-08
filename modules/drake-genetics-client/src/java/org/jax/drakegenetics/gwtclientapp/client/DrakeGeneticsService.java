@@ -46,6 +46,15 @@ public interface DrakeGeneticsService extends RemoteService
             DiploidGenome paternalGenome);
     
     /**
+     * For fetching the phenotype of a diploid genome
+     * @param genome
+     *          the diploid genome for which you want a phenotype
+     * @return 
+     *          the phenotype mapping for this diploid genome.
+     */
+    public Map<String, String> getPhenome(DiploidGenome genome);
+
+    /**
      * Get the metabolic test results 
      * @param genome
      *          the genome object

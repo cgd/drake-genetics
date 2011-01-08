@@ -113,6 +113,25 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
 
     /**
      * {@inheritDoc}
+     * @return 
+     */
+    public Map<String, String> getPhenome(
+            DiploidGenome genome)
+    {
+        // TODO right now this is a simple pass through. Implement persistence etc.
+        try
+        {
+            return this.phenoService.getPhenome(genome);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public LibraryNode getLibrary()
     {

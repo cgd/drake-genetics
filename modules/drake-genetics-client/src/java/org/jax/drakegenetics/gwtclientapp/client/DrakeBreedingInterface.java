@@ -23,9 +23,11 @@ import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.DrakeSpeciesSingleton;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 
@@ -77,6 +79,10 @@ public class DrakeBreedingInterface
     
     public void breed(DiploidGenome female, DiploidGenome male)
     {
+        //Image spinnerImage = new Image("/images/drakeSpinner.gif");
+        //panel.add(spinnerImage);
+        //panel.layout(true);
+
         this.drakeGeneticsService.breedPair(
                 female,
                 male,
@@ -158,6 +164,7 @@ public class DrakeBreedingInterface
         
         offspringText.append("</pre>");
         
+        this.panel.removeAll();
         this.panel.add(new HTML(offspringText.toString()));
         GWT.log(offspringText.toString());
         this.panel.layout(true);

@@ -17,63 +17,68 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
-import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 import com.extjs.gxt.ui.client.Style.VerticalAlignment;
-import com.extjs.gxt.ui.client.data.BaseTreeModel;
+
 import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.data.TreeModel;
+import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
+import com.extjs.gxt.ui.client.event.DomEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
-import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
+import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
-import com.extjs.gxt.ui.client.widget.layout.FitLayout;
-import com.extjs.gxt.ui.client.widget.treepanel.TreePanel;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
 
 /**
+ * The BreedingForm is the class for managing the widgets related to 
+ * display of the breeding pair, the action of calling the breeding interface,
+ * and displaying the progeny of the cross.
+ * 
  * @author <A HREF="mailto:dave.walton@jax.org">Dave Walton</A>
  */
-public class BreedingForm {
+public class BreedingForm implements DrakeReceiver {
 
     private Label failMessage = null;
     private ContentPanel formPanel = new ContentPanel();
-    // Once the detail panel is working we have this so we can send it
-    // drakes for detail display
-    private ContentPanel detailPanel = new ContentPanel();
-    private HorizontalPanel thePair = new HorizontalPanel();
+    // The female drake being bred
     private Drake female;
-    private Image femaleImage;
+    // Image for display in the panel which displays the "pair"
+    private Image femaleImage = new Image();
+    // The male drake being bred
     private Drake male;
-    private Image maleImage;
+    // Image for display in the panel which displays the "pair"
+    private Image maleImage = new Image();
+    // The panel where the female image is displayed
     private ContentPanel femalePanel = new ContentPanel();
+    // The panel where the male image is displayed
     private ContentPanel malePanel = new ContentPanel();
 
-    public BreedingForm(ContentPanel fp, 
+    public BreedingForm(ContentPanel fp, DrakeDetailPanel dp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.formPanel = fp;
+        final DrakeDetailPanel detailPanel = dp;
 
         formPanel.setHeaderVisible(false);
         formPanel.setBodyStyle("backgroundColor: #ede9e3");
         formPanel.setWidth(544);
-        formPanel.setHeight(350);
+        //formPanel.setHeight(350);
+        formPanel.setHeight(450);
         
         VerticalPanel vp1 = new VerticalPanel();
         HorizontalPanel top = new HorizontalPanel();
@@ -97,25 +102,47 @@ public class BreedingForm {
         femalePanel.setLayout(new BorderLayout());
         femalePanel.setHeaderVisible(false);
         femalePanel.setSize(80, 80);
-        //femaleImage = new Image("/images/eyes/SEF11520.jpg");
-        //femaleImage.setPixelSize(75, 75);
-        //femalePanel.add(femaleImage);
+        femalePanel.sinkEvents(Event.ONCLICK);
+        femalePanel.addListener(Events.OnClick,
+                new Listener<BaseEvent>() {
+            public void handleEvent(BaseEvent be) {
+                GWT.log("In event for selecting female panel " + be.toString());
+                if (female != null) {
+                    detailPanel.sendDrake(female);
+                    
+                }
+            }
+        });
+
         malePanel.setLayout(new BorderLayout());
         malePanel.setHeaderVisible(false);
         malePanel.setSize(80, 80);
-        // = new Image("/images/eyes/SEF11520.jpg");
-        //maleImage.setPixelSize(75, 75);
-        //malePanel.add(maleImage);
+        malePanel.sinkEvents(Event.ONCLICK);
+        malePanel.addListener(Events.OnClick,
+                new Listener<BaseEvent>() {
+            public void handleEvent(BaseEvent be) {
+                GWT.log("In event for selecting male panel " + be.toString());
+                if (male != null) {
+                    detailPanel.sendDrake(male);
+                    
+                }
+            }
+        });
+
+        HorizontalPanel thePair = new HorizontalPanel();
         thePair.add(femalePanel);
         thePair.add(malePanel);
         breedingPair.add(thePair);
         
-        
+
         SelectionListener<ButtonEvent> BreedingButtonListener = 
             new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
+                //if ( ce.isShiftKey()) {
+                    GWT.log("in shift " + ce.getKeyCode());
+                //}
                 DiploidGenome fg = female.getDiploidgenome();
                 DiploidGenome mg = female.getDiploidgenome();
                 
@@ -136,7 +163,7 @@ public class BreedingForm {
         
     }
     
-    public void setBreedingDrake(Drake d) {
+    public void sendDrake(Drake d) {
         if (d.getGender().equals("F")) {
             this.female = d;
             this.femaleImage = d.getSmallimage();

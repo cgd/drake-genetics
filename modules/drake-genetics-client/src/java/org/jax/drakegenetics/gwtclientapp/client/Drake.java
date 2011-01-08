@@ -17,6 +17,8 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
+import java.util.Map;
+
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
@@ -40,6 +42,16 @@ public class Drake extends BaseTreeModel {
         set("largeimage", largeImg);
     }
 
+    public Drake(String name, String gender, DiploidGenome dg, 
+            Map<String,String> phenome, Image smallImg, Image largeImg) {
+        set("name", name);
+        set("gender", gender);
+        set("diploidgenome", dg);
+        set("phenome",phenome);
+        set("smallimage", smallImg);
+        set("largeimage", largeImg);
+    }
+
     public String getName() {
         return (String) get("name");
     }
@@ -58,6 +70,14 @@ public class Drake extends BaseTreeModel {
 
     public Image getLargeimage() {
         return (Image) get("largeimage");
+    }
+    
+    public void setPhenome(Map<String, String> phenome) {
+        set("phenome",phenome);
+    }
+    
+    public Map<String, String> getPhenome() {
+        return (Map<String,String>)get("phenome");
     }
 
     public String toString() {
