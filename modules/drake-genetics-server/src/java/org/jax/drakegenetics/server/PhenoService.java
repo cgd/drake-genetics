@@ -153,18 +153,12 @@ public class PhenoService {
         */
 
         /* if the first allele in the list is "bog" ... */
-        if (bogBreathAlleles.get(0).equals("bog")) {
-            /* if there is only one copy of the gene, or the second copy is also
-             * "bog" then the phenotype is "bog breath"
-             */
-            if (bogBreathAlleles.size() == 1
-                    || (bogBreathAlleles.size() == 2 && bogBreathAlleles.get(1).equals("bog"))) {
-                return "bog breath";
-            }
+        if (numMatches(bogBreathAlleles, "bog") == bogBreathAlleles.size()) {
+        	return "Bog Breath";
         }
 
-        // every other combination is healty
-        return "healthy";
+        // every other combination is healthy
+        return "Healthy";
     }
 
     /**
@@ -182,11 +176,11 @@ public class PhenoService {
          * f/f - white eye
          */
 
-        if (flameAlleles.get(0).equals("F") && flameAlleles.get(1).equals("F")) {
+        if (numMatches(flameAlleles, "F") == 2) {
             // F/F
             return "red";
         }
-        else if (flameAlleles.get(0).equals("f") && flameAlleles.get(1).equals("f")) {
+        else if (numMatches(flameAlleles, "f") == 2) {
             // f/f
             return "white";
         }
@@ -210,11 +204,11 @@ public class PhenoService {
          * n/n - normal eye
          */
 
-        if(nickAlleles.get(0).equals("N") && nickAlleles.get(1).equals("N")) {
+        if(numMatches(nickAlleles, "N") == 2) {
                 // N/N
                 throw new LethalAlleleCombinationException();
         }
-        else if (nickAlleles.get(0).equals("n") && nickAlleles.get(1).equals("n")) {
+        else if (numMatches(nickAlleles, "n") == 2) {
                 // n/n
                 return "normal eye";
         }
@@ -237,9 +231,12 @@ public class PhenoService {
          * T/T - long tail with barb
          * T/t - long tail with barb
          * t/t - short tail, no barb
+         * 
+         * t/Y - short tail, no barb ?
+         * T/Y - long tail with barb ?
          */
 
-        if (tailAlleles.get(0).equals("t") && tailAlleles.get(1).equals("t")) {
+        if (numMatches(tailAlleles, "t") == tailAlleles.size()) {
             return "short no barb";
         }
 
@@ -261,10 +258,10 @@ public class PhenoService {
          * A2/A2 - one lateral plate
          */
 
-        if (armorAlleles.get(0).equals("A1") && armorAlleles.get(1).equals("A1")) {
+        if (numMatches(armorAlleles, "A1") == 2) {
             return "five lateral plates";
         }
-        else if (armorAlleles.get(0).equals("A2") && armorAlleles.get(1).equals("A2")) {
+        else if (numMatches(armorAlleles, "A2") == 2) {
             return "one lateral plate";
         }
 
@@ -375,16 +372,15 @@ public class PhenoService {
             // lets check for all inviable combinations
             
             // c/c Mt/* B/* dl/dl || c/c Mt/* B/Y dl/Y
-            if (numMatches(metalicAlleles, "Mt") >= 1
-                && numMatches(brownAlleles, "B") >= 1
+            if (metalicAlleles.contains("Mt") && brownAlleles.contains("B")
                 && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                         throw new LethalAlleleCombinationException();
             }
 
-            if (numMatches(metalicAlleles, "M") >= 1) { 
+            if (metalicAlleles.contains("M")) { 
 
                 // c/c M/* B/* dl/dl || c/c M/* B/Y dl/Y
-                if (numMatches(brownAlleles, "B") >= 1
+                if (brownAlleles.contains("B")
                         && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                     throw new LethalAlleleCombinationException();
                 }
@@ -397,7 +393,7 @@ public class PhenoService {
             }
 
             // c/c m/m dl/dl || c/c m/m dl/Y (*/* for Brown)
-            if (numMatches(metalicAlleles, "m")== 2 
+            if (numMatches(metalicAlleles, "m") == 2 
                     && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
                 throw new LethalAlleleCombinationException();
             }
@@ -409,7 +405,7 @@ public class PhenoService {
         else { // C/*
 
             // C/* Mt/*
-            if (numMatches(metalicAlleles, "Mt") >= 1) {
+            if (metalicAlleles.contains("Mt")) {
                 // check for lethal combinations B/* dl/dl || B/Y dl/Y
                 if (numMatches(brownAlleles, "B") >=1 
                         && numMatches(diluteAlleles, "dl") == diluteAlleles.size()) {
@@ -420,10 +416,10 @@ public class PhenoService {
                 return "Tawny";    
             }
             // C/* M/*
-            else if(numMatches(metalicAlleles, "M") >= 1) {
+            else if (metalicAlleles.contains("M")) {
 
                 // C/* M/* B/*
-                if (numMatches(brownAlleles, "B") >= 1) {
+                if (brownAlleles.contains("B")) {
                     // C/* M/* B/* D/*
                     if (numMatches(diluteAlleles, "D") >= 1) {
                         return "Steel";
@@ -456,9 +452,9 @@ public class PhenoService {
             // C/* m/m
             else {
                 // C/* m/m B/* || C/* m/m B/Y
-                if (numMatches(brownAlleles, "B") >= 1) {
+                if (brownAlleles.contains("B")) {
                     // C/* m/m B/* D/* || C/* m/m B/Y D/Y
-                    if (numMatches(diluteAlleles, "D") >= 1) {
+                    if (diluteAlleles.contains("D")) {
                         return "Charcoal";
                     }
                     // C/* m/m B/* d/d || C/* m/m B/Y d/Y || C/* m/m B/* d/dl
