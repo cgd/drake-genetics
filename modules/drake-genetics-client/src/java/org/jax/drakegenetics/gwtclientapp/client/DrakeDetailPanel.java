@@ -50,10 +50,11 @@ public class DrakeDetailPanel implements DrakeReceiver {
     // The panel where the image is displayed
     private ContentPanel drakeImagePanel = new ContentPanel();
     
-    private final Label drakeNameLabel = new Label();
-    private final Label drakeGenderLabel = new Label();
+    private final TextBox drakeNameLabel = new TextBox();
+    private final TextBox drakeGenderLabel = new TextBox();
     private final TextArea genomeTextArea = new TextArea();
-    private final Label drakePhenomeLabel = new Label();
+    private final TextArea phenomeTextArea = new TextArea();
+    //private final Label drakePhenomeLabel = new Label();
 
     public DrakeDetailPanel(ContentPanel fp, 
             DrakeGeneticsServiceAsync drakeGeneticsService) {
@@ -102,27 +103,35 @@ public class DrakeDetailPanel implements DrakeReceiver {
         HorizontalPanel namePanel = new HorizontalPanel();
         Label name = new Label("Name: ");
         namePanel.add(name);
+        drakeNameLabel.setReadOnly(true);
+        drakeNameLabel.setWidth("10");
         namePanel.add(drakeNameLabel);
-        vp1.add(namePanel);
+        //vp1.add(namePanel);
         
         HorizontalPanel genderPanel = new HorizontalPanel();
         Label gender = new Label("Sex: ");
-        genderPanel.add(gender);
-        genderPanel.add(drakeGenderLabel);
-        vp1.add(genderPanel);
+        namePanel.add(gender);
+        drakeGenderLabel.setReadOnly(true);
+        drakeGenderLabel.setWidth("10");
+        namePanel.add(drakeGenderLabel);
+        //genderPanel.add(gender);
+        //genderPanel.add(drakeGenderLabel);
+        //vp1.add(genderPanel);
+        vp1.add(namePanel);
  
         Label genome = new Label("Diploid Genome: ");
         vp1.add(genome);
         genomeTextArea.setWidth(315);
-        genomeTextArea.setHeight(100);
+        genomeTextArea.setHeight(75);
         genomeTextArea.setReadOnly(true);
         vp1.add(genomeTextArea);
 
-        HorizontalPanel phenomePanel = new HorizontalPanel();
         Label phenome = new Label("Phenotype: ");
-        phenomePanel.add(phenome);
-        phenomePanel.add(drakePhenomeLabel);
-        vp1.add(phenomePanel);
+        vp1.add(phenome);
+        phenomeTextArea.setWidth(315);
+        phenomeTextArea.setHeight(50);
+        phenomeTextArea.setReadOnly(true);
+        vp1.add(phenomeTextArea);
  
         hp1.add(vp1);
         
@@ -144,7 +153,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
         Map<String,String> phenome = d.getPhenome();
         if (phenome != null) {
             GWT.log(phenome.toString());
-            this.drakePhenomeLabel.setText(phenome.toString());
+            this.phenomeTextArea.setValue(phenome.toString());
         }
     }
     
