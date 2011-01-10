@@ -24,6 +24,7 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
+import com.extjs.gxt.ui.client.widget.Text;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
@@ -31,7 +32,6 @@ import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.TextBox;
 
 /**
  * The DrakeDetailPanel is the class for displaying details about a specific
@@ -50,8 +50,8 @@ public class DrakeDetailPanel implements DrakeReceiver {
     // The panel where the image is displayed
     private ContentPanel drakeImagePanel = new ContentPanel();
     
-    private final TextBox drakeNameLabel = new TextBox();
-    private final TextBox drakeGenderLabel = new TextBox();
+    private final Text drakeNameLabel = new Text();
+    private final Text drakeGenderLabel = new Text();
     private final TextArea genomeTextArea = new TextArea();
     private final TextArea phenomeTextArea = new TextArea();
     //private final Label drakePhenomeLabel = new Label();
@@ -80,39 +80,23 @@ public class DrakeDetailPanel implements DrakeReceiver {
         hp1.add(drakeImagePanel);
         
         VerticalPanel vp1 = new VerticalPanel();
-        
-        /*SelectionListener<ButtonEvent> BreedingButtonListener = 
-            new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                DiploidGenome fg = female.getDiploidgenome();
-                DiploidGenome mg = female.getDiploidgenome();
-                
-                breedingInterface.breed(fg, mg);
-                Info.display("Breeding...", "Breeding "
-                        + female.toString() + " X " + male.toString());
-
-            }
-        };*/
-        //Button breedButton = new Button("Breed", BreedingButtonListener);
-        Button breedButton = new Button("Make Available for Breeding");
-
-        vp1.add(breedButton);
+        vp1.setSpacing(1);
         
         HorizontalPanel namePanel = new HorizontalPanel();
+        namePanel.setSpacing(2);
         Label name = new Label("Name: ");
         namePanel.add(name);
-        drakeNameLabel.setReadOnly(true);
-        drakeNameLabel.setWidth("10");
+        //drakeNameLabel.setEnabled(false);
+        drakeNameLabel.setWidth(150);
         namePanel.add(drakeNameLabel);
         //vp1.add(namePanel);
         
         HorizontalPanel genderPanel = new HorizontalPanel();
         Label gender = new Label("Sex: ");
         namePanel.add(gender);
-        drakeGenderLabel.setReadOnly(true);
-        drakeGenderLabel.setWidth("10");
+        //drakeGenderLabel.setEnabled(false);
+
+        drakeGenderLabel.setWidth(75);
         namePanel.add(drakeGenderLabel);
         //genderPanel.add(gender);
         //genderPanel.add(drakeGenderLabel);
@@ -129,10 +113,28 @@ public class DrakeDetailPanel implements DrakeReceiver {
         Label phenome = new Label("Phenotype: ");
         vp1.add(phenome);
         phenomeTextArea.setWidth(315);
-        phenomeTextArea.setHeight(50);
+        phenomeTextArea.setHeight(55);
         phenomeTextArea.setReadOnly(true);
         vp1.add(phenomeTextArea);
  
+        /*
+         * SelectionListener<ButtonEvent> BreedingButtonListener = new
+         * SelectionListener<ButtonEvent>() {
+         * 
+         * @Override public void componentSelected(ButtonEvent ce) {
+         * DiploidGenome fg = female.getDiploidgenome(); DiploidGenome mg =
+         * female.getDiploidgenome();
+         * 
+         * breedingInterface.breed(fg, mg); Info.display("Breeding...",
+         * "Breeding " + female.toString() + " X " + male.toString());
+         * 
+         * } };
+         */
+        // Button breedButton = new Button("Breed", BreedingButtonListener);
+        Button breedButton = new Button("Make Available for Breeding");
+
+        vp1.add(breedButton);
+        
         hp1.add(vp1);
         
         detailPanel.add(hp1);

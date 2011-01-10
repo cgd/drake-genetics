@@ -53,10 +53,10 @@ public class DrakeSetGenerator  {
     }
     
     public Folder getTreeModel(DrakeGeneticsServiceAsync dgs) {
-        Image f_small_example = new Image("/images/eyes/SEF11520.jpg");
-        Image f_large_example = new Image("/images/eyes/LEF11520.jpg");
-        Image m_small_example = new Image("/images/eyes/SEM00500.jpg");
-        Image m_large_example = new Image("/images/eyes/LEM00500.jpg");
+        Image f_small_example = new Image("/images/eyes/SEF51311.jpg");
+        Image f_large_example = new Image("/images/eyes/LEF51311.jpg");
+        Image m_small_example = new Image("/images/eyes/SEM40100.jpg");
+        Image m_large_example = new Image("/images/eyes/LEM40100.jpg");
         DiploidGenome female_genome = new DiploidGenome("P1_M", "P1_P", true,
                 DrakeSpeciesSingleton.getInstance());
         DiploidGenome male_genome = new DiploidGenome("P2_M", "P2_P", false,
