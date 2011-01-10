@@ -69,8 +69,6 @@ public class PhenoService {
             phenome.put("Armor", getArmor(alleles));
             phenome.put("Sex", getSex(genome));
             phenome.put("Sex Reversal", getSexReversal(alleles));
-            phenome.put("Scale Color", getScaleColor(alleles));
-            //phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombinationException e) {
             phenome.clear();
@@ -79,24 +77,7 @@ public class PhenoService {
         return phenome;
     }
 
-    /**
-     * get the alleles for this genome
-     * @param genome
-     * @return a map of gene symbols to list of alleles for that gene
-     */
-    private static String getDiabetesPredisposition(Map<String, List<String>> alleles)
-    {
-         
-        List<String> diabetesAlleles = alleles.get("Dia");
-
-        if (diabetesAlleles.contains("d")) {
-            return "no predisposition for diabetes";
-        }
-        
-        return "predisposition for diabetes";
-        
-    }
-
+ 
     /**
      * get the alleles for this genome
      * @param genome
