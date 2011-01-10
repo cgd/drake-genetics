@@ -69,6 +69,7 @@ public class PhenoService {
             phenome.put("Armor", getArmor(alleles));
             phenome.put("Sex", getSex(genome));
             phenome.put("Sex Reversal", getSexReversal(alleles));
+            phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombinationException e) {
             phenome.clear();
@@ -78,6 +79,20 @@ public class PhenoService {
     }
 
  
+    /*   TODO really this is an abuse of the word phenotype since it
+     *   refers to a predisposition. This should be resolved in some
+     *   future iteration
+     */ 
+    private static String getDiabetesPredisposition(Map<String, List<String>> alleles)
+    {
+    	List<String> diabetesAlleles = alleles.get("Dia");
+    	
+    	if (diabetesAlleles.contains("Db")) {
+    		return "no predisposition for diabetes";
+    	}
+    	return "predisposition for diabetes";
+    }
+    
     /**
      * get the alleles for this genome
      * @param genome

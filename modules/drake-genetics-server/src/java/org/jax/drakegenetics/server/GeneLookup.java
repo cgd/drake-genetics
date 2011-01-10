@@ -47,6 +47,13 @@ public class GeneLookup {
         //hard coded in some Genes for now...
         Gene gene;
         List<String> alleles;
+        
+        //XXX made up "diabetes" gene, -GB
+        alleles = new ArrayList<String>();
+        alleles.add("Db");
+        alleles.add("db");
+        gene = new Gene("Diabetes", "Dia", "2", 33.0, 53195, alleles);
+        addGene(gene);
 
         alleles = new ArrayList<String>();
         alleles.add("B");

@@ -53,6 +53,7 @@ public class GenotypeService {
         genotypeMap.put("Tyr", "C");
         genotypeMap.put("Pax6", "N");
         genotypeMap.put("Eda", "A1");
+        genotypeMap.put("Dia", "Db");
         haplotypeToAlleles.put("P1_M", genotypeMap);
 
         //P1_P
@@ -67,6 +68,7 @@ public class GenotypeService {
         genotypeMap.put("Tyr", "C");
         genotypeMap.put("Pax6", "n");
         genotypeMap.put("Eda", "A2");
+        genotypeMap.put("Dia", "Db");
         haplotypeToAlleles.put("P1_P", genotypeMap);
 
         //P2_M
@@ -81,6 +83,7 @@ public class GenotypeService {
         genotypeMap.put("Tyr", "C");
         genotypeMap.put("Pax6", "n");
         genotypeMap.put("Eda", "A2");
+        genotypeMap.put("Dia", "Db");
         haplotypeToAlleles.put("P2_M", genotypeMap);
 
         //P2_P
@@ -90,6 +93,7 @@ public class GenotypeService {
         genotypeMap.put("Tyr", "C");
         genotypeMap.put("Pax6", "n");
         genotypeMap.put("Eda", "A2");
+        genotypeMap.put("Dia", "Db");
         haplotypeToAlleles.put("P2_P", genotypeMap);
     }
 
