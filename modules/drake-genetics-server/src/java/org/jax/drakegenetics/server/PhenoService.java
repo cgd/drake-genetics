@@ -61,16 +61,15 @@ public class PhenoService {
         Map<String, List<String>> alleles = getAlleles(genome);
 
         try {
-            phenome.put("Metabolic", getMetabolicPhenotype(alleles));
+            phenome.put("Breath", getBreathPhenotype(alleles));
             phenome.put("Eye Color", getEyeColor(alleles));
             phenome.put("Eye Morphology", getEyeMorphology(alleles));
             phenome.put("Scale Color", getScaleColor(alleles));
             phenome.put("Tail Morphology", getTailMorphology(alleles));
             phenome.put("Armor", getArmor(alleles));
             phenome.put("Sex", getSex(genome));
-            phenome.put("Sex Reversal", getSexReversal(alleles));
-            phenome.put("Scale Color", getScaleColor(alleles));
-            //phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
+            phenome.put("Sex Reversal", getSterility(genome, alleles));
+            phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombinationException e) {
             phenome.clear();
@@ -79,24 +78,21 @@ public class PhenoService {
         return phenome;
     }
 
-    /**
-     * get the alleles for this genome
-     * @param genome
-     * @return a map of gene symbols to list of alleles for that gene
-     */
+ 
+    /*   TODO really this is an abuse of the word phenotype since it
+     *   refers to a predisposition. This should be resolved in some
+     *   future iteration
+     */ 
     private static String getDiabetesPredisposition(Map<String, List<String>> alleles)
     {
-         
-        List<String> diabetesAlleles = alleles.get("Dia");
-
-        if (diabetesAlleles.contains("d")) {
-            return "no predisposition for diabetes";
-        }
-        
-        return "predisposition for diabetes";
-        
+    	List<String> diabetesAlleles = alleles.get("Dia");
+    	
+    	if (diabetesAlleles.contains("Db")) {
+    		return "no predisposition for diabetes";
+    	}
+    	return "predisposition for diabetes";
     }
-
+    
     /**
      * get the alleles for this genome
      * @param genome
@@ -136,11 +132,11 @@ public class PhenoService {
     }
 
     /**
-     * get the metabolic phenotype
+     * get the breath phenotype
      * @param alleles
      * @return string describing metabolic phenotype
      */
-    private static String getMetabolicPhenotype(Map<String, List<String>> alleles)
+    private static String getBreathPhenotype(Map<String, List<String>> alleles)
     {
 
         List<String> bogBreathAlleles = alleles.get("Otc");
@@ -270,35 +266,35 @@ public class PhenoService {
     }
 
     /**
-     * Get the sex reversal phenotype
+     * Get the sterility phenotype
      * @param alleles all alleles for this genome
-     * @return String description of the sex reversal phenotype
+     * @return String description of the sterility phenotype
      */
-    private static String getSexReversal(Map<String, List<String>> alleles)
+    private static String getSterility(DiploidGenome genome, Map<String, List<String>> alleles)
     {
 
         List<String> transformerAlleles = alleles.get("Ar");
 
+        // all aneuploids are sterile
+        if (genome.isAneuploid()) {
+        	return "true";
+        }
+        
+        //check Transformer gene 
+        
         /*
          * Tr/Tr - normal female
          * Tr/tr - normal female
          * Tr/Y - normal male
          * tr/Y - sex-reversed male (sterile female)
+         * tr/tr - not possible
          */
 
-        if (transformerAlleles.size() == 1) {
-            if (transformerAlleles.get(0).equals("Tr")) {
-                // Tr/Y
-                return "normal male";
-            }
-            // tr/Y
-            return "Sex-reversed male";
+        if (transformerAlleles.contains("Tr")) {
+        	return "false";
         }
-
-        // Tr/Tr Tr/tr,  tr/tr not possible
-        return "normal female";
-
-
+        
+        return "true";
     }
 
     /**
