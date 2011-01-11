@@ -68,7 +68,7 @@ public class PhenoService {
             phenome.put("Tail Morphology", getTailMorphology(alleles));
             phenome.put("Armor", getArmor(alleles));
             phenome.put("Sex", getSex(genome));
-            phenome.put("Sex Reversal", getSterility(genome, alleles));
+            phenome.put("Sterility", getSterility(genome, alleles));
             phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombinationException e) {
