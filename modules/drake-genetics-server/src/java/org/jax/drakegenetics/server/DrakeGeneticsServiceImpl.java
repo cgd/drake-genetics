@@ -69,19 +69,19 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
         this.phenoService = new PhenoService(
                 new GeneLookup(),
                 new GenotypeService());
-        this.metoService = new MetabolismService(this.phenoService);
+        this.metoService = new MetabolismService();
     }
     
     /**
      * {@inheritDoc}
      */
     public Map<String, double[]> getMetabolicTestResults(
-            DiploidGenome genome,
+            String predispForDiabetes,
             String diet)
     {
         try
         {
-            return this.metoService.getMetabolicTestResults(genome, diet);
+            return this.metoService.getMetabolicTestResults(predispForDiabetes, diet);
         }
         catch(Exception ex)
         {

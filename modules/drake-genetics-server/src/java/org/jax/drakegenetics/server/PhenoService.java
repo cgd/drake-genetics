@@ -353,9 +353,10 @@ public class PhenoService {
     * @param alleles all alleles for a genome
     * @return String description of scale color
     */
-    private String getScaleColor(Map<String, List<String>> alleles) throws LethalAlleleCombinationException
-    {
-        List<String> colorlessAlleles = alleles.get("Tyr");
+    private String getScaleColor(Map<String, List<String>> alleles) 
+        throws LethalAlleleCombinationException {
+        
+    	List<String> colorlessAlleles = alleles.get("Tyr");
         List<String> metalicAlleles = alleles.get("M");
         List<String> diluteAlleles = alleles.get("Myo5a");
         List<String> brownAlleles = alleles.get("Otc");
