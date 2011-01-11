@@ -18,6 +18,9 @@
 package org.jax.drakegenetics.gwtclientapp.client;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 import com.extjs.gxt.ui.client.Style.VerticalAlignment;
@@ -68,6 +71,10 @@ public class BreedingForm implements DrakeReceiver {
     private ContentPanel femalePanel = new ContentPanel();
     // The panel where the male image is displayed
     private ContentPanel malePanel = new ContentPanel();
+    // panels which hold the progeny image panels for each breeding
+    private List<ContentPanel> progenyPanels = new ArrayList<ContentPanel>();
+    // list of progeny from a breeding
+    private List<Drake> progeny = new ArrayList<Drake>();
 
     public BreedingForm(ContentPanel fp, DrakeDetailPanel dp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
@@ -84,15 +91,15 @@ public class BreedingForm implements DrakeReceiver {
         HorizontalPanel top = new HorizontalPanel();
         top.setVerticalAlign(VerticalAlignment.MIDDLE);
         top.setWidth(400);
-        top.setHeight(150);
+        top.setHeight(102);
         ContentPanel bottom = new ContentPanel();
         bottom.setHeaderVisible(false);
         vp1.add(top);
         vp1.add(bottom);
         
         final DrakeBreedingInterface breedingInterface = 
-            new DrakeBreedingInterface(drakeGeneticsService,  
-                bottom);
+            new DrakeBreedingInterface(drakeGeneticsService, progenyPanels, 
+                    progeny);
 
         ContentPanel breedingPair = new ContentPanel();
         breedingPair.setPosition(10, 10);
@@ -106,7 +113,6 @@ public class BreedingForm implements DrakeReceiver {
         femalePanel.addListener(Events.OnClick,
                 new Listener<BaseEvent>() {
             public void handleEvent(BaseEvent be) {
-                GWT.log("In event for selecting female panel " + be.toString());
                 if (female != null) {
                     detailPanel.sendDrake(female);
                     
@@ -121,7 +127,6 @@ public class BreedingForm implements DrakeReceiver {
         malePanel.addListener(Events.OnClick,
                 new Listener<BaseEvent>() {
             public void handleEvent(BaseEvent be) {
-                GWT.log("In event for selecting male panel " + be.toString());
                 if (male != null) {
                     detailPanel.sendDrake(male);
                     
@@ -143,10 +148,8 @@ public class BreedingForm implements DrakeReceiver {
                 //if ( ce.isShiftKey()) {
                     GWT.log("in shift " + ce.getKeyCode());
                 //}
-                DiploidGenome fg = female.getDiploidgenome();
-                DiploidGenome mg = female.getDiploidgenome();
                 
-                breedingInterface.breed(fg, mg);
+                breedingInterface.breed(female, male);
                 Info.display("Breeding...", "Breeding "
                         + female.toString() + " X " + male.toString());
 
@@ -158,6 +161,37 @@ public class BreedingForm implements DrakeReceiver {
         
         top.add(breedingPair);
         top.add(breedButton);
+        
+        ContentPanel progenyPanel = new ContentPanel();
+        progenyPanel.setHeading("Progeny");
+        progenyPanel.setSize(400, 340);
+
+        //  Creating a panel with 4 rows and 5 columns (change to a grid later
+        //  it might turn out better
+        VerticalPanel rows = new VerticalPanel();
+        for (int i=0; i<4; i++) {
+            HorizontalPanel row = new HorizontalPanel();
+            for (int j=0; j<5; j++ ) {
+                ContentPanel child = new ContentPanel();
+                child.setLayout(new BorderLayout());
+                child.setHeaderVisible(false);
+                child.setSize(80, 80);
+                child.sinkEvents(Event.ONCLICK);
+                child.addListener(Events.OnClick,
+                        new Listener<BaseEvent>() {
+                    public void handleEvent(BaseEvent be) {
+                        GWT.log("In event for selecting progeny panel " + 
+                                be.toString());
+                    }
+                });
+                row.add(child);
+                progenyPanels.add(child);
+            }
+            rows.add(row);
+        }
+        progenyPanel.add(rows);
+
+        bottom.add(progenyPanel);
         
         formPanel.add(vp1);
         

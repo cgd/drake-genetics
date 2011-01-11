@@ -77,7 +77,6 @@ public class BreedingPanel {
                         ModelData item = be.getItem();
                         if ("org.jax.drakegenetics.gwtclientapp.client.Drake".equals(item.getClass().getName())) {
                             Drake drake = (Drake)item;
-                            GWT.log("Clicked on drake = " + drake.toString());
                             //  Send drake to parent component of form Panel 
                             //  and to detail Panel
                             breedingForm.sendDrake(drake);
@@ -136,7 +135,6 @@ public class BreedingPanel {
         
         if (node.isDocument()) {
 
-            GWT.log(node.getDisplayName() + "--" + node.getFileName());
             final Document document = new Document(node.getDisplayName(),
                     node.getFileName());
             if (parent != null) {
@@ -158,13 +156,10 @@ public class BreedingPanel {
                 }
             }
             Collections.reverse(path);
-            GWT.log(path.toString());
             
             drakeGeneticsService.getPublication(path,
                     new AsyncCallback<String>() {
                         public void onSuccess(String documentUrl) {
-                            GWT.log(document.getName());
-                            GWT.log(" Node URL = " + documentUrl);
                             document.setUrl(documentUrl);
                             tree.repaint();
                         }

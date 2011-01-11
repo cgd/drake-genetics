@@ -33,6 +33,13 @@ public class Drake extends BaseTreeModel {
     public Drake() {
     }
 
+
+    public Drake(String name, String gender, DiploidGenome dg) {
+        set("name", name);
+        set("gender", gender);
+        set("diploidgenome", dg);
+    }
+
     public Drake(String name, String gender, DiploidGenome dg, 
             Image smallImg, Image largeImg) {
         set("name", name);
@@ -63,9 +70,17 @@ public class Drake extends BaseTreeModel {
     public DiploidGenome getDiploidgenome() {
         return (DiploidGenome) get("diploidgenome");
     }
+    
+    public void setSmallimage(Image smallimage) {
+        set("smallimage", smallimage);
+    }
 
     public Image getSmallimage() {
         return (Image) get("smallimage");
+    }
+
+    public void setLargeimage(Image largeimage) {
+        set("largeimage", largeimage);
     }
 
     public Image getLargeimage() {

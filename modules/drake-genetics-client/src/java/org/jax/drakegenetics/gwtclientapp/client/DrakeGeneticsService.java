@@ -24,6 +24,7 @@ import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * A GWT service interface for the drake genetics.
@@ -128,4 +129,5 @@ public interface DrakeGeneticsService extends RemoteService
      */
     public String getHelpDocument(List<String> documentTreePath);
 
+    public Boolean isValidDrakeImage(String url);
 }

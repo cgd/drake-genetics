@@ -23,6 +23,7 @@ import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 
 /**
  * Async interface for {@link DrakeGeneticsService}
@@ -136,4 +137,5 @@ public interface DrakeGeneticsServiceAsync
     public void getHelpDocument(List<String> documentTreePath,
             AsyncCallback<String> callback);
 
+    public void isValidDrakeImage(String url, AsyncCallback<Boolean> callback);
 }
