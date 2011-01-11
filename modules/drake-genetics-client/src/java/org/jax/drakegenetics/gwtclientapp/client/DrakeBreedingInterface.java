@@ -46,6 +46,8 @@ public class DrakeBreedingInterface
     
     private final Map<String,Integer> coatColors;
     private final Map<String,Integer> eyeColors;
+    
+    private boolean have_final_images = false;
 
     /**
      * Constructor
@@ -95,29 +97,50 @@ public class DrakeBreedingInterface
             this.drakes.removeAll(this.drakes);
             GWT.log("Size of drakes list is now: " + this.drakes.size());
         }
+        
+        if (f.getPhenome().get("Sterility").equals("true")) {
+            // If mom is sterile, there will be no eggs
+            for (int i = 0; i < 20; i++) {
+                Drake drake = new Drake("No Progeny Found", 
+                        new Image("/images/eye/do-not-symbol-small.jpg"), 
+                        new Image("/images/eye/do-not-symbol-small.jpg"));
+                this.drakes.add(drake);
+                panels.get(i).add(drake.getSmallimage());
+                panels.get(i).layout(true);
+            }
+        } else if (m.getPhenome().get("Sterility").equals("true")) {
+            // If dad is sterile, there will be unfertilized eggs
+            for (int i = 0; i < 20; i++) {
+                Drake drake = new Drake("Egg Unfertilized", 
+                        new Image("/images/eye/egg_small.jpg"), 
+                        new Image("/images/eye/egg_small.jpg"));
+                this.drakes.add(drake);
+                panels.get(i).add(drake.getSmallimage());
+                panels.get(i).layout(true);
+            }
+        } else {
+            this.drakeGeneticsService.breedPair(
+                    femaleDG,
+                    maleDG,
+                    new AsyncCallback<List<DiploidGenome>>()
+                    {
+                        public void onSuccess(List<DiploidGenome> offspring)
+                        {
+                            DrakeBreedingInterface.this.breedingSucceeded(female, 
+                                    male, offspring);
+                        }
+                        
+                        public void onFailure(Throwable caught)
+                        {
+                            DrakeBreedingInterface.this.breedingFailed(caught);
+                        }
+                    });
+        }
 
-        this.drakeGeneticsService.breedPair(
-                femaleDG,
-                maleDG,
-                new AsyncCallback<List<DiploidGenome>>()
-                {
-                    public void onSuccess(List<DiploidGenome> offspring)
-                    {
-                        DrakeBreedingInterface.this.breedingSucceeded(female, 
-                                male, offspring);
-                    }
-                    
-                    public void onFailure(Throwable caught)
-                    {
-                        DrakeBreedingInterface.this.breedingFailed(caught);
-                    }
-                });
     }
     
     private void breedingSucceeded(Drake mother, Drake father, List<DiploidGenome> offspring)
     {
-        DiploidGenome nextFemale = null;
-        DiploidGenome nextMale = null;
         // which off-spring
         int counter = 0;
         for(DiploidGenome currGenome : offspring)
@@ -146,19 +169,7 @@ public class DrakeBreedingInterface
                             GWT.log(caught.getMessage());
                         }
                     });
-
             
-            if(!currGenome.isAneuploid())
-            {
-                if(currGenome.isMale())
-                {
-                    nextMale = currGenome;
-                }
-                else
-                {
-                    nextFemale = currGenome;
-                }
-            }
             ++counter;
         }
     }
@@ -169,118 +180,117 @@ public class DrakeBreedingInterface
             drake.setSmallimage(new Image("/images/eyes/egg_small.jpg"));
             drake.setLargeimage(new Image("/images/eyes/egg_large.jpg"));
         } else {
-            int color = this.coatColors.get(phenome.get("Scale Color"));
-            int eye = this.eyeColors.get(phenome.get("Eye Color"));
-            int tail = 0;  // short no barb
-            if (! phenome.get("Tail Morphology").equals("short no barb")) {
-                tail = 1;  // normal barbed tail
-            }
-            int armor = 0;
-            if (phenome.get("Armor").equals("one lateral plate")) {
-                armor = 1;
-            } else if (phenome.get("Armor").equals("two lateral plates")) {
-                armor = 2;
-            } else if (phenome.get("Armor").equals("three lateral plates")) {
-                armor = 3;
-            }
-            int nicked = 0;  // normal eye
-            if (! phenome.get("Eye Morphology").equals("normal eye")) {
-                nicked = 1;  // nicked eye
-            }
-            String scruffy = "";
-            if (phenome.get("Sex").equals("Scruffy male") || 
-                    phenome.get("Sex").equals("Scruffy female") ) {
-                scruffy = "S";
-            }
-            final String lg_img_name = "/images/eyes/LE" + drake.getGender() + color + tail + 
-                armor + eye + nicked + scruffy + ".jpg";
-            final String sm_img_name = "/images/eyes/SE" + drake.getGender() + color + tail + 
-                armor + eye + nicked + scruffy + ".jpg";
             final Image sm_img = new Image();
             final Image lg_img = new Image();
             
-            this.drakeGeneticsService.isValidDrakeImage(sm_img_name,
-                    new AsyncCallback<Boolean>() {
-                        public void onSuccess(Boolean valid) {
-                            if (valid.booleanValue() == true) {
-                                sm_img.setUrl(sm_img_name);
+            if (this.have_final_images) {
+                
+                int color = this.coatColors.get(phenome.get("Scale Color"));
+                int eye = this.eyeColors.get(phenome.get("Eye Color"));
+                int tail = 0;  // short no barb
+                if (! phenome.get("Tail Morphology").equals("short no barb")) {
+                    tail = 1;  // normal barbed tail
+                }
+                int armor = 0;
+                if (phenome.get("Armor").equals("one lateral plate")) {
+                    armor = 1;
+                } else if (phenome.get("Armor").equals("two lateral plates")) {
+                    armor = 2;
+                } else if (phenome.get("Armor").equals("three lateral plates")) {
+                    armor = 3;
+                }
+                int nicked = 0;  // normal eye
+                if (! phenome.get("Eye Morphology").equals("normal eye")) {
+                    nicked = 1;  // nicked eye
+                }
+                String scruffy = "";
+                if (phenome.get("Sex").equals("Scruffy male") || 
+                        phenome.get("Sex").equals("Scruffy female") ) {
+                    scruffy = "S";
+                }
+                final String lg_img_name = "/images/eyes/LE" + drake.getGender() + color + tail + 
+                    armor + eye + nicked + scruffy + ".jpg";
+                final String sm_img_name = "/images/eyes/SE" + drake.getGender() + color + tail + 
+                    armor + eye + nicked + scruffy + ".jpg";
+                this.drakeGeneticsService.isValidDrakeImage(sm_img_name,
+                        new AsyncCallback<Boolean>() {
+                            public void onSuccess(Boolean valid) {
+                                if (valid.booleanValue() == true) {
+                                    sm_img.setUrl(sm_img_name);
+                                }
+                                else {
+                                    //sm_img.setUrl("/images/eyes/question_mark_small.jpg");
+                                    sm_img.setUrl(sm_img_name);
+                                }
                             }
-                            else {
-                                sm_img.setUrl("/images/eyes/question_mark_small.jpg");
+
+                            public void onFailure(Throwable caught) {
+                                caught.printStackTrace();
+                                GWT.log(caught.getMessage());
                             }
-                        }
-
-                        public void onFailure(Throwable caught) {
-                            caught.printStackTrace();
-                            GWT.log(caught.getMessage());
-                        }
-                    });
-            this.drakeGeneticsService.isValidDrakeImage(lg_img_name,
-                    new AsyncCallback<Boolean>() {
-                        public void onSuccess(Boolean valid) {
-                            if (valid.booleanValue() == true) {
-                                lg_img.setUrl(lg_img_name);
+                        });
+                this.drakeGeneticsService.isValidDrakeImage(lg_img_name,
+                        new AsyncCallback<Boolean>() {
+                            public void onSuccess(Boolean valid) {
+                                if (valid.booleanValue() == true) {
+                                    lg_img.setUrl(lg_img_name);
+                                }
+                                else {
+                                    //lg_img.setUrl("/images/eyes/question_mark_large.jpg");
+                                    lg_img.setUrl(lg_img_name);
+                                }
                             }
-                            else {
-                                lg_img.setUrl("/images/eyes/question_mark_large.jpg");
+
+                            public void onFailure(Throwable caught) {
+                                caught.printStackTrace();
+                                GWT.log(caught.getMessage());
                             }
-                        }
+                        });
 
-                        public void onFailure(Throwable caught) {
-                            caught.printStackTrace();
-                            GWT.log(caught.getMessage());
-                        }
-                    });
+            } else {
+                
+                int color = this.coatColors.get(phenome.get("Scale Color"));
+                int eye = this.eyeColors.get(phenome.get("Eye Color"));
+                
+                final String lg_img_name = "/images/eyes/LE" + drake.getGender() + color + "bb" + eye + "b"+ ".jpg";
+                final String sm_img_name = "/images/eyes/SE" + drake.getGender() + color +  "bb"  + eye + "b" + ".jpg";
+                
+                this.drakeGeneticsService.isValidDrakeImage(sm_img_name,
+                        new AsyncCallback<Boolean>() {
+                            public void onSuccess(Boolean valid) {
+                                if (valid.booleanValue() == true) {
+                                    sm_img.setUrl(sm_img_name);
+                                }
+                                else {
+                                    sm_img.setUrl("/images/eyes/question_mark_small.jpg");
+                                    //sm_img.setUrl(sm_img_name);
+                                }
+                            }
 
-            /*try {
-                RequestBuilder rb = new RequestBuilder(RequestBuilder.GET,
-                        sm_img_name);
-                rb.setCallback(new RequestCallback() {
-                    public void onError(Request request,
-                            java.lang.Throwable exception) {
-                        GWT.log("in onError");
-                        GWT.log(exception.getMessage());
-                        sm_img.setUrl("/images/eyes/question_mark_small.jpg");
-                    }
+                            public void onFailure(Throwable caught) {
+                                caught.printStackTrace();
+                                GWT.log(caught.getMessage());
+                            }
+                        });
+                this.drakeGeneticsService.isValidDrakeImage(lg_img_name,
+                        new AsyncCallback<Boolean>() {
+                            public void onSuccess(Boolean valid) {
+                                if (valid.booleanValue() == true) {
+                                    lg_img.setUrl(lg_img_name);
+                                }
+                                else {
+                                    lg_img.setUrl("/images/eyes/question_mark_large.jpg");
+                                    //lg_img.setUrl(lg_img_name);
+                                }
+                            }
 
-                    public void onResponseReceived(Request request,
-                            Response response) {
-                        GWT.log("in onResponseReceived " + request.toString());
-                        sm_img.setUrl("/images/eyes/" + sm_img_name);
-                    }
-                });
-                Request req = rb.send();
-            } catch (RequestException re) {
-                GWT.log("File " + sm_img_name + " Does not exist! "
-                        + re.getMessage());
-            } catch (Throwable t) {
-                GWT.log("File " + sm_img_name + " Does not exist! "
-                        + t.getMessage());
+                            public void onFailure(Throwable caught) {
+                                caught.printStackTrace();
+                                GWT.log(caught.getMessage());
+                            }
+                        });
             }
-            try {
-                RequestBuilder rb = new RequestBuilder(RequestBuilder.GET, lg_img_name);
-                rb.setCallback(new RequestCallback() {
-                    public void onError(Request request,
-                            java.lang.Throwable exception) {
-                        GWT.log("in onError");
-                        GWT.log(exception.getMessage());
-                        lg_img.setUrl("/images/eyes/question_mark_large.jpg");
-                    }
 
-                    public void onResponseReceived(Request request,
-                            Response response) {
-                        GWT.log("in onResponseReceived ");
-                        lg_img.setUrl("/images/eyes/" + lg_img_name);
-                    }
-                });
-                Request req = rb.send();
-                GWT.log(rb.getRequestData());
-                GWT.log(req.toString());
-            } catch (RequestException re) {
-                GWT.log("File " + lg_img_name + " Does not exist! " + re.getMessage());
-            } catch (Throwable t) {
-                GWT.log("File " + lg_img_name + " Does not exist! " + t.getMessage());
-            }*/
             drake.setSmallimage(sm_img);
             drake.setLargeimage(lg_img);
         }

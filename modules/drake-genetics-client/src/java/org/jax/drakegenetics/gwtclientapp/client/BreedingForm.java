@@ -72,9 +72,9 @@ public class BreedingForm implements DrakeReceiver {
     // The panel where the male image is displayed
     private ContentPanel malePanel = new ContentPanel();
     // panels which hold the progeny image panels for each breeding
-    private List<ContentPanel> progenyPanels = new ArrayList<ContentPanel>();
+    private final List<ContentPanel> progenyPanels = new ArrayList<ContentPanel>();
     // list of progeny from a breeding
-    private List<Drake> progeny = new ArrayList<Drake>();
+    private final List<Drake> progeny = new ArrayList<Drake>();
 
     public BreedingForm(ContentPanel fp, DrakeDetailPanel dp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
@@ -172,7 +172,8 @@ public class BreedingForm implements DrakeReceiver {
         for (int i=0; i<4; i++) {
             HorizontalPanel row = new HorizontalPanel();
             for (int j=0; j<5; j++ ) {
-                ContentPanel child = new ContentPanel();
+                final ContentPanel child = new ContentPanel();
+                child.setTitle("" + ((i*5)+j));
                 child.setLayout(new BorderLayout());
                 child.setHeaderVisible(false);
                 child.setSize(80, 80);
@@ -182,6 +183,15 @@ public class BreedingForm implements DrakeReceiver {
                     public void handleEvent(BaseEvent be) {
                         GWT.log("In event for selecting progeny panel " + 
                                 be.toString());
+                        // The panel name was set to a number above.
+                        // We parse the panel title to get the number it will
+                        // be in our progenyPanels list
+                        int panelNumber = Integer.parseInt(child.getTitle());
+                        if (progeny.size() > panelNumber) {
+                            Drake drake = progeny.get(panelNumber);
+                            detailPanel.sendDrake(drake);
+                        }
+                        GWT.log(child.getTitle());
                     }
                 });
                 row.add(child);

@@ -29,10 +29,18 @@ import com.google.gwt.user.client.ui.Image;
  */
 public class Drake extends BaseTreeModel {
     private static final long serialVersionUID = 1L;
+    private boolean drake = true;
+    private boolean breeder = false;
 
     public Drake() {
     }
 
+    public Drake(String name, Image smallImg, Image largeImg) {
+        set("name", name);
+        set("smallimage", smallImg);
+        set("largeimage", largeImg);
+        this.drake = false;
+    }
 
     public Drake(String name, String gender, DiploidGenome dg) {
         set("name", name);
@@ -97,5 +105,21 @@ public class Drake extends BaseTreeModel {
 
     public String toString() {
         return getName() + "_" + getGender();
+    }
+    
+    public boolean isDrake() {
+        return drake;
+    }
+    
+    public void setDrake(boolean isdrake) {
+        this.drake = isdrake;
+    }
+    
+    public boolean isBreeder () {
+        return this.breeder;
+    }
+    
+    public void setBreeder (boolean isbreeder) {
+        this.breeder = isbreeder;
     }
 }

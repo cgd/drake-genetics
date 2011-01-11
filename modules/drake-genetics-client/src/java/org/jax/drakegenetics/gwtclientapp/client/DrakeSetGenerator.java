@@ -24,6 +24,7 @@ import java.util.Set;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.DrakeSpeciesSingleton;
 
+import com.extjs.gxt.ui.client.data.BaseModel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
@@ -98,11 +99,12 @@ public class DrakeSetGenerator  {
                         male_genome, malePhenome,
                         m_small_example, m_large_example), }) };
 
-        for (Folder folder: folders) {
-            
-        }
         Folder root = new Folder("root");
         for (int i = 0; i < folders.length; i++) {
+            if (folders[i].isLeaf()) {
+                Drake drake = (Drake)((BaseModel)folders[i]);
+                drake.setBreeder(true);
+            }
             root.add((Folder) folders[i]);
         }
 

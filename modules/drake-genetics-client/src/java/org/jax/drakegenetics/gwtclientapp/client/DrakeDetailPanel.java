@@ -58,8 +58,8 @@ public class DrakeDetailPanel implements DrakeReceiver {
     private final Text eye = new Text();
     private final Text nicked = new Text();
     private final Text breath = new Text();
-    private final Text imgnm = new Text();
-    
+    private Button breedButton = new Button("Make Available for Breeding");
+
     
     //private final Label drakePhenomeLabel = new Label();
 
@@ -87,10 +87,10 @@ public class DrakeDetailPanel implements DrakeReceiver {
         hp1.add(drakeImagePanel);
         
         VerticalPanel vp1 = new VerticalPanel();
-        vp1.setSpacing(1);
+        //vp1.setSpacing(1);
         
         HorizontalPanel namePanel = new HorizontalPanel();
-        namePanel.setSpacing(2);
+        namePanel.setSpacing(1);
         Label nameLabel = new Label("Name: ");
         namePanel.add(nameLabel);
         this.name.setWidth(150);
@@ -98,7 +98,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
         vp1.add(namePanel);
         
         HorizontalPanel genderPanel = new HorizontalPanel();
-        genderPanel.setSpacing(2);
+        genderPanel.setSpacing(1);
         Label genderLabel = new Label("Sex: ");
         genderPanel.add(genderLabel);
         gender.setWidth(75);
@@ -106,7 +106,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
         vp1.add(genderPanel);
         
         HorizontalPanel colorPanel = new HorizontalPanel();
-        colorPanel.setSpacing(2);
+        colorPanel.setSpacing(1);
         Label colorLabel = new Label("Scale Color: ");
         colorPanel.add(colorLabel);
         this.color.setWidth(150);
@@ -114,7 +114,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
         vp1.add(colorPanel);
         
         HorizontalPanel armorPanel = new HorizontalPanel();
-        armorPanel.setSpacing(2);
+        armorPanel.setSpacing(1);
         Label armorLabel = new Label("Armor: ");
         armorPanel.add(armorLabel);
         armor.setWidth(150);
@@ -122,7 +122,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
         vp1.add(armorPanel);
 
         HorizontalPanel tailPanel = new HorizontalPanel();
-        tailPanel.setSpacing(2);
+        tailPanel.setSpacing(1);
         Label tailLabel = new Label("Tail Morphology: ");
         tailPanel.add(tailLabel);
         this.tail.setWidth(150);
@@ -130,7 +130,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
         vp1.add(tailPanel);
         
         HorizontalPanel eyePanel = new HorizontalPanel();
-        eyePanel.setSpacing(2);
+        eyePanel.setSpacing(1);
         Label eyeLabel = new Label("Eye Color: ");
         eyePanel.add(eyeLabel);
         eye.setWidth(150);
@@ -138,7 +138,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
         vp1.add(eyePanel);
         
         HorizontalPanel nickedPanel = new HorizontalPanel();
-        nickedPanel.setSpacing(2);
+        nickedPanel.setSpacing(1);
         Label nickedLabel = new Label("Eye Morphology: ");
         nickedPanel.add(nickedLabel);
         this.nicked.setWidth(150);
@@ -146,20 +146,13 @@ public class DrakeDetailPanel implements DrakeReceiver {
         vp1.add(nickedPanel);
         
         HorizontalPanel breathPanel = new HorizontalPanel();
-        breathPanel.setSpacing(2);
+        breathPanel.setSpacing(1);
         Label breathLabel = new Label("Breath: ");
-        breathPanel.add(armorLabel);
+        breathPanel.add(breathLabel);
         breath.setWidth(150);
         breathPanel.add(breath);
         vp1.add(breathPanel);
  
-        HorizontalPanel imgnmPanel = new HorizontalPanel();
-        imgnmPanel.setSpacing(2);
-        Label imgnmLabel = new Label("imgnm: ");
-        imgnmPanel.add(imgnmLabel);
-        imgnm.setWidth(150);
-        imgnmPanel.add(imgnm);
-        vp1.add(imgnmPanel);
         /*
          * SelectionListener<ButtonEvent> BreedingButtonListener = new
          * SelectionListener<ButtonEvent>() {
@@ -174,8 +167,9 @@ public class DrakeDetailPanel implements DrakeReceiver {
          * } };
          */
         // Button breedButton = new Button("Breed", BreedingButtonListener);
-        Button breedButton = new Button("Make Available for Breeding");
 
+        breedButton.setEnabled(false);
+        
         vp1.add(breedButton);
         
         hp1.add(vp1);
@@ -187,32 +181,41 @@ public class DrakeDetailPanel implements DrakeReceiver {
     public void sendDrake(Drake d) {
         this.drake = d;
         this.drakeImage = d.getLargeimage();
-        this.imgnm.setText(this.drakeImage.getUrl());
         this.drakeImagePanel.add(drakeImage);
         this.drakeImagePanel.layout(true);
         this.name.setText(d.getName());
-        String sex = "Female";
-        if (d.getGender().equals("M"))
-            sex = "Male";
-        this.gender.setText(sex);
-        Map<String,String> phenome = d.getPhenome();
-        if (phenome != null) {
-            if (phenome.containsKey("Lethal")) {
-                color.setText("");
-                armor.setText("");
-                tail.setText("");
-                eye.setText("");
-                nicked.setText("");
-                breath.setText("");
+        if (drake.isDrake()) {
+            
+            String sex = "Female";
+            if (d.getGender().equals("M"))
+                sex = "Male";
+            this.gender.setText(sex);
+            Map<String,String> phenome = d.getPhenome();
+            if (phenome != null) {
+                if (phenome.containsKey("Lethal")) {
+                    color.setText("");
+                    armor.setText("");
+                    tail.setText("");
+                    eye.setText("");
+                    nicked.setText("");
+                    breath.setText("");
+                }
+                else {
+                    color.setText(phenome.get("Scale Color"));
+                    armor.setText(phenome.get("Armor"));
+                    tail.setText(phenome.get("Tail Morphology"));
+                    eye.setText(phenome.get("Eye Color"));
+                    nicked.setText(phenome.get("Eye Morphology"));
+                    breath.setText(phenome.get("Breath"));
+                }
             }
-            else {
-                color.setText(phenome.get("Scale Color"));
-                armor.setText(phenome.get("Armor"));
-                tail.setText(phenome.get("Tail Morphology"));
-                eye.setText(phenome.get("Eye Color"));
-                nicked.setText(phenome.get("Eye Morphology"));
-                breath.setText(phenome.get("Breath"));
+            if (drake.isBreeder()) {
+                this.breedButton.setEnabled(false);
+            } else {
+                this.breedButton.setEnabled(true);
             }
+        } else {
+            this.breedButton.setEnabled(false);
         }
     }
     
