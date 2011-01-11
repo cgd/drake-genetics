@@ -23,7 +23,6 @@ import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * Async interface for {@link DrakeGeneticsService}
@@ -57,8 +56,8 @@ public interface DrakeGeneticsServiceAsync
 
     /**
      * Get the metabolic test results 
-     * @param genome
-     *          the genome object
+     * @param predispForDiabetes
+     *          the value of the diabetes predisposition "phenotype"
      * @param diet
      *          the diet consumed by the drake
      * @param callback
@@ -67,7 +66,7 @@ public interface DrakeGeneticsServiceAsync
      *          metabolite measures over time
      */
     public void getMetabolicTestResults(
-            DiploidGenome genome,
+            String predispForDiabetes,
             String diet,
             AsyncCallback<Map<String, double[]>> callback);
     
