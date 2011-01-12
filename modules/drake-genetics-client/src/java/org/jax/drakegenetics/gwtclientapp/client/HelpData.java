@@ -30,7 +30,6 @@ import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.store.TreeStore;
-import com.extjs.gxt.ui.client.widget.BoxComponent;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Window;
@@ -88,7 +87,7 @@ public class HelpData {
                         ModelData item = be.getItem();
                         String url = (String) item.get("url");
                         if (url != null && !url.equals("")) {
-                            helpDocumentPanel.setUrl(url);
+                            helpDocumentPanel.setUrl(GWT.getHostPageBaseURL() + url);
                         }
                     }
                 });
@@ -104,7 +103,7 @@ public class HelpData {
         helpDocumentPanel.setHeaderVisible(false);
         helpDocumentPanel.setWidth(410);
         helpDocumentPanel.setHeight(370);
-        helpDocumentPanel.setUrl("Help/index.html");
+        helpDocumentPanel.setUrl(GWT.getHostPageBaseURL() + "Help/index.html");
 
         displayPanel.add(helpDocumentPanel);
         displayWindow.add(displayPanel);
