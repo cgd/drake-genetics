@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/gwt-user-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/gxt-2.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/gwt-visualization-1.1.0.jar"/>
 	<classpathentry kind="output" path="eclipse-output"/>
 </classpath>

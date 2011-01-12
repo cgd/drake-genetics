@@ -13,6 +13,7 @@
 
   <!-- Other module inherits                                      -->
   <inherits name='com.extjs.gxt.ui.GXT'/>
+  <inherits name='com.google.gwt.visualization.Visualization'/>
   <!--
   <inherits name='org.jax.gwtutil.GwtUtil'/>
   -->
