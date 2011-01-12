@@ -17,7 +17,6 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +25,6 @@ import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 
@@ -83,7 +76,7 @@ public class DrakeBreedingInterface
     
     public void breed(Drake f, Drake m)
     {
-        //Image spinnerImage = new Image("/images/drakeSpinner.gif");
+        //Image spinnerImage = new Image("images/drakeSpinner.gif");
         //panel.add(spinnerImage);
         //panel.layout(true);
         final Drake female = f;
@@ -102,9 +95,10 @@ public class DrakeBreedingInterface
             // If mom is sterile, there will be no eggs
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("No Progeny Found", 
-                        new Image("/images/eye/do-not-symbol-small.jpg"), 
-                        new Image("/images/eye/do-not-symbol-large.jpg"));
+                        new Image("images/eye/do-not-symbol-small.jpg"),
+                        new Image("images/eye/do-not-symbol-large.jpg"));
                 this.drakes.add(drake);
+                panels.get(i).removeAll();
                 panels.get(i).add(drake.getSmallimage());
                 panels.get(i).layout(true);
             }
@@ -112,9 +106,10 @@ public class DrakeBreedingInterface
             // If dad is sterile, there will be unfertilized eggs
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("Egg Unfertilized", 
-                        new Image("/images/eye/egg_small.jpg"), 
-                        new Image("/images/eye/egg_large.jpg"));
+                        new Image("images/eye/egg_small.jpg"),
+                        new Image("images/eye/egg_large.jpg"));
                 this.drakes.add(drake);
+                panels.get(i).removeAll();
                 panels.get(i).add(drake.getSmallimage());
                 panels.get(i).layout(true);
             }
@@ -161,6 +156,7 @@ public class DrakeBreedingInterface
                             GWT.log("Progeny Number: "+ index + "  " + phenome.toString());
                             drake.setPhenome(phenome);
                             setImages(drake);
+                            panels.get(index).removeAll();
                             panels.get(index).add(drake.getSmallimage());
                             panels.get(index).layout(true);
                         }
@@ -178,8 +174,8 @@ public class DrakeBreedingInterface
     private void setImages(Drake drake) {
         Map<String,String> phenome = drake.getPhenome();
         if (phenome.containsKey("Lethal")) {
-            drake.setSmallimage(new Image("/images/eyes/egg_small.jpg"));
-            drake.setLargeimage(new Image("/images/eyes/egg_large.jpg"));
+            drake.setSmallimage(new Image("images/eyes/egg_small.jpg"));
+            drake.setLargeimage(new Image("images/eyes/egg_large.jpg"));
             drake.setDrake(false);
             drake.setBreeder(false);
         } else {
@@ -211,9 +207,9 @@ public class DrakeBreedingInterface
                         phenome.get("Sex").equals("Scruffy female") ) {
                     scruffy = "S";
                 }
-                final String lg_img_name = "/images/eyes/LE" + drake.getGender() + color + tail + 
+                final String lg_img_name = "images/eyes/LE" + drake.getGender() + color + tail +
                     armor + eye + nicked + scruffy + ".jpg";
-                final String sm_img_name = "/images/eyes/SE" + drake.getGender() + color + tail + 
+                final String sm_img_name = "images/eyes/SE" + drake.getGender() + color + tail +
                     armor + eye + nicked + scruffy + ".jpg";
                 this.drakeGeneticsService.isValidDrakeImage(sm_img_name,
                         new AsyncCallback<Boolean>() {
@@ -222,7 +218,7 @@ public class DrakeBreedingInterface
                                     sm_img.setUrl(sm_img_name);
                                 }
                                 else {
-                                    //sm_img.setUrl("/images/eyes/question_mark_small.jpg");
+                                    //sm_img.setUrl("images/eyes/question_mark_small.jpg");
                                     sm_img.setUrl(sm_img_name);
                                 }
                             }
@@ -239,7 +235,7 @@ public class DrakeBreedingInterface
                                     lg_img.setUrl(lg_img_name);
                                 }
                                 else {
-                                    //lg_img.setUrl("/images/eyes/question_mark_large.jpg");
+                                    //lg_img.setUrl("images/eyes/question_mark_large.jpg");
                                     lg_img.setUrl(lg_img_name);
                                 }
                             }
@@ -255,8 +251,8 @@ public class DrakeBreedingInterface
                 int color = this.coatColors.get(phenome.get("Scale Color"));
                 int eye = this.eyeColors.get(phenome.get("Eye Color"));
                 
-                final String lg_img_name = "/images/eyes/LE" + drake.getGender() + color + "bb" + eye + "b"+ ".jpg";
-                final String sm_img_name = "/images/eyes/SE" + drake.getGender() + color +  "bb"  + eye + "b" + ".jpg";
+                final String lg_img_name = "images/eyes/LE" + drake.getGender() + color + "bb" + eye + "b"+ ".jpg";
+                final String sm_img_name = "images/eyes/SE" + drake.getGender() + color +  "bb"  + eye + "b" + ".jpg";
                 
                 this.drakeGeneticsService.isValidDrakeImage(sm_img_name,
                         new AsyncCallback<Boolean>() {
@@ -265,7 +261,7 @@ public class DrakeBreedingInterface
                                     sm_img.setUrl(sm_img_name);
                                 }
                                 else {
-                                    sm_img.setUrl("/images/eyes/question_mark_small.jpg");
+                                    sm_img.setUrl("images/eyes/question_mark_small.jpg");
                                     //sm_img.setUrl(sm_img_name);
                                 }
                             }
@@ -282,7 +278,7 @@ public class DrakeBreedingInterface
                                     lg_img.setUrl(lg_img_name);
                                 }
                                 else {
-                                    lg_img.setUrl("/images/eyes/question_mark_large.jpg");
+                                    lg_img.setUrl("images/eyes/question_mark_large.jpg");
                                     //lg_img.setUrl(lg_img_name);
                                 }
                             }

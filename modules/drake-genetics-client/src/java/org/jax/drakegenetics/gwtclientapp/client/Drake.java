@@ -67,6 +67,10 @@ public class Drake extends BaseTreeModel {
         set("largeimage", largeImg);
     }
 
+    public void setName(String name) {
+        set("name", name);
+    }
+    
     public String getName() {
         return (String) get("name");
     }

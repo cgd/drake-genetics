@@ -37,8 +37,8 @@ import com.google.gwt.user.client.ui.VerticalPanel;
  */
 public class DrakeQuestBaseInterface
 {
-    private static final String BANNER_IMAGE_PATH = "/images/DQ_Banner.png";
-    private static final String SPLASH_IMAGE_PATH = "/images/DQ_Splash.png";
+    private static final String BANNER_IMAGE_PATH = "images/DQ_Banner.png";
+    private static final String SPLASH_IMAGE_PATH = "images/DQ_Splash.png";
     private final DrakeGeneticsServiceAsync drakeGeneticsService;
     private final Panel panel;
     private final VerticalPanel masterPanel = new VerticalPanel();

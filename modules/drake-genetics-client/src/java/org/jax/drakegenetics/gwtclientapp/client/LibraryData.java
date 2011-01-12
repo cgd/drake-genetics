@@ -81,7 +81,7 @@ public class LibraryData {
                         ModelData item = be.getItem();
                         String url = (String) item.get("url");
                         if (url != null && !url.equals("")) {
-                            libraryDocumentPanel.setUrl(url);
+                            libraryDocumentPanel.setUrl(GWT.getHostPageBaseURL() + url);
                         }
                     }
                 });
@@ -94,7 +94,7 @@ public class LibraryData {
         libraryDocumentPanel.setWidth(494);
         //libraryDocumentPanel.setHeight(451);
         libraryDocumentPanel.setHeight(671);
-        libraryDocumentPanel.setUrl("Library/index.html");
+        libraryDocumentPanel.setUrl(GWT.getHostPageBaseURL() + "Library/index.html");
         libraryPanel.add(libraryDocumentPanel);
 
     }
