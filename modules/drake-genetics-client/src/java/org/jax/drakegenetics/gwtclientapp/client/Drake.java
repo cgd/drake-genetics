@@ -30,7 +30,7 @@ import com.google.gwt.user.client.ui.Image;
 public class Drake extends BaseTreeModel {
     private static final long serialVersionUID = 1L;
     private boolean drake = true;
-    private boolean breeder = false;
+    private boolean breeder = true;
 
     public Drake() {
     }

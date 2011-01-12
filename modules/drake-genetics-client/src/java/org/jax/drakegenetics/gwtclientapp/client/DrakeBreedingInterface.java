@@ -103,7 +103,7 @@ public class DrakeBreedingInterface
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("No Progeny Found", 
                         new Image("/images/eye/do-not-symbol-small.jpg"), 
-                        new Image("/images/eye/do-not-symbol-small.jpg"));
+                        new Image("/images/eye/do-not-symbol-large.jpg"));
                 this.drakes.add(drake);
                 panels.get(i).add(drake.getSmallimage());
                 panels.get(i).layout(true);
@@ -113,7 +113,7 @@ public class DrakeBreedingInterface
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("Egg Unfertilized", 
                         new Image("/images/eye/egg_small.jpg"), 
-                        new Image("/images/eye/egg_small.jpg"));
+                        new Image("/images/eye/egg_large.jpg"));
                 this.drakes.add(drake);
                 panels.get(i).add(drake.getSmallimage());
                 panels.get(i).layout(true);
@@ -153,6 +153,7 @@ public class DrakeBreedingInterface
             
             final Drake drake = new Drake("(" + mother.getName() + " x " + father.getName() + ")",
                     sex, currGenome);
+            drake.setBreeder(false);
             this.drakes.add(drake);
             this.drakeGeneticsService.getPhenome(currGenome,
                     new AsyncCallback<Map<String, String>>() {
@@ -179,6 +180,8 @@ public class DrakeBreedingInterface
         if (phenome.containsKey("Lethal")) {
             drake.setSmallimage(new Image("/images/eyes/egg_small.jpg"));
             drake.setLargeimage(new Image("/images/eyes/egg_large.jpg"));
+            drake.setDrake(false);
+            drake.setBreeder(false);
         } else {
             final Image sm_img = new Image();
             final Image lg_img = new Image();

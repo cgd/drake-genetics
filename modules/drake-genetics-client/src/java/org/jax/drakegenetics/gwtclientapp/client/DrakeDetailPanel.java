@@ -43,6 +43,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
 
     private Label failMessage = null;
     private ContentPanel detailPanel = new ContentPanel();
+    private final DrakeReceiver tree;
     // The  drake being displayed
     private Drake drake;
     // Image for display 
@@ -58,14 +59,15 @@ public class DrakeDetailPanel implements DrakeReceiver {
     private final Text eye = new Text();
     private final Text nicked = new Text();
     private final Text breath = new Text();
-    private Button breedButton = new Button("Make Available for Breeding");
-
+    
+    private Button breedButton;
     
     //private final Label drakePhenomeLabel = new Label();
 
-    public DrakeDetailPanel(ContentPanel fp, 
+    public DrakeDetailPanel(ContentPanel fp, DrakeReceiver dr,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.detailPanel = fp;
+        this.tree = dr;
 
         detailPanel.setHeaderVisible(false);
         detailPanel.setBodyStyle("backgroundColor: #ede9e3");
@@ -152,22 +154,19 @@ public class DrakeDetailPanel implements DrakeReceiver {
         breath.setWidth(150);
         breathPanel.add(breath);
         vp1.add(breathPanel);
- 
-        /*
-         * SelectionListener<ButtonEvent> BreedingButtonListener = new
-         * SelectionListener<ButtonEvent>() {
-         * 
-         * @Override public void componentSelected(ButtonEvent ce) {
-         * DiploidGenome fg = female.getDiploidgenome(); DiploidGenome mg =
-         * female.getDiploidgenome();
-         * 
-         * breedingInterface.breed(fg, mg); Info.display("Breeding...",
-         * "Breeding " + female.toString() + " X " + male.toString());
-         * 
-         * } };
-         */
-        // Button breedButton = new Button("Breed", BreedingButtonListener);
 
+        SelectionListener<ButtonEvent> BreederButtonListener = 
+            new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                drake.setBreeder(true);
+                tree.sendDrake(drake);
+            }
+        };
+
+        breedButton = new Button("Make Available for Breeding",
+                BreederButtonListener);
         breedButton.setEnabled(false);
         
         vp1.add(breedButton);

@@ -38,6 +38,8 @@ public class DrakeSetGenerator  {
 
     private Map<String, String> femalePhenome = new HashMap<String,String>();
     private Map<String, String> malePhenome = new HashMap<String,String>();
+    private Folder females;
+    private Folder males;
 
     private void setFemalePhenome(Map<String,String> phenome) {
         Set<String> keys = phenome.keySet();
@@ -101,14 +103,10 @@ public class DrakeSetGenerator  {
 
         Folder root = new Folder("root");
         for (int i = 0; i < folders.length; i++) {
-            if (folders[i].isLeaf()) {
-                Drake drake = (Drake)((BaseModel)folders[i]);
-                drake.setBreeder(true);
-            }
             root.add((Folder) folders[i]);
         }
 
         return root;
     }
-
+    
 }

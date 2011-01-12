@@ -211,12 +211,14 @@ public class BreedingForm implements DrakeReceiver {
         if (d.getGender().equals("F")) {
             this.female = d;
             this.femaleImage = d.getSmallimage();
+            this.femalePanel.removeAll();
             this.femalePanel.add(femaleImage);
             this.femalePanel.layout(true);
 
         } else {
             this.male = d;
             this.maleImage = d.getSmallimage();
+            this.malePanel.removeAll();
             this.malePanel.add(maleImage);
             this.malePanel.layout(true);
         }
