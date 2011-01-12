@@ -28,6 +28,7 @@ import com.extjs.gxt.ui.client.widget.Text;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.TextArea;
+import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
@@ -51,7 +52,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
     // The panel where the image is displayed
     private ContentPanel drakeImagePanel = new ContentPanel();
     
-    private final Text name = new Text();
+    private final TextField name = new TextField();
     private final Text gender = new Text();
     private final Text color = new Text();
     private final Text armor = new Text();
@@ -59,8 +60,9 @@ public class DrakeDetailPanel implements DrakeReceiver {
     private final Text eye = new Text();
     private final Text nicked = new Text();
     private final Text breath = new Text();
+    private final Text scruffy = new Text();
     
-    private Button breedButton;
+    private Button breederButton;
     
     //private final Label drakePhenomeLabel = new Label();
 
@@ -95,8 +97,27 @@ public class DrakeDetailPanel implements DrakeReceiver {
         namePanel.setSpacing(1);
         Label nameLabel = new Label("Name: ");
         namePanel.add(nameLabel);
-        this.name.setWidth(150);
+        this.name.setWidth(190);
         namePanel.add(name);
+        breederButton = new Button("Make Available",
+                new SelectionListener<ButtonEvent>() {
+
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                String txtFieldName = ((String)name.getValue()).trim();
+                if (! txtFieldName.equals("") && 
+                        ! txtFieldName.equals(drake.getName())) {
+                    drake.setName((String)name.getValue());
+                }
+                drake.setBreeder(true);
+                tree.sendDrake(drake);
+                enableBreederButton(false);
+            }
+        });
+        breederButton.setEnabled(false);
+        
+        namePanel.add(breederButton);
+
         vp1.add(namePanel);
         
         HorizontalPanel genderPanel = new HorizontalPanel();
@@ -155,21 +176,14 @@ public class DrakeDetailPanel implements DrakeReceiver {
         breathPanel.add(breath);
         vp1.add(breathPanel);
 
-        SelectionListener<ButtonEvent> BreederButtonListener = 
-            new SelectionListener<ButtonEvent>() {
+        HorizontalPanel scruffyPanel = new HorizontalPanel();
+        scruffyPanel.setSpacing(1);
+        Label scruffyLabel = new Label("Scruffy: ");
+        scruffyPanel.add(scruffyLabel);
+        scruffy.setWidth(150);
+        scruffyPanel.add(scruffy);
+        vp1.add(scruffyPanel);
 
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                drake.setBreeder(true);
-                tree.sendDrake(drake);
-            }
-        };
-
-        breedButton = new Button("Make Available for Breeding",
-                BreederButtonListener);
-        breedButton.setEnabled(false);
-        
-        vp1.add(breedButton);
         
         hp1.add(vp1);
         
@@ -177,12 +191,16 @@ public class DrakeDetailPanel implements DrakeReceiver {
         
     }
     
+    private void enableBreederButton(boolean enabled) {
+        this.breederButton.setEnabled(enabled);
+    }
+    
     public void sendDrake(Drake d) {
         this.drake = d;
         this.drakeImage = d.getLargeimage();
         this.drakeImagePanel.add(drakeImage);
         this.drakeImagePanel.layout(true);
-        this.name.setText(d.getName());
+        this.name.setValue(d.getName());
         if (drake.isDrake()) {
             
             String sex = "Female";
@@ -198,6 +216,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
                     eye.setText("");
                     nicked.setText("");
                     breath.setText("");
+                    scruffy.setText("");
                 }
                 else {
                     color.setText(phenome.get("Scale Color"));
@@ -206,15 +225,28 @@ public class DrakeDetailPanel implements DrakeReceiver {
                     eye.setText(phenome.get("Eye Color"));
                     nicked.setText(phenome.get("Eye Morphology"));
                     breath.setText(phenome.get("Breath"));
+                    String scruffyText = phenome.get("Sex");
+                    if (scruffyText.equals("male") || scruffyText.equals("female")) {
+                        scruffyText = "no";
+                    }
+                    scruffy.setText(scruffyText);
                 }
             }
             if (drake.isBreeder()) {
-                this.breedButton.setEnabled(false);
+                this.breederButton.setEnabled(false);
             } else {
-                this.breedButton.setEnabled(true);
+                this.breederButton.setEnabled(true);
             }
         } else {
-            this.breedButton.setEnabled(false);
+            this.breederButton.setEnabled(false);
+            gender.setText("");
+            color.setText("");
+            armor.setText("");
+            tail.setText("");
+            eye.setText("");
+            nicked.setText("");
+            breath.setText("");
+            scruffy.setText("");
         }
     }
     

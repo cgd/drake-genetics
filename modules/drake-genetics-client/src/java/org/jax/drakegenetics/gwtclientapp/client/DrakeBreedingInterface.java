@@ -105,6 +105,7 @@ public class DrakeBreedingInterface
                         new Image("/images/eye/do-not-symbol-small.jpg"), 
                         new Image("/images/eye/do-not-symbol-large.jpg"));
                 this.drakes.add(drake);
+                panels.get(i).removeAll();
                 panels.get(i).add(drake.getSmallimage());
                 panels.get(i).layout(true);
             }
@@ -115,6 +116,7 @@ public class DrakeBreedingInterface
                         new Image("/images/eye/egg_small.jpg"), 
                         new Image("/images/eye/egg_large.jpg"));
                 this.drakes.add(drake);
+                panels.get(i).removeAll();
                 panels.get(i).add(drake.getSmallimage());
                 panels.get(i).layout(true);
             }
@@ -161,6 +163,7 @@ public class DrakeBreedingInterface
                             GWT.log("Progeny Number: "+ index + "  " + phenome.toString());
                             drake.setPhenome(phenome);
                             setImages(drake);
+                            panels.get(index).removeAll();
                             panels.get(index).add(drake.getSmallimage());
                             panels.get(index).layout(true);
                         }
