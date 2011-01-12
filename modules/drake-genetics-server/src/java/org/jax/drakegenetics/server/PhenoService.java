@@ -68,7 +68,7 @@ public class PhenoService {
             phenome.put("Tail Morphology", getTailMorphology(alleles));
             phenome.put("Armor", getArmor(alleles));
             phenome.put("Sex", getSex(genome));
-            phenome.put("Sex Reversal", getSterility(genome, alleles));
+            phenome.put("Sterility", getSterility(genome, alleles));
             phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombinationException e) {
@@ -353,9 +353,10 @@ public class PhenoService {
     * @param alleles all alleles for a genome
     * @return String description of scale color
     */
-    private String getScaleColor(Map<String, List<String>> alleles) throws LethalAlleleCombinationException
-    {
-        List<String> colorlessAlleles = alleles.get("Tyr");
+    private String getScaleColor(Map<String, List<String>> alleles) 
+        throws LethalAlleleCombinationException {
+        
+    	List<String> colorlessAlleles = alleles.get("Tyr");
         List<String> metalicAlleles = alleles.get("M");
         List<String> diluteAlleles = alleles.get("Myo5a");
         List<String> brownAlleles = alleles.get("Otc");

@@ -56,8 +56,8 @@ public interface DrakeGeneticsService extends RemoteService
 
     /**
      * Get the metabolic test results 
-     * @param genome
-     *          the genome object
+     * @param predispForDiabetes
+     *          the value of the diabetes predisposition "phenotype"
      * @param diet
      *          the diet consumed by the drake
      * @return
@@ -66,7 +66,7 @@ public interface DrakeGeneticsService extends RemoteService
      *          over time
      */
     public Map<String, double[]> getMetabolicTestResults(
-            DiploidGenome genome,
+            String predispForDiabetes,
             String diet);
 
     /**
@@ -128,4 +128,5 @@ public interface DrakeGeneticsService extends RemoteService
      */
     public String getHelpDocument(List<String> documentTreePath);
 
+    public Boolean isValidDrakeImage(String url);
 }

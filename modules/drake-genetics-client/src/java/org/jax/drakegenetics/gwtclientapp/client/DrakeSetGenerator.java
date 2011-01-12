@@ -24,6 +24,7 @@ import java.util.Set;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.DrakeSpeciesSingleton;
 
+import com.extjs.gxt.ui.client.data.BaseModel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
@@ -37,6 +38,8 @@ public class DrakeSetGenerator  {
 
     private Map<String, String> femalePhenome = new HashMap<String,String>();
     private Map<String, String> malePhenome = new HashMap<String,String>();
+    private Folder females;
+    private Folder males;
 
     private void setFemalePhenome(Map<String,String> phenome) {
         Set<String> keys = phenome.keySet();
@@ -98,9 +101,6 @@ public class DrakeSetGenerator  {
                         male_genome, malePhenome,
                         m_small_example, m_large_example), }) };
 
-        for (Folder folder: folders) {
-            
-        }
         Folder root = new Folder("root");
         for (int i = 0; i < folders.length; i++) {
             root.add((Folder) folders[i]);
@@ -108,5 +108,5 @@ public class DrakeSetGenerator  {
 
         return root;
     }
-
+    
 }

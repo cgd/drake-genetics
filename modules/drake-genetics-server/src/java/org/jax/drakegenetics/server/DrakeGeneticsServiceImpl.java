@@ -18,16 +18,21 @@
 package org.jax.drakegenetics.server;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsService;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -50,6 +55,7 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     private StaticDocumentLibrary helpController;
     private PhenoService phenoService;
     private MetabolismService metoService;
+    private Set<String> paths;
     
     /**
      * {@inheritDoc}
@@ -58,7 +64,6 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     public void init(ServletConfig config) throws ServletException
     {
         super.init(config);
-        
         this.reproductionSimulator = new ReproductionSimulator();
         this.libraryController = new StaticDocumentLibrary(
                 DrakeGeneticsServiceImpl.LIBRARY_ROOT,
@@ -69,19 +74,22 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
         this.phenoService = new PhenoService(
                 new GeneLookup(),
                 new GenotypeService());
-        this.metoService = new MetabolismService(this.phenoService);
+        ServletContext context = config.getServletContext();
+        this.paths = (Set<String>)context.getResourcePaths("/images/eyes");
+
+        this.metoService = new MetabolismService();
     }
     
     /**
      * {@inheritDoc}
      */
     public Map<String, double[]> getMetabolicTestResults(
-            DiploidGenome genome,
+            String predispForDiabetes,
             String diet)
     {
         try
         {
-            return this.metoService.getMetabolicTestResults(genome, diet);
+            return this.metoService.getMetabolicTestResults(predispForDiabetes, diet);
         }
         catch(Exception ex)
         {
@@ -211,6 +219,19 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
             ex.printStackTrace();
             return null;
         }
+    }
+    
+    public Boolean isValidDrakeImage(String url) {
+        boolean valid = false;
+        for (Iterator<String> i=paths.iterator(); i.hasNext();) {
+            String path = i.next();
+            if (url.equals(path)) {
+                valid = true;
+                break;
+            }
+        }
+        return new Boolean(valid);
+
     }
 
 }

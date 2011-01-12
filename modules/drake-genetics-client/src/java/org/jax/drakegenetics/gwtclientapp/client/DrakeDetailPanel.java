@@ -43,6 +43,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
 
     private Label failMessage = null;
     private ContentPanel detailPanel = new ContentPanel();
+    private final DrakeReceiver tree;
     // The  drake being displayed
     private Drake drake;
     // Image for display 
@@ -50,15 +51,23 @@ public class DrakeDetailPanel implements DrakeReceiver {
     // The panel where the image is displayed
     private ContentPanel drakeImagePanel = new ContentPanel();
     
-    private final Text drakeNameLabel = new Text();
-    private final Text drakeGenderLabel = new Text();
-    private final TextArea genomeTextArea = new TextArea();
-    private final TextArea phenomeTextArea = new TextArea();
+    private final Text name = new Text();
+    private final Text gender = new Text();
+    private final Text color = new Text();
+    private final Text armor = new Text();
+    private final Text tail = new Text();
+    private final Text eye = new Text();
+    private final Text nicked = new Text();
+    private final Text breath = new Text();
+    
+    private Button breedButton;
+    
     //private final Label drakePhenomeLabel = new Label();
 
-    public DrakeDetailPanel(ContentPanel fp, 
+    public DrakeDetailPanel(ContentPanel fp, DrakeReceiver dr,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.detailPanel = fp;
+        this.tree = dr;
 
         detailPanel.setHeaderVisible(false);
         detailPanel.setBodyStyle("backgroundColor: #ede9e3");
@@ -80,59 +89,86 @@ public class DrakeDetailPanel implements DrakeReceiver {
         hp1.add(drakeImagePanel);
         
         VerticalPanel vp1 = new VerticalPanel();
-        vp1.setSpacing(1);
+        //vp1.setSpacing(1);
         
         HorizontalPanel namePanel = new HorizontalPanel();
-        namePanel.setSpacing(2);
-        Label name = new Label("Name: ");
+        namePanel.setSpacing(1);
+        Label nameLabel = new Label("Name: ");
+        namePanel.add(nameLabel);
+        this.name.setWidth(150);
         namePanel.add(name);
-        //drakeNameLabel.setEnabled(false);
-        drakeNameLabel.setWidth(150);
-        namePanel.add(drakeNameLabel);
-        //vp1.add(namePanel);
+        vp1.add(namePanel);
         
         HorizontalPanel genderPanel = new HorizontalPanel();
-        Label gender = new Label("Sex: ");
-        namePanel.add(gender);
-        //drakeGenderLabel.setEnabled(false);
+        genderPanel.setSpacing(1);
+        Label genderLabel = new Label("Sex: ");
+        genderPanel.add(genderLabel);
+        gender.setWidth(75);
+        genderPanel.add(gender);
+        vp1.add(genderPanel);
+        
+        HorizontalPanel colorPanel = new HorizontalPanel();
+        colorPanel.setSpacing(1);
+        Label colorLabel = new Label("Scale Color: ");
+        colorPanel.add(colorLabel);
+        this.color.setWidth(150);
+        colorPanel.add(color);
+        vp1.add(colorPanel);
+        
+        HorizontalPanel armorPanel = new HorizontalPanel();
+        armorPanel.setSpacing(1);
+        Label armorLabel = new Label("Armor: ");
+        armorPanel.add(armorLabel);
+        armor.setWidth(150);
+        armorPanel.add(armor);
+        vp1.add(armorPanel);
 
-        drakeGenderLabel.setWidth(75);
-        namePanel.add(drakeGenderLabel);
-        //genderPanel.add(gender);
-        //genderPanel.add(drakeGenderLabel);
-        //vp1.add(genderPanel);
-        vp1.add(namePanel);
- 
-        Label genome = new Label("Diploid Genome: ");
-        vp1.add(genome);
-        genomeTextArea.setWidth(315);
-        genomeTextArea.setHeight(75);
-        genomeTextArea.setReadOnly(true);
-        vp1.add(genomeTextArea);
+        HorizontalPanel tailPanel = new HorizontalPanel();
+        tailPanel.setSpacing(1);
+        Label tailLabel = new Label("Tail Morphology: ");
+        tailPanel.add(tailLabel);
+        this.tail.setWidth(150);
+        tailPanel.add(tail);
+        vp1.add(tailPanel);
+        
+        HorizontalPanel eyePanel = new HorizontalPanel();
+        eyePanel.setSpacing(1);
+        Label eyeLabel = new Label("Eye Color: ");
+        eyePanel.add(eyeLabel);
+        eye.setWidth(150);
+        eyePanel.add(eye);
+        vp1.add(eyePanel);
+        
+        HorizontalPanel nickedPanel = new HorizontalPanel();
+        nickedPanel.setSpacing(1);
+        Label nickedLabel = new Label("Eye Morphology: ");
+        nickedPanel.add(nickedLabel);
+        this.nicked.setWidth(150);
+        nickedPanel.add(nicked);
+        vp1.add(nickedPanel);
+        
+        HorizontalPanel breathPanel = new HorizontalPanel();
+        breathPanel.setSpacing(1);
+        Label breathLabel = new Label("Breath: ");
+        breathPanel.add(breathLabel);
+        breath.setWidth(150);
+        breathPanel.add(breath);
+        vp1.add(breathPanel);
 
-        Label phenome = new Label("Phenotype: ");
-        vp1.add(phenome);
-        phenomeTextArea.setWidth(315);
-        phenomeTextArea.setHeight(55);
-        phenomeTextArea.setReadOnly(true);
-        vp1.add(phenomeTextArea);
- 
-        /*
-         * SelectionListener<ButtonEvent> BreedingButtonListener = new
-         * SelectionListener<ButtonEvent>() {
-         * 
-         * @Override public void componentSelected(ButtonEvent ce) {
-         * DiploidGenome fg = female.getDiploidgenome(); DiploidGenome mg =
-         * female.getDiploidgenome();
-         * 
-         * breedingInterface.breed(fg, mg); Info.display("Breeding...",
-         * "Breeding " + female.toString() + " X " + male.toString());
-         * 
-         * } };
-         */
-        // Button breedButton = new Button("Breed", BreedingButtonListener);
-        Button breedButton = new Button("Make Available for Breeding");
+        SelectionListener<ButtonEvent> BreederButtonListener = 
+            new SelectionListener<ButtonEvent>() {
 
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                drake.setBreeder(true);
+                tree.sendDrake(drake);
+            }
+        };
+
+        breedButton = new Button("Make Available for Breeding",
+                BreederButtonListener);
+        breedButton.setEnabled(false);
+        
         vp1.add(breedButton);
         
         hp1.add(vp1);
@@ -146,16 +182,39 @@ public class DrakeDetailPanel implements DrakeReceiver {
         this.drakeImage = d.getLargeimage();
         this.drakeImagePanel.add(drakeImage);
         this.drakeImagePanel.layout(true);
-        this.drakeNameLabel.setText(" " + d.getName());
-        String sex = " Female";
-        if (d.getGender().equals("M"))
-            sex = " Male";
-        this.drakeGenderLabel.setText(sex);
-        this.genomeTextArea.setValue(d.getDiploidgenome().toString());
-        Map<String,String> phenome = d.getPhenome();
-        if (phenome != null) {
-            GWT.log(phenome.toString());
-            this.phenomeTextArea.setValue(phenome.toString());
+        this.name.setText(d.getName());
+        if (drake.isDrake()) {
+            
+            String sex = "Female";
+            if (d.getGender().equals("M"))
+                sex = "Male";
+            this.gender.setText(sex);
+            Map<String,String> phenome = d.getPhenome();
+            if (phenome != null) {
+                if (phenome.containsKey("Lethal")) {
+                    color.setText("");
+                    armor.setText("");
+                    tail.setText("");
+                    eye.setText("");
+                    nicked.setText("");
+                    breath.setText("");
+                }
+                else {
+                    color.setText(phenome.get("Scale Color"));
+                    armor.setText(phenome.get("Armor"));
+                    tail.setText(phenome.get("Tail Morphology"));
+                    eye.setText(phenome.get("Eye Color"));
+                    nicked.setText(phenome.get("Eye Morphology"));
+                    breath.setText(phenome.get("Breath"));
+                }
+            }
+            if (drake.isBreeder()) {
+                this.breedButton.setEnabled(false);
+            } else {
+                this.breedButton.setEnabled(true);
+            }
+        } else {
+            this.breedButton.setEnabled(false);
         }
     }
     

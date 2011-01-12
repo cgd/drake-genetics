@@ -37,12 +37,13 @@ import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.treepanel.TreePanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 /**
  * @author <A HREF="mailto:dave.walton@jax.org">Dave Walton</A>
  */
-public class BreedingPanel {
+public class BreedingPanel  implements DrakeReceiver {
 
     private Label failMessage = null;
     private Folder root = null;
@@ -58,7 +59,7 @@ public class BreedingPanel {
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.breedingPanel = lp;
         final DrakeDetailPanel drakeDetail = new DrakeDetailPanel(detailPanel,
-                drakeGeneticsService);
+                (DrakeReceiver)this, drakeGeneticsService);
         final BreedingForm breedingForm = new BreedingForm(formPanel, 
                 drakeDetail, drakeGeneticsService);
 
@@ -77,7 +78,6 @@ public class BreedingPanel {
                         ModelData item = be.getItem();
                         if ("org.jax.drakegenetics.gwtclientapp.client.Drake".equals(item.getClass().getName())) {
                             Drake drake = (Drake)item;
-                            GWT.log("Clicked on drake = " + drake.toString());
                             //  Send drake to parent component of form Panel 
                             //  and to detail Panel
                             breedingForm.sendDrake(drake);
@@ -102,102 +102,32 @@ public class BreedingPanel {
         store.add(model.getChildren(), true);
 
     }
-
-    private void getTreeModelSucceeded(LibraryNode results,
-            DrakeGeneticsServiceAsync drakeGeneticsService) {
-
-        this.root = (Folder) parseLibraryNode(results, null,
-                drakeGeneticsService);
+    
+    public void sendDrake(Drake d) {
+        Folder females;
+        Folder males;
         
-        store.add(this.root.getChildren(), true);
-        //tree.show();
-    }
+        Drake nuDrake = new Drake(d.getName(), d.getGender(), 
+                d.getDiploidgenome(), d.getPhenome(),
+                new Image(d.getSmallimage().getUrl()),
+                new Image(d.getLargeimage().getUrl()));
 
-    private void getTreeModelFailed(Throwable caught) {
-        caught.printStackTrace();
-        this.failMessage = new Label(caught.getMessage());
-        this.breedingPanel.add(failMessage);
-        //this.breedingPanel.show();
-    }
-
-    /**
-     * Method used to transfer the nodes of a LibrayNode based tree to a
-     * BaseTreeModel based tree of Folder and Document objects for use in a GXT
-     * display
-     * 
-     * @param node
-     *            A LibraryNode object that was returned from the server
-     * @return The equivalent BaseTreeModel node (Folder or Document) for
-     *         display in a GXT Widget.
-     */
-    private BaseTreeModel parseLibraryNode(LibraryNode node, TreeModel parent,
-            DrakeGeneticsServiceAsync drakeGeneticsService) {
-        BaseTreeModel displayNode = null;
-        
-        if (node.isDocument()) {
-
-            GWT.log(node.getDisplayName() + "--" + node.getFileName());
-            final Document document = new Document(node.getDisplayName(),
-                    node.getFileName());
-            if (parent != null) {
-                document.setParent(parent);
-            }
-
-            // Add code here to actually fetch the document and add it to
-            // the Document object
-            List<String> path = new ArrayList<String>();
-            path.add(document.getDocument());
-            Folder fParent = (Folder) parent;
-            if (! fParent.getName().equals("/Library/")) {
-                path.add(fParent.getName());
-                Folder curParent = (Folder) parent.getParent();
-                while (curParent != null) {
-                    if (!curParent.getName().equals("/Library/"))
-                        path.add(curParent.getName());
-                    curParent = (Folder) curParent.getParent();
-                }
-            }
-            Collections.reverse(path);
-            GWT.log(path.toString());
-            
-            drakeGeneticsService.getPublication(path,
-                    new AsyncCallback<String>() {
-                        public void onSuccess(String documentUrl) {
-                            GWT.log(document.getName());
-                            GWT.log(" Node URL = " + documentUrl);
-                            document.setUrl(documentUrl);
-                            tree.repaint();
-                        }
-
-                        public void onFailure(Throwable caught) {
-                            getTreeModelFailed(caught);
-                        }
-                    });
-            displayNode = document;
-
-        } else if (node.isLeaf()) {
-            displayNode = new Folder(node.getData());
-            if (parent != null) {
-                displayNode.setParent(parent);
-            }
-
+        if ( ((Folder)store.getChild(0)).getName().equals("Females")) {
+            females = (Folder)store.getChild(0);
+            males = (Folder)store.getChild(1);
         } else {
-            displayNode = new Folder(node.getData());
-            if (parent != null) {
-                displayNode.setParent(parent);
-            }
-            for (int i = 0; i < node.getChildCount(); i++) {
-                displayNode.add(parseLibraryNode(
-                        (LibraryNode) node.getChild(i), displayNode,
-                        drakeGeneticsService));
-            }
+            females = (Folder)store.getChild(1);
+            males = (Folder)store.getChild(0);
         }
-
-        return displayNode;
+        store.setMonitorChanges(true);
+        
+        if (d.getGender().equals("F")) {
+            store.add(females,nuDrake, false);
+        } else {
+            store.add(males,nuDrake, false);
+        }
+        
     }
 
-    public Label getFailMessage() {
-        return this.failMessage;
-    }
     
 }

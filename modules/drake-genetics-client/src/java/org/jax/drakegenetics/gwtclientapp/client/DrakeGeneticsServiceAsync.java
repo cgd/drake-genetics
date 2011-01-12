@@ -56,8 +56,8 @@ public interface DrakeGeneticsServiceAsync
 
     /**
      * Get the metabolic test results 
-     * @param genome
-     *          the genome object
+     * @param predispForDiabetes
+     *          the value of the diabetes predisposition "phenotype"
      * @param diet
      *          the diet consumed by the drake
      * @param callback
@@ -66,7 +66,7 @@ public interface DrakeGeneticsServiceAsync
      *          metabolite measures over time
      */
     public void getMetabolicTestResults(
-            DiploidGenome genome,
+            String predispForDiabetes,
             String diet,
             AsyncCallback<Map<String, double[]>> callback);
     
@@ -136,4 +136,5 @@ public interface DrakeGeneticsServiceAsync
     public void getHelpDocument(List<String> documentTreePath,
             AsyncCallback<String> callback);
 
+    public void isValidDrakeImage(String url, AsyncCallback<Boolean> callback);
 }
