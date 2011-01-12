@@ -28,6 +28,10 @@
             org="com.extjs"
             name="gxt"
             rev="latest.integration"/>
+        <dependency
+        	org="com.google"
+        	name="gwt-visualization"
+        	rev="latest.integration"/>
     </dependencies>
 
 </ivy-module>

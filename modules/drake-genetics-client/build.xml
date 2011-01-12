@@ -28,6 +28,7 @@
                 <include name="gwt-client-util-src-*.jar"/>
                 <include name="gxt-*.jar"/>
                 <exclude name="gxt-resources-*.jar"/>
+                <include name="gwt-visualization-*.jar"/>
             </fileset>
         </unjar>
         
