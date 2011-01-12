@@ -112,26 +112,22 @@ public class MetabolismService
         //append filename
         sb.append(".txt");
         
+        // read in data from tabular file
         BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getResourceAsStream(sb.toString())));
-        String line;
-        
-        
+        String line; 
         int lineNum = 0;
+        
+        //skip over header
+        line = br.readLine();
         while ((line = br.readLine()) != null) {
-            double[] values;
-
-            // skip header
-            if (lineNum++ == 0) {
-                continue;
-            }
-
             String[] tokens = line.split("\t");
-            values = new double[tokens.length];
+            double[] values = new double[tokens.length];
+            
             for (int i = 0; i < tokens.length; i++) {
                 values[i] = new Double(tokens[i]);
             }
 
-            metaboliteValues.put(metabolites[lineNum - 1], values);
+            metaboliteValues.put(metabolites[lineNum++], values);
         }
         
     	
