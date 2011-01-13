@@ -39,6 +39,7 @@ public class MetabolismChart extends Composite
     private AbsolutePanel absolutePositionsPanel;
     private LineChart lineChart = null;
     
+    private String title;
     private Map<String, double[]> metabolismData;
     
     private int pixelHeight = -1;
@@ -131,24 +132,28 @@ public class MetabolismChart extends Composite
         this.visAPILoaded = true;
         if(this.metabolismData != null)
         {
-            this.updateMetabolismData();
+            this.updateChart();
         }
     }
     
     /**
-     * Setter for the current metabolism data
-     * @param metabolismData the metabolismData to set
+     * Draw the metabolism chart for the given parameters
+     * @param title
+     *          this will be used as the chart title
+     * @param metabolismData
+     *          the metabolismData to set
      */
-    public void setMetabolismData(Map<String, double[]> metabolismData)
+    public void drawChart(String title, Map<String, double[]> metabolismData)
     {
+        this.title = title;
         this.metabolismData = metabolismData;
         if(this.visAPILoaded)
         {
-            this.updateMetabolismData();
+            this.updateChart();
         }
     }
     
-    private void updateMetabolismData()
+    private void updateChart()
     {
         if(this.lineChart != null)
         {
@@ -181,7 +186,7 @@ public class MetabolismChart extends Composite
             options.setHeight(this.absolutePositionsPanel.getOffsetHeight());
         }
         
-        options.setTitle("Drake Metabolism");
+        options.setTitle(this.title);
         
         return options;
     }
