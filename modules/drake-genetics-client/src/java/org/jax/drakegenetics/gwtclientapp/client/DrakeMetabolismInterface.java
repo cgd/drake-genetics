@@ -25,6 +25,7 @@ import java.util.Map;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
+import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -77,22 +78,25 @@ public class DrakeMetabolismInterface
     }
     
     
-    public void runTest(Drake specimen, String diet, List<String> mets)
+    public void runTest(Drake specimen, String d, List<String> mets)
     {
         //Image spinnerImage = new Image("/images/drakeSpinner.gif");
         //panel.add(spinnerImage);
         //panel.layout(true);
         final Drake subject = specimen;
         final List<String> metabolites = mets;
+        final String diet = d;
+        
+        String dietKey = this.diets.get(diet);
         
         Map<String, String> phenome = subject.getPhenome();
         
         this.drakeGeneticsService.getMetabolicTestResults(
-                phenome.get("Diabetes Predisposition"), diet, 
+                phenome.get("Diabetes Predisposition"), dietKey, 
                 new AsyncCallback<Map<String, double[]>>() {
                     public void onSuccess(Map<String, double[]> results) {
                         DrakeMetabolismInterface.this.testSucceeded(subject,
-                                results, metabolites);
+                                diet, results, metabolites);
                     }
                         
                     public void onFailure(Throwable caught) {
@@ -102,14 +106,33 @@ public class DrakeMetabolismInterface
     }
         
     
-    private void testSucceeded(Drake drake, Map<String, double[]> results,
-            List<String> metabolites)
+    private void testSucceeded(Drake drake, String diet, 
+            Map<String, double[]> results, List<String> metabolites)
     {
         // Code up call to Keith's code to get plots, and add them
         // to tab panel
         GWT.log("in testSucceeded for Drake " + drake.toString());
         GWT.log(results.toString());
         GWT.log(metabolites.toString());
+        Map<String,double[]> dataToChart = new HashMap<String,double[]>();
+        for (String metabolite: metabolites) {
+            String metKey = this.metabolites.get(metabolite);
+            double[] data = results.get(metKey);
+            dataToChart.put(metabolite, data);
+        }
+        MetabolismChart chart = new MetabolismChart();
+        GWT.log("TabPanel =" + this.panel.getWidth() +  "x" + this.panel.getHeight());
+        chart.setPixelSize(this.panel.getWidth()-4, this.panel.getHeight()-45);
+        chart.drawChart(drake.getName() + "/" + diet, dataToChart);
+        TabItem tab = new TabItem();
+        tab.setTitle(drake.getName() + "/" + diet);
+        tab.setText(drake.getName() + "/" + diet);
+        tab.setSize(this.panel.getWidth()-6, this.panel.getHeight()-22);
+        tab.setClosable(true);
+        tab.add(chart);
+        
+        this.panel.add(tab);
+        this.panel.setSelection(tab);
     }
     
     

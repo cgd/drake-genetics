@@ -195,7 +195,7 @@ public class MetabolismChart extends Composite
     {
         DataTable data = DataTable.create();
         
-        data.addColumn(ColumnType.NUMBER, "x");
+        data.addColumn(ColumnType.STRING, "x");
         
         int dataRowCount = -1;
         for(double[] metaValues : this.metabolismData.values())
@@ -221,7 +221,7 @@ public class MetabolismChart extends Composite
         data.addRows(dataRowCount);
         for(int row = 0; row < dataRowCount; row++)
         {
-            data.setValue(row, 0, row);
+            data.setValue(row, 0, Integer.toString(row));
             for(int col = 0; col < metaboliteNames.size(); col++)
             {
                 data.setValue(

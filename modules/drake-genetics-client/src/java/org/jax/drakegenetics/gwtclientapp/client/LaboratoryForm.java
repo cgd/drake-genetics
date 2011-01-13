@@ -31,12 +31,14 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.DomEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
+import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
+import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.Window;
@@ -84,7 +86,9 @@ public class LaboratoryForm implements DrakeReceiver {
         this.formPanel = fp;
         final DrakeDetailPanel detailPanel = dp;
 
-        TabPanel tabPanel = new TabPanel();
+        final TabPanel tabPanel = new TabPanel();
+        tabPanel.setSize(538,323);
+        tabPanel.setTabScroll(true);
         final DrakeMetabolismInterface metabolismInterface = 
             new DrakeMetabolismInterface(drakeGeneticsService, tabPanel);
         
@@ -129,13 +133,13 @@ public class LaboratoryForm implements DrakeReceiver {
         FormPanel simple = new FormPanel();
         simple.setHeaderVisible(false);
         simple.setBorders(false);
-        simple.setWidth(460);
-        simple.setHeight(125);
+        simple.setWidth(455);
+        simple.setHeight(145);
         
         List<Diet> list = new ArrayList<Diet>();  
-        Diet standard = new Diet("normal", "Standard");
+        Diet standard = new Diet("Standard", "Standard");
         list.add(standard);
-        Diet glucose = new Diet("high glucose","High in Sugar");
+        Diet glucose = new Diet("High in Sugar","High in Sugar");
         list.add(glucose);
         
         final ListStore<Diet> store = new ListStore<Diet>();  
@@ -149,6 +153,8 @@ public class LaboratoryForm implements DrakeReceiver {
         diets.setForceSelection(true);  
         diets.setStore(store);  
         diets.setTriggerAction(TriggerAction.ALL);
+        diets.setEditable(false);
+        diets.setValue(standard);
         simple.add(diets, formData);
         
         final CheckBox check1 = new CheckBox();
@@ -197,34 +203,83 @@ public class LaboratoryForm implements DrakeReceiver {
         simple.add(checkGroup2, formData); 
 
         final CheckBoxGroup checkGroup3 = new CheckBoxGroup();  
-        checkGroup2.add(check7);  
-        checkGroup2.add(check8);  
+        checkGroup3.add(check7);  
+        checkGroup3.add(check8);  
         simple.add(checkGroup3, formData); 
 
+        HorizontalPanel buttons = new HorizontalPanel();
         SelectionListener<ButtonEvent> RunTestButtonListener = 
             new SelectionListener<ButtonEvent>() {
 
             @Override
             public void componentSelected(ButtonEvent ce) {
-                String diet = diets.getSelectedText();
-                GWT.log("Selected diet = " + diet);
-                List<String> metabolites = new ArrayList<String>();
-                for (CheckBox c : checkGroup1.getValues()) {
-                    metabolites.add(c.getName());
-                }
-                for (CheckBox c : checkGroup2.getValues()) {
-                    metabolites.add(c.getName());
-                }
-                for (CheckBox c : checkGroup3.getValues()) {
-                    metabolites.add(c.getName());
-                }
-                metabolismInterface.runTest(specimen, diet, metabolites);
-                Info.display("Running Tests...", "Does nothing at this time ");
+                if (specimen == null) {
+                    MessageBox mb = MessageBox.alert("Select Drake", 
+                            "Must select a drake before running test!", 
+                            new Listener<MessageBoxEvent> () {
+                                public void handleEvent(MessageBoxEvent e) {
+                                    GWT.log("do nothing");
+                                }
+                    });
+                } else {
+                    Diet diet = diets.getValue();
+                    if (diet == null) {
+                        MessageBox mb = MessageBox.alert("Select Diet", 
+                                "Must select a diet before " +
+                                "running test!", 
+                                new Listener<MessageBoxEvent> () {
+                                    public void handleEvent(MessageBoxEvent e) {
+                                        GWT.log("do nothing");
+                                    }
+                        });
+                    } else {
+                        GWT.log(diet.toString());
+                        GWT.log("Selected diet = " + diet.getName());
+                        List<String> metabolites = new ArrayList<String>();
+                        for (CheckBox c : checkGroup1.getValues()) {
+                            metabolites.add(c.getBoxLabel());
+                        }
+                        for (CheckBox c : checkGroup2.getValues()) {
+                            metabolites.add(c.getBoxLabel());
+                        }
+                        for (CheckBox c : checkGroup3.getValues()) {
+                            metabolites.add(c.getBoxLabel());
+                        }
+                        if (metabolites.size() > 0) {
+                            GWT.log(metabolites.toString());
+                            metabolismInterface.runTest(specimen, 
+                                    diet.getName(),
+                                    metabolites);
+                            Info.display("Running Tests...",
+                                    "Running Metabolism test...");
+                        } else {
+                            MessageBox mb = MessageBox.alert("Select Metabolite", 
+                                    "Must select something to measure before " +
+                                    "running test!", 
+                                    new Listener<MessageBoxEvent> () {
+                                        public void handleEvent(MessageBoxEvent e) {
+                                            GWT.log("do nothing");
+                                        }
+                            });
+                            
+                        }
+                    }
 
+                }
             }
         };
         Button runTestButton = new Button("Run Tests", RunTestButtonListener);
-        simple.add(runTestButton);
+        buttons.add(runTestButton);
+        //simple.add(runTestButton);
+        
+        Button clearTabsButton = new Button("Clear Tabs", new SelectionListener<ButtonEvent>() {
+            @Override
+            public void componentSelected(ButtonEvent ce) {
+                tabPanel.removeAll();
+            }
+        });
+        buttons.add(clearTabsButton);
+        simple.add(buttons);
 
         controls.add(simple);
         
@@ -248,6 +303,7 @@ public class LaboratoryForm implements DrakeReceiver {
         this.specimenImage = d.getSmallimage();
         this.specimenPanel.removeAll();
         this.specimenPanel.add(specimenImage);
+        this.specimenPanel.setTitle(specimen.getName());
         this.specimenPanel.layout(true);
     }
     
