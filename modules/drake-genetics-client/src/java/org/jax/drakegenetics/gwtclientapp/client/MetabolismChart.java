@@ -153,6 +153,17 @@ public class MetabolismChart extends Composite
         }
     }
     
+    /**
+     * Repaints the chart using the existing title and data
+     */
+    public void redrawChart()
+    {
+        if(this.metabolismData != null && this.visAPILoaded)
+        {
+            this.updateChart();
+        }
+    }
+    
     private void updateChart()
     {
         if(this.lineChart != null)
