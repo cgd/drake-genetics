@@ -22,7 +22,7 @@ public final class PhenoConstants {
     public static final String CAT_SEX = "Sex";
     public static final String CAT_STERILITY = "Sterility";
     public static final String CAT_SCALE_COLOR = "Scale Color";
-    public static final String CAT_EYE_COLOR = "Eye Morphology";
+    public static final String CAT_EYE_COLOR = "Eye Color";
     public static final String CAT_EYE_MORPH = "Eye Morphology";
     public static final String CAT_TAIL_MORPH = "Tail Morphology";
     public static final String CAT_ARMOR = "Armor";
