@@ -25,6 +25,7 @@ import java.util.Map;
 import org.jax.drakegenetics.shareddata.client.Chromosome;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.Gene;
+import org.jax.drakegenetics.shareddata.client.PhenoConstants;
 
 /**
  *
@@ -61,15 +62,19 @@ public class PhenoService {
         Map<String, List<String>> alleles = getAlleles(genome);
 
         try {
-            phenome.put("Breath", getBreathPhenotype(alleles));
-            phenome.put("Eye Color", getEyeColor(alleles));
-            phenome.put("Eye Morphology", getEyeMorphology(alleles));
-            phenome.put("Scale Color", getScaleColor(alleles));
-            phenome.put("Tail Morphology", getTailMorphology(alleles));
-            phenome.put("Armor", getArmor(alleles));
-            phenome.put("Sex", getSex(genome, alleles));
-            phenome.put("Sterility", getSterility(genome, alleles));
-            phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
+            phenome.put(PhenoConstants.CAT_BREATH, getBreathPhenotype(alleles));
+            phenome.put(PhenoConstants.CAT_EYE_COLOR, getEyeColor(alleles));
+            phenome.put(PhenoConstants.CAT_EYE_MORPH, 
+                    getEyeMorphology(alleles));
+            phenome.put(PhenoConstants.CAT_SCALE_COLOR, getScaleColor(alleles));
+            phenome.put(PhenoConstants.CAT_TAIL_MORPH, 
+                    getTailMorphology(alleles));
+            phenome.put(PhenoConstants.CAT_ARMOR, getArmor(alleles));
+            phenome.put(PhenoConstants.CAT_SEX, getSex(genome, alleles));
+            phenome.put(PhenoConstants.CAT_STERILITY, 
+                    getSterility(genome, alleles));
+            phenome.put(PhenoConstants.CAT_DB_PREDISP, 
+                    getDiabetesPredisposition(alleles));
         }
         catch (LethalAlleleCombinationException e) {
             phenome.clear();
@@ -88,9 +93,9 @@ public class PhenoService {
     	List<String> diabetesAlleles = alleles.get("Dia");
     	
     	if (diabetesAlleles.contains("Db")) {
-    		return "no predisposition for diabetes";
+    		return PhenoConstants.DIABETES_NOPREDISP;
     	}
-    	return "predisposition for diabetes";
+    	return PhenoConstants.DIABETES_PREDISP;
     }
     
     /**
@@ -151,11 +156,11 @@ public class PhenoService {
 
         /* if the first allele in the list is "bog" ... */
         if (numMatches(bogBreathAlleles, "bog") == bogBreathAlleles.size()) {
-            return "Bog Breath";
+            return PhenoConstants.BREATH_BOG;
         }
 
         // every other combination is healthy
-        return "Healthy";
+        return PhenoConstants.BREATH_HEALTHY;
     }
 
     /**
@@ -175,14 +180,14 @@ public class PhenoService {
 
         if (numMatches(flameAlleles, "F") == 2) {
             // F/F
-            return "red";
+            return PhenoConstants.COLOR_RED;
         }
         else if (numMatches(flameAlleles, "f") == 2) {
             // f/f
-            return "white";
+            return PhenoConstants.COLOR_WHITE;
         }
         // F/f
-        return "gold";
+        return PhenoConstants.COLOR_GOLD;
     }
 
     /**
@@ -207,11 +212,11 @@ public class PhenoService {
         }
         else if (numMatches(nickAlleles, "n") == 2) {
                 // n/n
-                return "normal eye";
+                return PhenoConstants.EYE_MORPH_NORMAL;
         }
         
         // N/n
-        return "nicked iris";
+        return PhenoConstants.EYE_MORPH_NICK;
 
     }
 
@@ -234,10 +239,10 @@ public class PhenoService {
          */
 
         if (numMatches(tailAlleles, "t") == tailAlleles.size()) {
-            return "short no barb";
+            return PhenoConstants.TAIL_MORPH_SHORT_NO_BARB;
         }
 
-        return "long with barb";
+        return PhenoConstants.TAIL_MORPH_LONG_BARB;
     }
 
     /**
@@ -256,13 +261,13 @@ public class PhenoService {
          */
 
         if (numMatches(armorAlleles, "A1") == 2) {
-            return "five lateral plates";
+            return PhenoConstants.ARMOR_PLATES_5;
         }
         else if (numMatches(armorAlleles, "A2") == 2) {
-            return "one lateral plate";
+            return PhenoConstants.ARMOR_PLATES_1;
         }
 
-        return "three lateral plates";
+        return PhenoConstants.ARMOR_PLATES_3;
     }
 
     /**
@@ -277,7 +282,7 @@ public class PhenoService {
 
         // all aneuploids are sterile
         if (genome.isAneuploid()) {
-        	return "true";
+        	return PhenoConstants.STERILE_TRUE;
         }
         
         //check Transformer gene 
@@ -291,10 +296,10 @@ public class PhenoService {
          */
 
         if (transformerAlleles.contains("Tr")) {
-        	return "false";
+        	return PhenoConstants.STERILE_FALSE;
         }
         
-        return "true";
+        return PhenoConstants.STERILE_TRUE;
     }
 
     /**
@@ -334,23 +339,23 @@ public class PhenoService {
         }
         else if (xCount == 1 && yCount == 0) {
             // XO
-            return "Scruffy female";
+            return PhenoConstants.SEX_F_SCRUFFY;
         }
         else if (xCount == 2 && yCount == 1) {
             // XXY
-            return "Scruffy male";
+            return PhenoConstants.SEX_M_SCRUFFY;
         }
         else if (xCount ==1 && yCount == 1) {
             // XY
             if (transformerAlleles.get(0).equals("tr")) {
                 // sex reversed male, phenotype will be sterile female
-                return "female";
+                return PhenoConstants.SEX_F;
             }
-            return "male";
+            return PhenoConstants.SEX_M;
         }
 
         // XY
-        return "female";
+        return PhenoConstants.SEX_F;
 
     }
 
@@ -403,7 +408,7 @@ public class PhenoService {
             }
 
             // any other c/c is Frost
-            return "Frost";
+            return PhenoConstants.COLOR_FROST;
             
         }
         else { // C/*
@@ -417,7 +422,7 @@ public class PhenoService {
                 }
                 
                 // everything else Mt/* is Tawny
-                return "Tawny";    
+                return PhenoConstants.COLOR_TAWNY;    
             }
             // C/* M/*
             else if (metalicAlleles.contains("M")) {
@@ -426,13 +431,13 @@ public class PhenoService {
                 if (brownAlleles.contains("B")) {
                     // C/* M/* B/* D/*
                     if (diluteAlleles.contains("D")) {
-                        return "Steel";
+                        return PhenoConstants.COLOR_STEEL;
                     }
                     // C/* M/* B/* d/d || C/* M/* B/Y d/Y || C/* M/* B/* d/dl
                     else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
                             || (numMatches(diluteAlleles, "d") == 1
                                 && numMatches(diluteAlleles, "dl") == 1)) {
-                        return "Argent";
+                        return PhenoConstants.COLOR_ARGENT;
                     }
                 }
 
@@ -440,13 +445,13 @@ public class PhenoService {
                 if (numMatches(brownAlleles, "b") == brownAlleles.size()) {
                     // C/* M/* b/b D/* || C/* M/* b/Y D/*
                     if (diluteAlleles.contains("D")) {
-                        return "Copper";
+                        return PhenoConstants.COLOR_COPPER;
                     }
                     // C/* M/* b/b d/d || C/* M/* b/Y d/Y ||  C/* M/* b/b d/dl
                     else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
                             || (numMatches(diluteAlleles, "d") == 1
                                 && numMatches(diluteAlleles, "dl") == 1)) {
-                        return "Gold";
+                        return PhenoConstants.COLOR_GOLD;
                     }
                 }
 
@@ -459,12 +464,12 @@ public class PhenoService {
                 if (brownAlleles.contains("B")) {
                     // C/* m/m B/* D/* || C/* m/m B/Y D/Y
                     if (diluteAlleles.contains("D")) {
-                        return "Charcoal";
+                        return PhenoConstants.COLOR_CHARCOAL;
                     }
                     // C/* m/m B/* d/d || C/* m/m B/Y d/Y || C/* m/m B/* d/dl
                     else if (numMatches(diluteAlleles, "d") == diluteAlleles.size()
                             || (numMatches(diluteAlleles, "d") == 1 && numMatches(diluteAlleles, "dl") == 1)) {
-                         return "Dust";
+                         return PhenoConstants.COLOR_DUST;
                     }
                     // all other C/* m/m B/*
                     throw new LethalAlleleCombinationException();
@@ -474,12 +479,12 @@ public class PhenoService {
 
                 // C/* m/m b/b D/* || C/* m/m b/Y D/Y
                 if (diluteAlleles.contains("D")) {
-                    return "Earth";
+                    return PhenoConstants.COLOR_EARTH;
                 }
                 // C/* m/m b/b d/d || C/* m/m b/Y d/Y || C/* m/m b/b d/dl
                 else if(numMatches(diluteAlleles, "d") == diluteAlleles.size()
                             || (numMatches(diluteAlleles, "d") == 1 && numMatches(diluteAlleles, "dl") == 1)) {
-                    return "Sand";
+                    return PhenoConstants.COLOR_SAND;
                 }
 
                 throw new LethalAlleleCombinationException();
