@@ -142,13 +142,8 @@ public class DrakeBreedingInterface
         for(DiploidGenome currGenome : offspring)
         {
             final int index = counter;
-            String sex = "F";
-            if (currGenome.isMale()) {
-                sex = "M";
-            }
-            
             final Drake drake = new Drake("(" + mother.getName() + " x " + father.getName() + ")",
-                    sex, currGenome);
+                    currGenome);
             drake.setBreeder(false);
             this.drakes.add(drake);
             this.drakeGeneticsService.getPhenome(currGenome,
