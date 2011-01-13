@@ -30,9 +30,11 @@ public final class PhenoConstants {
     public static final String CAT_DB_PREDISP = "Diabetes Predisposition";
     public static final String CAT_LETHAL = "Lethal";
     
-    public static final String BREATH_BOG = "Bog Breath";
-    public static final String BREATH_HEALTHY = "Healthy";
+    //breath phenotype values
+    public static final String BREATH_BOG = "bog breath";
+    public static final String BREATH_HEALTHY = "healthy";
     
+    //phenotype colors
     public static final String COLOR_WHITE = "white";
     public static final String COLOR_GOLD = "gold";
     public static final String COLOR_RED = "red";
@@ -46,20 +48,24 @@ public final class PhenoConstants {
     public static final String COLOR_EARTH = "earth";
     public static final String COLOR_SAND = "sand";
     
-    
+    //eye morphology phenotypes
     public static final String EYE_MORPH_NICK = "nicked iris";
     public static final String EYE_MORPH_NORMAL = "normal iris";
     
+    //tail morphology phenotypes
     public static final String TAIL_MORPH_LONG_BARB = "long with barb";
     public static final String TAIL_MORPH_SHORT_NO_BARB = "short no barb";
     
+    //armor phenotypes
     public static final String ARMOR_PLATES_1 = "one lateral plate";
     public static final String ARMOR_PLATES_3 = "three lateral plates";
     public static final String ARMOR_PLATES_5 = "five lateral plates";
     
+    //sterility phenotypes
     public static final String STERILE_TRUE = "true";
     public static final String STERILE_FALSE = "false";
     
+    //sex phenotypes
     public static final String SEX_M = "male";
     public static final String SEX_F = "female";
     public static final String SEX_M_SCRUFFY = "scruffy male";
