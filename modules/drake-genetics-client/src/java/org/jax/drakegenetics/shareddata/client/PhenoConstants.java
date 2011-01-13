@@ -48,6 +48,9 @@ public final class PhenoConstants {
     public static final String COLOR_EARTH = "earth";
     public static final String COLOR_SAND = "sand";
     
+    //lethality phenotypes
+    public static final String LETHAL_TRUE = "true";
+    
     //eye morphology phenotypes
     public static final String EYE_MORPH_NICK = "nicked iris";
     public static final String EYE_MORPH_NORMAL = "normal iris";

@@ -78,7 +78,7 @@ public class PhenoService {
         }
         catch (LethalAlleleCombinationException e) {
             phenome.clear();
-            phenome.put("Lethal", "true");
+            phenome.put(PhenoConstants.CAT_LETHAL, PhenoConstants.LETHAL_TRUE);
         }
         return phenome;
     }
