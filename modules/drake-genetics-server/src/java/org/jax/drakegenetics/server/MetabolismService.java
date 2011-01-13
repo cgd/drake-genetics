@@ -23,6 +23,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jax.drakegenetics.shareddata.client.PhenoConstants;
+
 
 
 /**
@@ -94,7 +96,7 @@ public class MetabolismService
         StringBuilder sb = new StringBuilder("/metabolism/");
         
         // append string for predisposition
-        if (predispForDiabetes.equalsIgnoreCase("predisposition for diabetes")) {
+        if (predispForDiabetes.equals(PhenoConstants.DIABETES_PREDISP)) {
         	sb.append("Predisp_");
         }
         else {

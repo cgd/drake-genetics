@@ -20,6 +20,8 @@ package org.jax.drakegenetics.gwtclientapp.client;
 
 import java.util.Map;
 
+import org.jax.drakegenetics.shareddata.client.PhenoConstants;
+
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
@@ -209,7 +211,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
             this.gender.setText(sex);
             Map<String,String> phenome = d.getPhenome();
             if (phenome != null) {
-                if (phenome.containsKey("Lethal")) {
+                if (phenome.containsKey(PhenoConstants.CAT_LETHAL)) {
                     color.setText("");
                     armor.setText("");
                     tail.setText("");
@@ -219,14 +221,15 @@ public class DrakeDetailPanel implements DrakeReceiver {
                     scruffy.setText("");
                 }
                 else {
-                    color.setText(phenome.get("Scale Color"));
-                    armor.setText(phenome.get("Armor"));
-                    tail.setText(phenome.get("Tail Morphology"));
-                    eye.setText(phenome.get("Eye Color"));
-                    nicked.setText(phenome.get("Eye Morphology"));
-                    breath.setText(phenome.get("Breath"));
-                    String scruffyText = phenome.get("Sex");
-                    if (scruffyText.equals("male") || scruffyText.equals("female")) {
+                    color.setText(phenome.get(PhenoConstants.CAT_SCALE_COLOR));
+                    armor.setText(phenome.get(PhenoConstants.CAT_ARMOR));
+                    tail.setText(phenome.get(PhenoConstants.CAT_TAIL_MORPH));
+                    eye.setText(phenome.get(PhenoConstants.CAT_EYE_COLOR));
+                    nicked.setText(phenome.get(PhenoConstants.CAT_EYE_MORPH));
+                    breath.setText(phenome.get(PhenoConstants.CAT_BREATH));
+                    String scruffyText = phenome.get(PhenoConstants.CAT_SEX);
+                    if (scruffyText.equals(PhenoConstants.SEX_M) 
+                            || scruffyText.equals(PhenoConstants.SEX_F)) {
                         scruffyText = "no";
                     }
                     scruffy.setText(scruffyText);

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
+import org.jax.drakegenetics.shareddata.client.PhenoConstants;
 
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.google.gwt.core.client.GWT;
@@ -55,20 +56,20 @@ public class DrakeBreedingInterface
         this.drakes = drakes;
         this.coatColors = new HashMap<String,Integer>();
         this.eyeColors = new HashMap<String, Integer>();
-        this.coatColors.put("Frost",new Integer(0));
-        this.coatColors.put("Charcoal",new Integer(1));
-        this.coatColors.put("Earth",new Integer(2));
-        this.coatColors.put("Dust",new Integer(3));
-        this.coatColors.put("Sand",new Integer(4));
-        this.coatColors.put("Steel",new Integer(5));
-        this.coatColors.put("Copper",new Integer(6));
-        this.coatColors.put("Argent",new Integer(7));
-        this.coatColors.put("Gold",new Integer(8));
-        this.coatColors.put("Tawny",new Integer(9));
+        this.coatColors.put(PhenoConstants.COLOR_FROST,new Integer(0));
+        this.coatColors.put(PhenoConstants.COLOR_CHARCOAL,new Integer(1));
+        this.coatColors.put(PhenoConstants.COLOR_EARTH,new Integer(2));
+        this.coatColors.put(PhenoConstants.COLOR_DUST,new Integer(3));
+        this.coatColors.put(PhenoConstants.COLOR_SAND,new Integer(4));
+        this.coatColors.put(PhenoConstants.COLOR_STEEL,new Integer(5));
+        this.coatColors.put(PhenoConstants.COLOR_COPPER,new Integer(6));
+        this.coatColors.put(PhenoConstants.COLOR_ARGENT,new Integer(7));
+        this.coatColors.put(PhenoConstants.COLOR_GOLD,new Integer(8));
+        this.coatColors.put(PhenoConstants.COLOR_TAWNY,new Integer(9));
         
-        this.eyeColors.put("white",new Integer(0));
-        this.eyeColors.put("gold",new Integer(1));
-        this.eyeColors.put("red",new Integer(2));
+        this.eyeColors.put(PhenoConstants.COLOR_WHITE,new Integer(0));
+        this.eyeColors.put(PhenoConstants.COLOR_GOLD,new Integer(1));
+        this.eyeColors.put(PhenoConstants.COLOR_RED,new Integer(2));
         
         
     }
@@ -91,7 +92,7 @@ public class DrakeBreedingInterface
             GWT.log("Size of drakes list is now: " + this.drakes.size());
         }
         
-        if (f.getPhenome().get("Sterility").equals("true")) {
+        if (f.getPhenome().get(PhenoConstants.CAT_STERILITY).equals(PhenoConstants.STERILE_TRUE)) {
             // If mom is sterile, there will be no eggs
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("No Progeny Found", 
@@ -102,7 +103,7 @@ public class DrakeBreedingInterface
                 panels.get(i).add(drake.getSmallimage());
                 panels.get(i).layout(true);
             }
-        } else if (m.getPhenome().get("Sterility").equals("true")) {
+        } else if (m.getPhenome().get(PhenoConstants.CAT_STERILITY).equals(PhenoConstants.STERILE_TRUE)) {
             // If dad is sterile, there will be unfertilized eggs
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("Egg Unfertilized", 
@@ -184,27 +185,27 @@ public class DrakeBreedingInterface
             
             if (this.have_final_images) {
                 
-                int color = this.coatColors.get(phenome.get("Scale Color"));
-                int eye = this.eyeColors.get(phenome.get("Eye Color"));
+                int color = this.coatColors.get(phenome.get(PhenoConstants.CAT_SCALE_COLOR));
+                int eye = this.eyeColors.get(phenome.get(PhenoConstants.CAT_EYE_COLOR));
                 int tail = 0;  // short no barb
-                if (! phenome.get("Tail Morphology").equals("short no barb")) {
+                if (! phenome.get(PhenoConstants.CAT_TAIL_MORPH).equals(PhenoConstants.TAIL_MORPH_SHORT_NO_BARB)) {
                     tail = 1;  // normal barbed tail
                 }
                 int armor = 0;
-                if (phenome.get("Armor").equals("one lateral plate")) {
+                if (phenome.get(PhenoConstants.CAT_ARMOR).equals(PhenoConstants.ARMOR_PLATES_1)) {
                     armor = 1;
-                } else if (phenome.get("Armor").equals("two lateral plates")) {
-                    armor = 2;
-                } else if (phenome.get("Armor").equals("three lateral plates")) {
+                } else if (phenome.get(PhenoConstants.CAT_ARMOR).equals(PhenoConstants.ARMOR_PLATES_3)) {
                     armor = 3;
+                } else if (phenome.get(PhenoConstants.CAT_ARMOR).equals(PhenoConstants.ARMOR_PLATES_5)) {
+                    armor = 5;
                 }
                 int nicked = 0;  // normal eye
-                if (! phenome.get("Eye Morphology").equals("normal eye")) {
+                if (! phenome.get(PhenoConstants.CAT_EYE_MORPH).equals(PhenoConstants.EYE_MORPH_NICK)) {
                     nicked = 1;  // nicked eye
                 }
                 String scruffy = "";
-                if (phenome.get("Sex").equals("Scruffy male") || 
-                        phenome.get("Sex").equals("Scruffy female") ) {
+                if (phenome.get(PhenoConstants.CAT_SEX).equals(PhenoConstants.SEX_M_SCRUFFY) || 
+                        phenome.get(PhenoConstants.CAT_SEX).equals(PhenoConstants.SEX_F_SCRUFFY) ) {
                     scruffy = "S";
                 }
                 final String lg_img_name = "images/eyes/LE" + drake.getGender() + color + tail +
@@ -248,8 +249,8 @@ public class DrakeBreedingInterface
 
             } else {
                 
-                int color = this.coatColors.get(phenome.get("Scale Color"));
-                int eye = this.eyeColors.get(phenome.get("Eye Color"));
+                int color = this.coatColors.get(phenome.get(PhenoConstants.CAT_SCALE_COLOR));
+                int eye = this.eyeColors.get(phenome.get(PhenoConstants.CAT_EYE_COLOR));
                 
                 final String lg_img_name = "images/eyes/LE" + drake.getGender() + color + "bb" + eye + "b"+ ".jpg";
                 final String sm_img_name = "images/eyes/SE" + drake.getGender() + color +  "bb"  + eye + "b" + ".jpg";
