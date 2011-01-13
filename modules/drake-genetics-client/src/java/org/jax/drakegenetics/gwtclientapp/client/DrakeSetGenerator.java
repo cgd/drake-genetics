@@ -24,7 +24,6 @@ import java.util.Set;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.DrakeSpeciesSingleton;
 
-import com.extjs.gxt.ui.client.data.BaseModel;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
@@ -56,10 +55,10 @@ public class DrakeSetGenerator  {
     }
     
     public Folder getTreeModel(DrakeGeneticsServiceAsync dgs) {
-        Image f_small_example = new Image("/images/eyes/SEF51311.jpg");
-        Image f_large_example = new Image("/images/eyes/LEF51311.jpg");
-        Image m_small_example = new Image("/images/eyes/SEM40100.jpg");
-        Image m_large_example = new Image("/images/eyes/LEM40100.jpg");
+        Image f_small_example = new Image("images/eyes/SEF51311.jpg");
+        Image f_large_example = new Image("images/eyes/LEF51311.jpg");
+        Image m_small_example = new Image("images/eyes/SEM40100.jpg");
+        Image m_large_example = new Image("images/eyes/LEM40100.jpg");
         DiploidGenome female_genome = new DiploidGenome("P1_M", "P1_P", true,
                 DrakeSpeciesSingleton.getInstance());
         DiploidGenome male_genome = new DiploidGenome("P2_M", "P2_P", false,

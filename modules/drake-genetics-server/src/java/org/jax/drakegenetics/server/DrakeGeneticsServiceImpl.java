@@ -220,10 +220,11 @@ public class DrakeGeneticsServiceImpl extends RemoteServiceServlet implements Dr
     }
     
     public Boolean isValidDrakeImage(String url) {
+        String webResourceName = url.startsWith("/") ? url : "/" + url;
         boolean valid = false;
         for (Iterator<String> i=paths.iterator(); i.hasNext();) {
             String path = i.next();
-            if (url.equals(path)) {
+            if (webResourceName.equals(path)) {
                 valid = true;
                 break;
             }

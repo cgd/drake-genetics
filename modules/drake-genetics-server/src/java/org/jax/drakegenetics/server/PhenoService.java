@@ -67,7 +67,7 @@ public class PhenoService {
             phenome.put("Scale Color", getScaleColor(alleles));
             phenome.put("Tail Morphology", getTailMorphology(alleles));
             phenome.put("Armor", getArmor(alleles));
-            phenome.put("Sex", getSex(genome));
+            phenome.put("Sex", getSex(genome, alleles));
             phenome.put("Sterility", getSterility(genome, alleles));
             phenome.put("Diabetes Predisposition", getDiabetesPredisposition(alleles));
         }
@@ -303,8 +303,10 @@ public class PhenoService {
      * @return String description of the sex: (Scruffy) [male, female]
      * @throws org.jax.drakegenetics.server.PhenoService.LethalAlleleCombinationException
      */
-    private String getSex(DiploidGenome genome) throws LethalAlleleCombinationException
+    private String getSex(DiploidGenome genome, Map<String, List<String>> alleles) throws LethalAlleleCombinationException
     {
+        List<String> transformerAlleles = alleles.get("Ar");
+        
         int xCount = 0;
         int yCount = 0;
 
@@ -340,6 +342,10 @@ public class PhenoService {
         }
         else if (xCount ==1 && yCount == 1) {
             // XY
+            if (transformerAlleles.get(0).equals("tr")) {
+                // sex reversed male, phenotype will be sterile female
+                return "female";
+            }
             return "male";
         }
 

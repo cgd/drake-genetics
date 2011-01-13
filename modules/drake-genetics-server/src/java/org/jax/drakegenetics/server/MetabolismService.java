@@ -80,7 +80,7 @@ public class MetabolismService
         //TODO as long as we're reading the metabolite values from static files
         //     maybe we should put this in a file in the metabolism/ directory
         //     rather than hard code it
-        String[] metabolites = {"L g6p", "L glycgn", "L pep", "L pyr", "L lac",
+        String[] metabolites = {"L gluc", "L g6p", "L glycgn", "L pep", "L pyr", "L lac",
         		"L oa_m", "L acet_m", "L citrate", "L aK", "L malate", "L oa_c",
         		"L acet_c", "L malonyl", "L palm", "L palmCoA", "L ket",
         		"L alan", "L cAMP", "L glutamate", "L co2", "B gluc", "B ins", 
