@@ -44,6 +44,7 @@ public class DrakeQuestBaseInterface
     private final VerticalPanel masterPanel = new VerticalPanel();
     private final HorizontalPanel libraryPanel = new HorizontalPanel();
     private final HorizontalPanel breedingPanel = new HorizontalPanel();
+    private final HorizontalPanel laboratoryPanel = new HorizontalPanel();
     private final Window helpWindow = new Window();
     private boolean helpInitialized = false;
     private final ContentPanel bannerPanel = new ContentPanel();
@@ -102,6 +103,7 @@ public class DrakeQuestBaseInterface
              */
             mainBackground.hide();
             breedingPanel.hide();
+            laboratoryPanel.hide();
             libraryPanel.show();
             libraryPanel.layout(true);
         }
@@ -127,8 +129,35 @@ public class DrakeQuestBaseInterface
              */
             mainBackground.hide();
             libraryPanel.hide();
+            laboratoryPanel.hide();
             breedingPanel.show();
             breedingPanel.layout(true);
+        }
+    };
+
+    /**
+     * instantiation of a selection listener for the Laboratory Button in the
+     * Toolbar.
+     */
+    private final SelectionListener<ButtonEvent> LaboratoryButtonListener = 
+        new SelectionListener<ButtonEvent>() {
+
+        @Override
+        public void componentSelected(ButtonEvent ce) {
+            /*
+             * Keith suggestion for making it all display when content loaded
+             * 
+             * for each onSuccess you set "this.content1Loaded = true" for the
+             * 1st pane's content and "this.content2Loaded = true" for the
+             * second pane's content. Then each onSuccess calls
+             * "showWindowIfContentLoaded(...)". This function starts with
+             * if(this.content1Loaded && this.content2Loaded){ ...}
+             */
+            mainBackground.hide();
+            libraryPanel.hide();
+            breedingPanel.hide();
+            laboratoryPanel.show();
+            laboratoryPanel.layout(true);
         }
     };
 
@@ -170,6 +199,7 @@ public class DrakeQuestBaseInterface
             @Override
             public void componentSelected(ButtonEvent ce) {
                 breedingPanel.hide();
+                laboratoryPanel.hide();
                 libraryPanel.hide();
                 mainBackground.show();
                 Info.display("Not Yet Implemented", "The "
@@ -189,7 +219,7 @@ public class DrakeQuestBaseInterface
 
         toolBar.add(new SeparatorToolItem());
 
-        Button item3 = new Button("Laboratory", StubButtonListener);
+        Button item3 = new Button("Laboratory", this.LaboratoryButtonListener);
         toolBar.add(item3);
 
         toolBar.add(new SeparatorToolItem());
@@ -211,6 +241,10 @@ public class DrakeQuestBaseInterface
         breedingPanel.hide();
         BreedingPanel bp = new BreedingPanel(breedingPanel, drakeGeneticsService);
         mainPanel.add(breedingPanel);
+        
+        laboratoryPanel.hide();
+        LaboratoryPanel lp = new LaboratoryPanel(laboratoryPanel, drakeGeneticsService);
+        mainPanel.add(laboratoryPanel);
         
         libraryPanel.hide();
         LibraryData ld = new LibraryData(libraryPanel, drakeGeneticsService);

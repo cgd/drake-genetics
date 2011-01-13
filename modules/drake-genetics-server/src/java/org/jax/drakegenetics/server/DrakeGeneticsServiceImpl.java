@@ -18,7 +18,6 @@
 package org.jax.drakegenetics.server;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,6 @@ import org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsService;
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
 import org.jax.drakegenetics.shareddata.client.LibraryNode;
 
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
