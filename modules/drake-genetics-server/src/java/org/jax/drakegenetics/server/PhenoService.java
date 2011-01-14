@@ -382,6 +382,12 @@ public class PhenoService {
         List<String> diluteAlleles = alleles.get("Myo5a");
         List<String> brownAlleles = alleles.get("Otc");
 
+        System.out.println(colorlessAlleles.toString());
+        System.out.println(metalicAlleles.toString());
+        System.out.println(brownAlleles.toString());
+        System.out.println(diluteAlleles.toString());
+        
+
         // We've tried to collapse as many of these rules as possible
         // and also take advantage that combinations like B/Y dl/dl or B/b dl/Y are impossible
 
@@ -465,11 +471,6 @@ public class PhenoService {
                     }
                 }
 
-                System.out.println(colorlessAlleles.toString());
-                System.out.println(metalicAlleles.toString());
-                System.out.println(brownAlleles.toString());
-                System.out.println(diluteAlleles.toString());
-                
                 // everything else inviable
                 throw new LethalAlleleCombinationException();
             }
