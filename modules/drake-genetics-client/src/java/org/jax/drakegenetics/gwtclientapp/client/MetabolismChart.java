@@ -27,19 +27,19 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.visualization.client.AbstractDataTable.ColumnType;
 import com.google.gwt.visualization.client.DataTable;
 import com.google.gwt.visualization.client.VisualizationUtils;
-import com.google.gwt.visualization.client.visualizations.LineChart;
-import com.google.gwt.visualization.client.visualizations.LineChart.Options;
+import com.google.gwt.visualization.client.visualizations.ImageLineChart;
+import com.google.gwt.visualization.client.visualizations.ImageLineChart.Options;
 
 /**
  * @author <A HREF="mailto:keith.sheppard@jax.org">Keith Sheppard</A>
  */
 public class MetabolismChart extends Composite
 {
-    private boolean visAPILoaded;
+    private static boolean visAPILoaded = false;
     private AbsolutePanel absolutePositionsPanel;
-    private LineChart lineChart = null;
+    private ImageLineChart lineChart = null;
     
-    private String title;
+    private String chartTitle;
     private Map<String, double[]> metabolismData;
     
     private int pixelHeight = -1;
@@ -65,8 +65,14 @@ public class MetabolismChart extends Composite
         this.absolutePositionsPanel = new AbsolutePanel();
         this.initWidget(this.absolutePositionsPanel);
         
-        this.visAPILoaded = visAPIPreloaded;
-        if(!visAPIPreloaded)
+        if(visAPIPreloaded)
+        {
+            MetabolismChart.visAPILoaded = true;
+        }
+        
+        // TODO we have a race condition here if multiple charts are constructed
+        //      before initialization has a chance to complete
+        if(!MetabolismChart.visAPILoaded)
         {
             Runnable loadLineChartCallback = new Runnable()
             {
@@ -75,7 +81,7 @@ public class MetabolismChart extends Composite
                     MetabolismChart.this.visualizationAPILoaded();
                 }
             };
-            VisualizationUtils.loadVisualizationApi(loadLineChartCallback, LineChart.PACKAGE);
+            VisualizationUtils.loadVisualizationApi(loadLineChartCallback, ImageLineChart.PACKAGE);
         }
     }
     
@@ -129,7 +135,7 @@ public class MetabolismChart extends Composite
     
     private void visualizationAPILoaded()
     {
-        this.visAPILoaded = true;
+        MetabolismChart.visAPILoaded = true;
         if(this.metabolismData != null)
         {
             this.updateChart();
@@ -138,19 +144,37 @@ public class MetabolismChart extends Composite
     
     /**
      * Draw the metabolism chart for the given parameters
-     * @param title
+     * @param chartTitle
      *          this will be used as the chart title
      * @param metabolismData
      *          the metabolismData to set
      */
-    public void drawChart(String title, Map<String, double[]> metabolismData)
+    public void drawChart(String chartTitle, Map<String, double[]> metabolismData)
     {
-        this.title = title;
+        this.chartTitle = chartTitle;
         this.metabolismData = metabolismData;
-        if(this.visAPILoaded)
+        if(MetabolismChart.visAPILoaded)
         {
             this.updateChart();
         }
+    }
+    
+    /**
+     * Getter for the chart title
+     * @return the chart title
+     */
+    public String getChartTitle()
+    {
+        return this.chartTitle;
+    }
+    
+    /**
+     * Getter for the metabolism data
+     * @return the metabolism data
+     */
+    public Map<String, double[]> getMetabolismData()
+    {
+        return this.metabolismData;
     }
     
     /**
@@ -158,7 +182,7 @@ public class MetabolismChart extends Composite
      */
     public void redrawChart()
     {
-        if(this.metabolismData != null && this.visAPILoaded)
+        if(this.metabolismData != null && MetabolismChart.visAPILoaded)
         {
             this.updateChart();
         }
@@ -166,17 +190,24 @@ public class MetabolismChart extends Composite
     
     private void updateChart()
     {
-        if(this.lineChart != null)
-        {
-            this.absolutePositionsPanel.remove(this.lineChart);
-            this.lineChart = null;
-        }
+        this.absolutePositionsPanel.clear();
+        this.lineChart = null;
         
         if(this.metabolismData != null)
         {
-            this.lineChart = new LineChart(
+            this.lineChart = new ImageLineChart(
                     this.metabolismDataToDataTable(),
                     this.createLineChartOptions());
+            if(this.pixelHeight >= 1 && this.pixelWidth >= 1)
+            {
+                this.lineChart.setPixelSize(this.pixelWidth, this.pixelHeight);
+            }
+            else
+            {
+                this.lineChart.setPixelSize(
+                        this.absolutePositionsPanel.getOffsetWidth(),
+                        this.absolutePositionsPanel.getOffsetHeight());
+            }
             this.absolutePositionsPanel.add(this.lineChart, 0, 0);
         }
     }
@@ -184,7 +215,6 @@ public class MetabolismChart extends Composite
     private Options createLineChartOptions()
     {
         Options options = Options.create();
-        options.setSmoothLine(true);
         
         if(this.pixelHeight >= 1 && this.pixelWidth >= 1)
         {
@@ -197,7 +227,7 @@ public class MetabolismChart extends Composite
             options.setHeight(this.absolutePositionsPanel.getOffsetHeight());
         }
         
-        options.setTitle(this.title);
+        options.setTitle(this.chartTitle);
         
         return options;
     }

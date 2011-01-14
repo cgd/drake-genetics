@@ -21,29 +21,20 @@ package org.jax.drakegenetics.gwtclientapp.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jax.drakegenetics.shareddata.client.DiploidGenome;
-
 import com.extjs.gxt.ui.client.Style.VerticalAlignment;
-
-import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.BaseEvent;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
-import com.extjs.gxt.ui.client.event.DomEvent;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.store.ListStore;
-import com.extjs.gxt.ui.client.widget.Container;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.MessageBox;
-import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
-import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.CheckBoxGroup;
@@ -53,10 +44,7 @@ import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.FormData;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Event;
-import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
@@ -313,19 +301,6 @@ public class LaboratoryForm implements DrakeReceiver {
         this.specimenPanel.add(specimenImage);
         this.specimenPanel.setTitle(specimen.getName());
         this.specimenPanel.layout(true);
-    }
-    
-    /**
-     * The metabolism plots require a refresh to show, once hidden
-     */
-    public void refreshTabs() {
-        GWT.log("in refresh tabs");
-        //if (tabPanel.getItemCount() > 0) {
-        //    for (TabItem tab:tabPanel.getItems()) {
-        //        MetabolismChart mc = (MetabolismChart)tab.getWidget(0);
-        //        mc.redrawChart();
-        //    }
-        //}
     }
     
 }
