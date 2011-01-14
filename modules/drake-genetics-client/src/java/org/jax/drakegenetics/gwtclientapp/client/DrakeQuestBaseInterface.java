@@ -248,7 +248,6 @@ public class DrakeQuestBaseInterface
         Folder model = dg.getTreeModel(drakeGeneticsService);
         TreeStore<ModelData> store = new TreeStore<ModelData>();
         store.add(model.getChildren(), true);
-        GWT.log("Number of children " + store.getChildCount());
 
         breedingPanel.hide();
         BreedingPanel bp = new BreedingPanel(breedingPanel, 

@@ -102,9 +102,6 @@ public class DrakeMetabolismInterface
     {
         // Code up call to Keith's code to get plots, and add them
         // to tab panel
-        GWT.log("in testSucceeded for Drake " + drake.toString());
-        GWT.log(results.toString());
-        GWT.log(metabolites.toString());
         Map<String,double[]> dataToChart = new HashMap<String,double[]>();
         for (String metabolite: metabolites) {
             String metKey = this.metabolites.get(metabolite);
@@ -124,7 +121,6 @@ public class DrakeMetabolismInterface
         // Code up call to Keith's code to get plots, and add them
         // to tab panel
         MetabolismChart chart = new MetabolismChart();
-        GWT.log("TabPanel =" + this.panelWidth + "x" + this.panelHeight);
         chart.setPixelSize(this.panelWidth-20, this.panelHeight-70);
         TabItem tab = new TabItem();
         tab.setTitle(title);

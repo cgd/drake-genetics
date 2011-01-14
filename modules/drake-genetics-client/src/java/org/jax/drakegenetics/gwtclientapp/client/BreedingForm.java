@@ -146,7 +146,7 @@ public class BreedingForm implements DrakeReceiver {
             @Override
             public void componentSelected(ButtonEvent ce) {
                 //if ( ce.isShiftKey()) {
-                    GWT.log("in shift " + ce.getKeyCode());
+                //    GWT.log("in shift " + ce.getKeyCode());
                 //}
                 
                 breedingInterface.breed(female, male);
@@ -181,8 +181,6 @@ public class BreedingForm implements DrakeReceiver {
                 child.addListener(Events.OnClick,
                         new Listener<BaseEvent>() {
                     public void handleEvent(BaseEvent be) {
-                        GWT.log("In event for selecting progeny panel " + 
-                                be.toString());
                         // The panel name was set to a number above.
                         // We parse the panel title to get the number it will
                         // be in our progenyPanels list
@@ -191,7 +189,6 @@ public class BreedingForm implements DrakeReceiver {
                             Drake drake = progeny.get(panelNumber);
                             detailPanel.sendDrake(drake);
                         }
-                        GWT.log(child.getTitle());
                     }
                 });
                 row.add(child);
