@@ -50,6 +50,7 @@ public class DrakeQuestBaseInterface
     private final ContentPanel bannerPanel = new ContentPanel();
     private final ContentPanel mainPanel = new ContentPanel();
     private final ContentPanel mainBackground = new ContentPanel();
+    //private final LaboratoryPanel lab;
 
    
     /**
@@ -158,6 +159,7 @@ public class DrakeQuestBaseInterface
             breedingPanel.hide();
             laboratoryPanel.show();
             laboratoryPanel.layout(true);
+            //lab.refreshTabs();
         }
     };
 
@@ -234,7 +236,6 @@ public class DrakeQuestBaseInterface
         masterPanel.add(toolBar);
 
         mainPanel.setHeaderVisible(false);
-        //mainPanel.setSize(694, 451);
         mainPanel.setSize(694, 671);
         mainPanel.setBodyStyle("backgroundColor: #ede9e3");
 
@@ -243,7 +244,8 @@ public class DrakeQuestBaseInterface
         mainPanel.add(breedingPanel);
         
         laboratoryPanel.hide();
-        LaboratoryPanel lp = new LaboratoryPanel(laboratoryPanel, drakeGeneticsService);
+        LaboratoryPanel lab = new LaboratoryPanel(laboratoryPanel, 
+                drakeGeneticsService);
         mainPanel.add(laboratoryPanel);
         
         libraryPanel.hide();
@@ -260,37 +262,8 @@ public class DrakeQuestBaseInterface
 
         masterPanel.add(mainPanel);
 
-       /*this.drakeGeneticsService.someMethod(
-                param1,
-                param2,
-                new AsyncCallback<List<return_object>>()
-                {
-                    public void onSuccess(List<return_object> results)
-                    {
-                        // do stuff like call blahSucceeded()
-                    }
-                    
-                    public void onFailure(Throwable caught)
-                    {
-                        DrakeQuestBaseInterface.this.blahFailed(caught);
-                    }
-                });*/
         this.panel.add(masterPanel);
     }
-    
-    private void blahSucceeded(/* return result here */)
-    {
-        
-        
-        //this.panel.add(/* stuff to add to interface for example - new HTML(offspringText.toString())*/);
-    }
-
-    private void blahFailed(Throwable caught)
-    {
-        caught.printStackTrace();
-        this.panel.add(new Label(caught.getMessage()));
-    }
-    
     
 }
 

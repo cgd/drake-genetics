@@ -35,10 +35,12 @@ import com.extjs.gxt.ui.client.event.MessageBoxEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
 import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.widget.Container;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.MessageBox;
+import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.Window;
@@ -80,13 +82,14 @@ public class LaboratoryForm implements DrakeReceiver {
     private final List<ContentPanel> plotPanels = new ArrayList<ContentPanel>();
     // list of results from a experiements
     //private final List<???> results = new ArrayList<???>();
+    private final TabPanel tabPanel = new TabPanel();
+
 
     public LaboratoryForm(ContentPanel fp, DrakeDetailPanel dp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.formPanel = fp;
         final DrakeDetailPanel detailPanel = dp;
 
-        final TabPanel tabPanel = new TabPanel();
         tabPanel.setSize(538,323);
         tabPanel.setTabScroll(true);
         final DrakeMetabolismInterface metabolismInterface = 
@@ -96,6 +99,11 @@ public class LaboratoryForm implements DrakeReceiver {
         formPanel.setBodyStyle("backgroundColor: #ede9e3");
         formPanel.setWidth(544);
         formPanel.setHeight(450);
+        formPanel.addListener(Events.Show, new Listener() {
+            public void handleEvent(BaseEvent be) {
+                GWT.log("formPanel being shown");
+            }
+        });
         
         VerticalPanel vp1 = new VerticalPanel();
         formPanel.add(vp1);
@@ -305,6 +313,19 @@ public class LaboratoryForm implements DrakeReceiver {
         this.specimenPanel.add(specimenImage);
         this.specimenPanel.setTitle(specimen.getName());
         this.specimenPanel.layout(true);
+    }
+    
+    /**
+     * The metabolism plots require a refresh to show, once hidden
+     */
+    public void refreshTabs() {
+        GWT.log("in refresh tabs");
+        //if (tabPanel.getItemCount() > 0) {
+        //    for (TabItem tab:tabPanel.getItems()) {
+        //        MetabolismChart mc = (MetabolismChart)tab.getWidget(0);
+        //        mc.redrawChart();
+        //    }
+        //}
     }
     
 }

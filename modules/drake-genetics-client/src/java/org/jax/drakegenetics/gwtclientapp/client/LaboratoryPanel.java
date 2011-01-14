@@ -54,13 +54,14 @@ public class LaboratoryPanel  implements DrakeReceiver {
     private final VerticalPanel workPanel = new VerticalPanel();
     private ContentPanel formPanel = new ContentPanel();
     private ContentPanel detailPanel = new ContentPanel();
+    private final LaboratoryForm laboratoryForm; 
 
     public LaboratoryPanel(HorizontalPanel lp,
             DrakeGeneticsServiceAsync drakeGeneticsService) {
         this.laboratoryPanel = lp;
         final DrakeDetailPanel drakeDetail = new DrakeDetailPanel(detailPanel,
                 (DrakeReceiver)this, drakeGeneticsService);
-        final LaboratoryForm laboratoryForm = new LaboratoryForm(formPanel, 
+        laboratoryForm = new LaboratoryForm(formPanel, 
                 drakeDetail, drakeGeneticsService);
 
         treePanel.setHeaderVisible(true);
@@ -129,5 +130,7 @@ public class LaboratoryPanel  implements DrakeReceiver {
         
     }
 
-    
+    public void refreshTabs() {
+        laboratoryForm.refreshTabs();
+    }    
 }
