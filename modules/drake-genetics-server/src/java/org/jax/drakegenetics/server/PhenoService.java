@@ -339,6 +339,9 @@ public class PhenoService {
             }
         }
 
+        System.out.println("xCount " + xCount);
+        System.out.println("yCount " + yCount);
+        
         if (xCount == 0 || xCount == 3) {
             // YO or XXX
             throw new LethalAlleleCombinationException();
