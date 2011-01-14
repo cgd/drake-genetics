@@ -237,8 +237,10 @@ public class DrakeDetailPanel implements DrakeReceiver {
             }
             if (drake.isBreeder()) {
                 this.breederButton.setEnabled(false);
+                this.name.setReadOnly(true);
             } else {
                 this.breederButton.setEnabled(true);
+                this.name.setReadOnly(false);
             }
         } else {
             this.breederButton.setEnabled(false);
