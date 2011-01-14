@@ -38,8 +38,7 @@ public class DrakeSetGenerator  {
     private Map<String, String> femalePhenome = new HashMap<String,String>();
     private Map<String, String> malePhenome = new HashMap<String,String>();
     private Map<String, String> sexRevPhenome = new HashMap<String,String>();
-    private Folder females;
-    private Folder males;
+    private Map<String, String> diabeticPhenome = new HashMap<String,String>();
 
     private void setFemalePhenome(Map<String,String> phenome) {
         Set<String> keys = phenome.keySet();
@@ -62,16 +61,30 @@ public class DrakeSetGenerator  {
         }
     }
     
+    private void setDiabeticPhenome(Map<String,String> phenome) {
+        Set<String> keys = phenome.keySet();
+        for (String key: keys) {
+            diabeticPhenome.put(key,phenome.get(key));
+        }
+    }
+    
     public Folder getTreeModel(DrakeGeneticsServiceAsync dgs) {
         Image f_small_example = new Image("images/eyes/SEF51311.jpg");
         Image f_large_example = new Image("images/eyes/LEF51311.jpg");
         Image m_small_example = new Image("images/eyes/SEM40100.jpg");
         Image m_large_example = new Image("images/eyes/LEM40100.jpg");
+        Image d_small_example = new Image("images/eyes/SEF1bb2b.jpg");
+        Image d_large_example = new Image("images/eyes/LEF1bb2b.jpg");
+        Image b_small_example = new Image("images/eyes/SEM40100.jpg");
+        Image b_large_example = new Image("images/eyes/LEM40100.jpg");
+        
         DiploidGenome female_genome = new DiploidGenome("P1_M", "P1_P", true,
                 DrakeSpeciesSingleton.getInstance());
         DiploidGenome male_genome = new DiploidGenome("P2_M", "P2_P", false,
                 DrakeSpeciesSingleton.getInstance());
-        DiploidGenome sex_rev_male_genome = new DiploidGenome("BOB_M", "BOB_P", 
+        DiploidGenome sex_rev_male_genome = new DiploidGenome("BOB_M", "P2_P", 
+                true, DrakeSpeciesSingleton.getInstance());
+        DiploidGenome db_female_genome = new DiploidGenome("DB_M", "DB_P", 
                 true, DrakeSpeciesSingleton.getInstance());
 
         dgs.getPhenome(female_genome,
@@ -107,7 +120,21 @@ public class DrakeSetGenerator  {
                     public void onSuccess(Map<String, String> phenome) {
                         GWT.log("Have Sex Rev Male Phenotype!");
                         GWT.log(phenome.toString());
-                        setMalePhenome(phenome);
+                        setSexRevPhenome(phenome);
+                    }
+
+                    public void onFailure(Throwable caught) {
+                        caught.printStackTrace();
+                        GWT.log(caught.getMessage());
+                    }
+                });
+        
+        dgs.getPhenome(db_female_genome,
+                new AsyncCallback<Map<String, String>>() {
+                    public void onSuccess(Map<String, String> phenome) {
+                        GWT.log("Have Diabetic Female Phenotype!");
+                        GWT.log(phenome.toString());
+                        setDiabeticPhenome(phenome);
                     }
 
                     public void onFailure(Throwable caught) {
@@ -121,7 +148,9 @@ public class DrakeSetGenerator  {
                         female_genome, femalePhenome,
                         f_small_example, f_large_example), 
                         new Drake("BOB", sex_rev_male_genome, sexRevPhenome,
-                                m_small_example, m_large_example),}),
+                                b_small_example, b_large_example),
+                        new Drake("DB", db_female_genome, diabeticPhenome,
+                                        d_small_example, d_large_example),}),
                 new Folder("Males", new Drake[] { new Drake("P2",
                         male_genome, malePhenome,
                         m_small_example, m_large_example), }) };
