@@ -96,7 +96,7 @@ public class GenotypeService {
         genotypeMap.put("Dia", "Db");
         haplotypeToAlleles.put("P2_P", genotypeMap);
         
-        //BOB_M  (sex reversed)
+        //PAT_M  (sex reversed)
         genotypeMap = new HashMap<String, String>();
         genotypeMap.put("Otc", "b");
         genotypeMap.put("Tyrp1", "Bog");
@@ -109,10 +109,8 @@ public class GenotypeService {
         genotypeMap.put("Pax6", "n");
         genotypeMap.put("Eda", "A2");
         genotypeMap.put("Dia", "Db");
-        haplotypeToAlleles.put("BOB_M", genotypeMap);
-        
-
-        
+        haplotypeToAlleles.put("PAT_M", genotypeMap);
+   
         //DB_M
         genotypeMap = new HashMap<String, String>();
         genotypeMap.put("Otc", "B");

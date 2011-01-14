@@ -115,17 +115,23 @@ public class PhenoService {
 
             for (Chromosome c : maternalHaploid) {
                 if (c.getChromosomeName().equals(gene.getChromosomeName())) {
-                    alleles.add(genotypeService.getAllele(
+                    String allele = genotypeService.getAllele(
                             c.getHaplotypeAtPosition(gene.getStartPosition()),
-                            gene.getSymbol()));
+                            gene.getSymbol());
+                    if (allele != null) {
+                        alleles.add(allele);
+                    }
                 }
             }
 
             for (Chromosome c : paternalHaploid) {
                 if (c.getChromosomeName().equals(gene.getChromosomeName())) {
-                    alleles.add(genotypeService.getAllele(
+                    String allele = genotypeService.getAllele(
                             c.getHaplotypeAtPosition(gene.getStartPosition()),
-                            gene.getSymbol()));
+                            gene.getSymbol());
+                    if (allele != null) {
+                        alleles.add(allele);
+                    }
                 }
             }
 
@@ -322,6 +328,7 @@ public class PhenoService {
             if (c.getChromosomeName().equals("X")) {
                 xCount++;
             }
+  
         }
 
         for (Chromosome c : paternalHaploid) {
@@ -333,6 +340,9 @@ public class PhenoService {
             }
         }
 
+        System.out.println("xCount " + xCount);
+        System.out.println("yCount " + yCount);
+        
         if (xCount == 0 || xCount == 3) {
             // YO or XXX
             throw new LethalAlleleCombinationException();
@@ -455,6 +465,11 @@ public class PhenoService {
                     }
                 }
 
+                System.out.println(colorlessAlleles.toString());
+                System.out.println(metalicAlleles.toString());
+                System.out.println(brownAlleles.toString());
+                System.out.println(diluteAlleles.toString());
+                
                 // everything else inviable
                 throw new LethalAlleleCombinationException();
             }
