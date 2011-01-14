@@ -83,7 +83,7 @@ public class DrakeSetGenerator  {
         DiploidGenome male_genome = new DiploidGenome("P2_M", "P2_P", false,
                 DrakeSpeciesSingleton.getInstance());
         DiploidGenome sex_rev_male_genome = new DiploidGenome("BOB_M", "P2_P", 
-                true, DrakeSpeciesSingleton.getInstance());
+                false, DrakeSpeciesSingleton.getInstance());
         DiploidGenome db_female_genome = new DiploidGenome("DB_M", "DB_P", 
                 true, DrakeSpeciesSingleton.getInstance());
 
