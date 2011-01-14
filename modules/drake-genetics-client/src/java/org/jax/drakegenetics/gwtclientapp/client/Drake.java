@@ -20,6 +20,7 @@ package org.jax.drakegenetics.gwtclientapp.client;
 import java.util.Map;
 
 import org.jax.drakegenetics.shareddata.client.DiploidGenome;
+import org.jax.drakegenetics.shareddata.client.PhenoConstants;
 
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.google.gwt.user.client.ui.Image;
@@ -42,25 +43,22 @@ public class Drake extends BaseTreeModel {
         this.drake = false;
     }
 
-    public Drake(String name, String gender, DiploidGenome dg) {
+    public Drake(String name, DiploidGenome dg) {
         set("name", name);
-        set("gender", gender);
         set("diploidgenome", dg);
     }
 
-    public Drake(String name, String gender, DiploidGenome dg, 
+    public Drake(String name, DiploidGenome dg, 
             Image smallImg, Image largeImg) {
         set("name", name);
-        set("gender", gender);
         set("diploidgenome", dg);
         set("smallimage", smallImg);
         set("largeimage", largeImg);
     }
 
-    public Drake(String name, String gender, DiploidGenome dg, 
+    public Drake(String name, DiploidGenome dg, 
             Map<String,String> phenome, Image smallImg, Image largeImg) {
         set("name", name);
-        set("gender", gender);
         set("diploidgenome", dg);
         set("phenome",phenome);
         set("smallimage", smallImg);
@@ -76,7 +74,31 @@ public class Drake extends BaseTreeModel {
     }
 
     public String getGender() {
-        return (String) get("gender");
+        // tries to return phenotypic sex and failing that tries to
+        // return genotypic sex
+        Map<String, String> phenome = this.getPhenome();
+        String sexPheno = null;
+        if(phenome != null) {
+            sexPheno = phenome.get(PhenoConstants.CAT_SEX);
+        }
+        
+        if(sexPheno == null) {
+            DiploidGenome genome = this.getDiploidgenome();
+            if(genome == null) {
+                return null;
+            } else {
+                return genome.isMale() ? "M" : "F";
+            }
+        } else {
+            if(PhenoConstants.SEX_F.equals(sexPheno) || PhenoConstants.SEX_F_SCRUFFY.equals(sexPheno)) {
+                return "F";
+            } else if(PhenoConstants.SEX_M.equals(sexPheno) || PhenoConstants.SEX_M_SCRUFFY.equals(sexPheno)) {
+                return "M";
+            }
+            else {
+                return null;
+            }
+        }
     }
 
     public DiploidGenome getDiploidgenome() {

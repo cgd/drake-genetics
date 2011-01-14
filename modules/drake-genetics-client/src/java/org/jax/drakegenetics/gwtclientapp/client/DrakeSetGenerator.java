@@ -93,10 +93,10 @@ public class DrakeSetGenerator  {
                 });
         
         Folder[] folders = new Folder[] {
-                new Folder("Females", new Drake[] { new Drake("P1", "F",
+                new Folder("Females", new Drake[] { new Drake("P1",
                         female_genome, femalePhenome,
                         f_small_example, f_large_example), }),
-                new Folder("Males", new Drake[] { new Drake("P2", "M",
+                new Folder("Males", new Drake[] { new Drake("P2",
                         male_genome, malePhenome,
                         m_small_example, m_large_example), }) };
 

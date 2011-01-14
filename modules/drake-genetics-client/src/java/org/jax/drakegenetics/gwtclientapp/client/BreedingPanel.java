@@ -17,15 +17,7 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.jax.drakegenetics.shareddata.client.LibraryNode;
-
-import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.extjs.gxt.ui.client.data.ModelData;
-import com.extjs.gxt.ui.client.data.TreeModel;
 import com.extjs.gxt.ui.client.event.Events;
 import com.extjs.gxt.ui.client.event.Listener;
 import com.extjs.gxt.ui.client.event.TreePanelEvent;
@@ -35,8 +27,6 @@ import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.layout.FitLayout;
 import com.extjs.gxt.ui.client.widget.treepanel.TreePanel;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
@@ -107,7 +97,7 @@ public class BreedingPanel  implements DrakeReceiver {
         Folder females;
         Folder males;
         
-        Drake nuDrake = new Drake(d.getName(), d.getGender(), 
+        Drake nuDrake = new Drake(d.getName(),
                 d.getDiploidgenome(), d.getPhenome(),
                 new Image(d.getSmallimage().getUrl()),
                 new Image(d.getLargeimage().getUrl()));
