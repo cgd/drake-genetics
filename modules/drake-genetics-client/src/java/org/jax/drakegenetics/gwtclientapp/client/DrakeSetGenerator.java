@@ -82,7 +82,7 @@ public class DrakeSetGenerator  {
                 DrakeSpeciesSingleton.getInstance());
         DiploidGenome male_genome = new DiploidGenome("P2_M", "P2_P", false,
                 DrakeSpeciesSingleton.getInstance());
-        DiploidGenome sex_rev_male_genome = new DiploidGenome("BOB_M", "P2_P", 
+        DiploidGenome sex_rev_male_genome = new DiploidGenome("PAT_M", "P2_P", 
                 false, DrakeSpeciesSingleton.getInstance());
         DiploidGenome db_female_genome = new DiploidGenome("DB_M", "DB_P", 
                 true, DrakeSpeciesSingleton.getInstance());
@@ -147,7 +147,7 @@ public class DrakeSetGenerator  {
                 new Folder("Females", new Drake[] { new Drake("P1",
                         female_genome, femalePhenome,
                         f_small_example, f_large_example), 
-                        new Drake("BOB", sex_rev_male_genome, sexRevPhenome,
+                        new Drake("PAT", sex_rev_male_genome, sexRevPhenome,
                                 b_small_example, b_large_example),
                         new Drake("DB", db_female_genome, diabeticPhenome,
                                         d_small_example, d_large_example),}),
