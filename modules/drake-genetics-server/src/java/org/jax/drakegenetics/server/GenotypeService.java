@@ -109,17 +109,9 @@ public class GenotypeService {
         genotypeMap.put("Pax6", "n");
         genotypeMap.put("Eda", "A2");
         genotypeMap.put("Dia", "Db");
-        haplotypeToAlleles.put("P2_M", genotypeMap);
+        haplotypeToAlleles.put("BOB_M", genotypeMap);
         
-        //BOB_P
-        genotypeMap = new HashMap<String, String>();
-        genotypeMap.put("M", "m");
-        genotypeMap.put("Xdh","f");
-        genotypeMap.put("Tyr", "C");
-        genotypeMap.put("Pax6", "n");
-        genotypeMap.put("Eda", "A2");
-        genotypeMap.put("Dia", "Db");
-        haplotypeToAlleles.put("P2_P", genotypeMap);
+
     }
 
     public String getAllele(String haplotype, String geneSymbol)
