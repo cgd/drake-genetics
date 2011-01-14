@@ -17,25 +17,14 @@
 
 package org.jax.drakegenetics.gwtclientapp.client;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jax.drakegenetics.shareddata.client.DiploidGenome;
-
-import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.TabItem;
 import com.extjs.gxt.ui.client.widget.TabPanel;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.http.client.RequestCallback;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.Response;
-import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 
 /**
  * @author <A HREF="mailto:dave.walton@jax.org">Dave Walton</A>
@@ -48,6 +37,8 @@ public class DrakeMetabolismInterface
     private final Map<String,String> metabolites;
     private final Map<String,String> diets;
     
+    private int panelWidth = -1;
+    private int panelHeight = -1;
 
     /**
      * Constructor
@@ -120,19 +111,30 @@ public class DrakeMetabolismInterface
             double[] data = results.get(metKey);
             dataToChart.put(metabolite, data);
         }
+        this.testSucceeded(drake.getName() + "/" + diet, dataToChart);
+    }
+    
+    private void testSucceeded(String title, Map<String, double[]> results) {
+        if(this.panelWidth == -1 || this.panelHeight == -1)
+        {
+            this.panelWidth = this.panel.getWidth();
+            this.panelHeight = this.panel.getHeight();
+        }
+        
+        // Code up call to Keith's code to get plots, and add them
+        // to tab panel
         MetabolismChart chart = new MetabolismChart();
-        GWT.log("TabPanel =" + this.panel.getWidth() +  "x" + this.panel.getHeight());
-        chart.setPixelSize(this.panel.getWidth()-4, this.panel.getHeight()-45);
-        chart.drawChart(drake.getName() + "/" + diet, dataToChart);
+        GWT.log("TabPanel =" + this.panelWidth + "x" + this.panelHeight);
+        chart.setPixelSize(this.panelWidth-20, this.panelHeight-70);
         TabItem tab = new TabItem();
-        tab.setTitle(drake.getName() + "/" + diet);
-        tab.setText(drake.getName() + "/" + diet);
-        tab.setSize(this.panel.getWidth()-6, this.panel.getHeight()-22);
+        tab.setTitle(title);
+        tab.setText(title);
         tab.setClosable(true);
         tab.add(chart);
-        
         this.panel.add(tab);
+        
         this.panel.setSelection(tab);
+        chart.drawChart(title, results);
     }
     
     

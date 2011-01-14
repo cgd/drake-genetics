@@ -56,7 +56,4 @@ public class LaboratoryPanel {
         
     }
 
-    public void refreshTabs() {
-        laboratoryForm.refreshTabs();
-    }    
 }

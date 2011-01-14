@@ -464,7 +464,7 @@ public class PhenoService {
                         return PhenoConstants.COLOR_GOLD;
                     }
                 }
-                
+
                 // everything else inviable
                 throw new LethalAlleleCombinationException();
             }

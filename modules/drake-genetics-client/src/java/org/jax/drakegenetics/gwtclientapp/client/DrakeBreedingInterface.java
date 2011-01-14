@@ -96,8 +96,8 @@ public class DrakeBreedingInterface
             // If mom is sterile, there will be no eggs
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("No Progeny Found", 
-                        new Image("images/eye/do-not-symbol-small.jpg"),
-                        new Image("images/eye/do-not-symbol-large.jpg"));
+                        new Image("images/eyes/do-not-symbol-small.jpg"),
+                        new Image("images/eyes/do-not-symbol-large.jpg"));
                 this.drakes.add(drake);
                 panels.get(i).removeAll();
                 panels.get(i).add(drake.getSmallimage());
@@ -107,8 +107,8 @@ public class DrakeBreedingInterface
             // If dad is sterile, there will be unfertilized eggs
             for (int i = 0; i < 20; i++) {
                 Drake drake = new Drake("Egg Unfertilized", 
-                        new Image("images/eye/egg_small.jpg"),
-                        new Image("images/eye/egg_large.jpg"));
+                        new Image("images/eyes/egg_small.jpg"),
+                        new Image("images/eyes/egg_large.jpg"));
                 this.drakes.add(drake);
                 panels.get(i).removeAll();
                 panels.get(i).add(drake.getSmallimage());
