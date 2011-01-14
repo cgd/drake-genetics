@@ -68,7 +68,7 @@ public class LaboratoryForm implements DrakeReceiver {
     private ContentPanel specimenPanel = new ContentPanel();
     // panels which hold the experiment result image panels
     private final List<ContentPanel> plotPanels = new ArrayList<ContentPanel>();
-    // list of results from a experiements
+    // list of results from a experiments
     //private final List<???> results = new ArrayList<???>();
     private final TabPanel tabPanel = new TabPanel();
 
