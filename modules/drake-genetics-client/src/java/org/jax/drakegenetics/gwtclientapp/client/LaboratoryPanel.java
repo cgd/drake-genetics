@@ -108,9 +108,8 @@ public class LaboratoryPanel  implements DrakeReceiver {
         Folder females;
         Folder males;
         
-        Drake nuDrake = new Drake(d.getName(), d.getGender(), 
-                d.getDiploidgenome(), d.getPhenome(),
-                new Image(d.getSmallimage().getUrl()),
+        Drake nuDrake = new Drake(d.getName(), d.getDiploidgenome(), 
+                d.getPhenome(), new Image(d.getSmallimage().getUrl()), 
                 new Image(d.getLargeimage().getUrl()));
 
         if ( ((Folder)store.getChild(0)).getName().equals("Females")) {
