@@ -18,8 +18,11 @@
 package org.jax.drakegenetics.gwtclientapp.client;
 
 
+import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
+import com.extjs.gxt.ui.client.store.ListStore;
+import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
 import com.extjs.gxt.ui.client.widget.Info;
@@ -27,6 +30,7 @@ import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -239,13 +243,21 @@ public class DrakeQuestBaseInterface
         mainPanel.setSize(694, 671);
         mainPanel.setBodyStyle("backgroundColor: #ede9e3");
 
+        //  Define the base set of Drakes that the app starts with
+        DrakeSetGenerator dg = new DrakeSetGenerator();
+        Folder model = dg.getTreeModel(drakeGeneticsService);
+        TreeStore<ModelData> store = new TreeStore<ModelData>();
+        store.add(model.getChildren(), true);
+        GWT.log("Number of children " + store.getChildCount());
+
         breedingPanel.hide();
-        BreedingPanel bp = new BreedingPanel(breedingPanel, drakeGeneticsService);
+        BreedingPanel bp = new BreedingPanel(breedingPanel, 
+                drakeGeneticsService, store);
         mainPanel.add(breedingPanel);
         
         laboratoryPanel.hide();
         LaboratoryPanel lab = new LaboratoryPanel(laboratoryPanel, 
-                drakeGeneticsService);
+                drakeGeneticsService, store);
         mainPanel.add(laboratoryPanel);
         
         libraryPanel.hide();
