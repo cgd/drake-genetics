@@ -286,9 +286,10 @@ public class PhenoService {
 
         List<String> transformerAlleles = alleles.get("Ar");
 
-        // all aneuploids are sterile
-        if (genome.isAneuploid()) {
-        	return PhenoConstants.STERILE_TRUE;
+
+        //check for scruffy
+        if (isScruffy(genome)) {
+            return PhenoConstants.STERILE_TRUE;
         }
         
         //check Transformer gene 
@@ -340,8 +341,6 @@ public class PhenoService {
             }
         }
 
-        System.out.println("xCount " + xCount);
-        System.out.println("yCount " + yCount);
         
         if (xCount == 0 || xCount == 3) {
             // YO or XXX
@@ -381,6 +380,7 @@ public class PhenoService {
         List<String> metalicAlleles = alleles.get("M");
         List<String> diluteAlleles = alleles.get("Myo5a");
         List<String> brownAlleles = alleles.get("Otc");
+        
 
         // We've tried to collapse as many of these rules as possible
         // and also take advantage that combinations like B/Y dl/dl or B/b dl/Y are impossible
@@ -464,11 +464,6 @@ public class PhenoService {
                         return PhenoConstants.COLOR_GOLD;
                     }
                 }
-
-                System.out.println(colorlessAlleles.toString());
-                System.out.println(metalicAlleles.toString());
-                System.out.println(brownAlleles.toString());
-                System.out.println(diluteAlleles.toString());
                 
                 // everything else inviable
                 throw new LethalAlleleCombinationException();
@@ -528,6 +523,37 @@ public class PhenoService {
             }
         }
         return count;
+    }
+    
+    private static boolean isScruffy(DiploidGenome genome) {
+        int xCount = 0;
+        int yCount = 0;
+
+        List<Chromosome> maternalHaploid = genome.getMaternalHaploid();
+        List<Chromosome> paternalHaploid = genome.getPaternalHaploid();
+
+        for (Chromosome c : maternalHaploid) {
+            if (c.getChromosomeName().equals("X")) {
+                xCount++;
+            }
+  
+        }
+
+        for (Chromosome c : paternalHaploid) {
+            if (c.getChromosomeName().equals("X")) {
+                xCount++;
+            }
+            else if (c.getChromosomeName().equals("Y")) {
+                yCount++;
+            }
+        }
+
+        
+        if ( (xCount == 1 && yCount == 0) || (xCount == 2 && yCount == 1)) {  
+            return true;
+        }
+        
+        return false;
     }
 
 
