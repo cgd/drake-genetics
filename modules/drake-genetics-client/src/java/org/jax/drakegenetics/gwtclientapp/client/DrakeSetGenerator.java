@@ -123,7 +123,7 @@ public class DrakeSetGenerator  {
                 }
         }
         maternalHaploid.remove(toRemove);
-        sc_female_genome.setPaternalHaploid(maternalHaploid);
+        sc_female_genome.setMaternalHaploid(maternalHaploid);
         // scruffy male
         DiploidGenome sc_male_genome = new DiploidGenome("P2_M", "P2_P", false,
                 DrakeSpeciesSingleton.getInstance());
