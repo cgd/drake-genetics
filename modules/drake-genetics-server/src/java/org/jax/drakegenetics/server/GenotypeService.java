@@ -110,9 +110,7 @@ public class GenotypeService {
         genotypeMap.put("Eda", "A2");
         genotypeMap.put("Dia", "Db");
         haplotypeToAlleles.put("BOB_M", genotypeMap);
-        
-
-        
+   
         //DB_M
         genotypeMap = new HashMap<String, String>();
         genotypeMap.put("Otc", "B");
