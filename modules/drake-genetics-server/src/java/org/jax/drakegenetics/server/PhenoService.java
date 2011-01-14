@@ -59,6 +59,12 @@ public class PhenoService {
     {
         Map<String, String> phenome = new HashMap<String, String>();
 
+        if (genome.isLethal()) {
+            phenome.put(PhenoConstants.CAT_LETHAL, PhenoConstants.LETHAL_TRUE);
+            return phenome;
+        }
+        
+        
         Map<String, List<String>> alleles = getAlleles(genome);
 
         try {
