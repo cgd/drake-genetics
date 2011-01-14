@@ -186,6 +186,16 @@ public class DiploidGenome implements Serializable
     }
     
     /**
+     * Returns true for aneuploidy which is lethal (does not account for
+     * alleles which may also lead to lethal)
+     * @return  true if this {@link #isAneuploid()} and the aneuploidy is lethal
+     */
+    public boolean isLethal()
+    {
+        return this.getSpeciesGenomeDescription().isLethal(this);
+    }
+    
+    /**
      * Determines if there is any aneuploidy in this genome.
      * @return  true if there is any aneuploidy
      */

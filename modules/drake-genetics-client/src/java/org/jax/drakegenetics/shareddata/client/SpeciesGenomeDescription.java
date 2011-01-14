@@ -158,4 +158,43 @@ public class SpeciesGenomeDescription implements Serializable
         // a normal haploid must contain all autosomes and one of "X" or "Y"
         return autosomesFound.size() != this.autosomeCount || !foundSexChromosome;
     }
+
+    /**
+     * Returns true for aneuploidy which is lethal (does not account for
+     * alleles which may also lead to lethal)
+     * @param genome the genome to test
+     * @return  true if this {@link #isAneuploid(DiploidGenome)} and the
+     * aneuploidy is lethal
+     */
+    public boolean isLethal(DiploidGenome genome)
+    {
+        return
+            this.isHaploidLethal(genome.getMaternalHaploid()) ||
+            this.isHaploidLethal(genome.getPaternalHaploid());
+    }
+    
+    /**
+     * Returns true for aneuploidy which is lethal (does not account for
+     * alleles which may also lead to lethal)
+     * @param haploidChromosomes the haploid to test
+     * @return  true if it's lethal
+     */
+    public boolean isHaploidLethal(Collection<Chromosome> haploidChromosomes)
+    {
+        Set<String> autosomesFound = new HashSet<String>();
+        for(Chromosome chromosome : haploidChromosomes)
+        {
+            String name = chromosome.getChromosomeName();
+            if(autosomesFound.contains(name))
+            {
+                // two copies of the same autosome are lethal
+                return true;
+            }
+            
+            autosomesFound.add(name);
+        }
+        
+        // a normal haploid must contain all autosomes
+        return autosomesFound.size() != this.autosomeCount;
+    }
 }
