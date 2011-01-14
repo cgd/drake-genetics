@@ -200,6 +200,7 @@ public class DrakeDetailPanel implements DrakeReceiver {
     public void sendDrake(Drake d) {
         this.drake = d;
         this.drakeImage = d.getLargeimage();
+        GWT.log("HAVE LARGE IMAGE: " + drakeImage.getUrl());
         this.drakeImagePanel.add(drakeImage);
         this.drakeImagePanel.layout(true);
         this.name.setValue(d.getName());
