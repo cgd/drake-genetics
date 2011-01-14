@@ -115,17 +115,23 @@ public class PhenoService {
 
             for (Chromosome c : maternalHaploid) {
                 if (c.getChromosomeName().equals(gene.getChromosomeName())) {
-                    alleles.add(genotypeService.getAllele(
+                    String allele = genotypeService.getAllele(
                             c.getHaplotypeAtPosition(gene.getStartPosition()),
-                            gene.getSymbol()));
+                            gene.getSymbol());
+                    if (allele != null) {
+                        alleles.add(allele);
+                    }
                 }
             }
 
             for (Chromosome c : paternalHaploid) {
                 if (c.getChromosomeName().equals(gene.getChromosomeName())) {
-                    alleles.add(genotypeService.getAllele(
+                    String allele = genotypeService.getAllele(
                             c.getHaplotypeAtPosition(gene.getStartPosition()),
-                            gene.getSymbol()));
+                            gene.getSymbol());
+                    if (allele != null) {
+                        alleles.add(allele);
+                    }
                 }
             }
 
