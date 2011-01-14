@@ -89,7 +89,6 @@ public class DrakeBreedingInterface
         // Before we breed we need to clear the drakes
         if (this.drakes.size() > 0) {
             this.drakes.removeAll(this.drakes);
-            GWT.log("Size of drakes list is now: " + this.drakes.size());
         }
         
         if (f.getPhenome().get(PhenoConstants.CAT_STERILITY).equals(PhenoConstants.STERILE_TRUE)) {
@@ -149,7 +148,6 @@ public class DrakeBreedingInterface
             this.drakeGeneticsService.getPhenome(currGenome,
                     new AsyncCallback<Map<String, String>>() {
                         public void onSuccess(Map<String, String> phenome) {
-                            GWT.log("Progeny Number: "+ index + "  " + phenome.toString());
                             drake.setPhenome(phenome);
                             setImages(drake);
                             panels.get(index).removeAll();
