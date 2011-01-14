@@ -328,6 +328,7 @@ public class PhenoService {
             if (c.getChromosomeName().equals("X")) {
                 xCount++;
             }
+  
         }
 
         for (Chromosome c : paternalHaploid) {
@@ -464,6 +465,11 @@ public class PhenoService {
                     }
                 }
 
+                System.out.println(colorlessAlleles.toString());
+                System.out.println(metalicAlleles.toString());
+                System.out.println(brownAlleles.toString());
+                System.out.println(diluteAlleles.toString());
+                
                 // everything else inviable
                 throw new LethalAlleleCombinationException();
             }
