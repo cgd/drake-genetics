@@ -87,6 +87,10 @@ public class HelpData {
                         ModelData item = be.getItem();
                         String url = (String) item.get("url");
                         if (url != null && !url.equals("")) {
+                            if(url.startsWith("/"))
+                            {
+                                url = url.substring(1);
+                            }
                             helpDocumentPanel.setUrl(GWT.getHostPageBaseURL() + url);
                         }
                     }
