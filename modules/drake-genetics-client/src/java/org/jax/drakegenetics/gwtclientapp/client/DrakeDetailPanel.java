@@ -200,7 +200,6 @@ public class DrakeDetailPanel implements DrakeReceiver {
     public void sendDrake(Drake d) {
         this.drake = d;
         this.drakeImage = d.getLargeimage();
-        GWT.log("HAVE LARGE IMAGE: " + drakeImage.getUrl());
         this.drakeImagePanel.add(drakeImage);
         this.drakeImagePanel.layout(true);
         this.name.setValue(d.getName());
@@ -238,8 +237,10 @@ public class DrakeDetailPanel implements DrakeReceiver {
             }
             if (drake.isBreeder()) {
                 this.breederButton.setEnabled(false);
+                this.name.setReadOnly(true);
             } else {
                 this.breederButton.setEnabled(true);
+                this.name.setReadOnly(false);
             }
         } else {
             this.breederButton.setEnabled(false);
