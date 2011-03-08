@@ -81,6 +81,10 @@ public class LibraryData {
                         ModelData item = be.getItem();
                         String url = (String) item.get("url");
                         if (url != null && !url.equals("")) {
+                            if(url.startsWith("/"))
+                            {
+                                url = url.substring(1);
+                            }
                             libraryDocumentPanel.setUrl(GWT.getHostPageBaseURL() + url);
                         }
                     }

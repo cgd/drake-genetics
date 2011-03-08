@@ -19,8 +19,10 @@
   -->
   <inherits name='org.jax.drakegenetics.shareddata.SharedData'/>
   
+  <!--
   <set-property name="user.agent" value="gecko"/>
   <extend-property name="locale" values="en_UK"></extend-property>
+  -->
   
   <!-- Specify the app entry point class.                         -->
   <entry-point class='org.jax.drakegenetics.gwtclientapp.client.DrakeGeneticsEntryPoint'></entry-point>

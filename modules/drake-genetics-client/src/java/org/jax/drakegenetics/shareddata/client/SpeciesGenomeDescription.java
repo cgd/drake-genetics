@@ -185,13 +185,16 @@ public class SpeciesGenomeDescription implements Serializable
         for(Chromosome chromosome : haploidChromosomes)
         {
             String name = chromosome.getChromosomeName();
-            if(autosomesFound.contains(name))
+            if(!ChromosomeDescription.isSexChromosome(name))
             {
-                // two copies of the same autosome are lethal
-                return true;
+                if(autosomesFound.contains(name))
+                {
+                    // two copies of the same autosome are lethal
+                    return true;
+                }
+                
+                autosomesFound.add(name);
             }
-            
-            autosomesFound.add(name);
         }
         
         // a normal haploid must contain all autosomes
