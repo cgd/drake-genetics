@@ -230,10 +230,15 @@ public class DrakeQuestBaseInterface
 
         toolBar.add(new SeparatorToolItem());
 
+        //
+        //  TODO:  DOW March 8, 2011 -  At Randy's request the Library will
+        //  be disabled for the time being.  There is no real content.  When 
+        //  There is content, it should be as simple as uncommenting the line 
+        //  for "toolBar.add(item4)" and the separator.
         Button item4 = new Button("Library", this.LibraryButtonListener);
-        toolBar.add(item4);
+        //toolBar.add(item4);
 
-        toolBar.add(new SeparatorToolItem());
+        //toolBar.add(new SeparatorToolItem());
 
         Button item5 = new Button("Help", this.HelpButtonListener);
         toolBar.add(item5);
