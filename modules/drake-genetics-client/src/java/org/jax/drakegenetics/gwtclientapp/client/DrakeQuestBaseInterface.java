@@ -21,18 +21,14 @@ package org.jax.drakegenetics.gwtclientapp.client;
 import com.extjs.gxt.ui.client.data.ModelData;
 import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
-import com.extjs.gxt.ui.client.store.ListStore;
 import com.extjs.gxt.ui.client.store.TreeStore;
 import com.extjs.gxt.ui.client.widget.ContentPanel;
 import com.extjs.gxt.ui.client.widget.HorizontalPanel;
-import com.extjs.gxt.ui.client.widget.Info;
 import com.extjs.gxt.ui.client.widget.Window;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.toolbar.SeparatorToolItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -199,35 +195,11 @@ public class DrakeQuestBaseInterface
         masterPanel.add(bannerPanel);
 
         // Create and add the tool bar
+        // TODO add an "Account" menu item when we have account management features
         ToolBar toolBar = new ToolBar();
-        SelectionListener<ButtonEvent> StubButtonListener = new SelectionListener<ButtonEvent>() {
-
-            @Override
-            public void componentSelected(ButtonEvent ce) {
-                breedingPanel.hide();
-                laboratoryPanel.hide();
-                libraryPanel.hide();
-                mainBackground.show();
-                Info.display("Not Yet Implemented", "The "
-                        + ce.getButton().getText()
-                        + " functionality has not yet been implemented");
-
-            }
-        };
-
-        Button item1 = new Button("Account", StubButtonListener);
-        toolBar.add(item1);
-
+        toolBar.add(new Button("Breed Drakes", this.BreedingButtonListener));
         toolBar.add(new SeparatorToolItem());
-
-        Button item2 = new Button("Breed Drakes", this.BreedingButtonListener);
-        toolBar.add(item2);
-
-        toolBar.add(new SeparatorToolItem());
-
-        Button item3 = new Button("Laboratory", this.LaboratoryButtonListener);
-        toolBar.add(item3);
-
+        toolBar.add(new Button("Laboratory", this.LaboratoryButtonListener));
         toolBar.add(new SeparatorToolItem());
 
         //
