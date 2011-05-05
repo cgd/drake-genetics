@@ -245,8 +245,8 @@ public class DrakeBreedingInterface
                 int color = this.coatColors.get(phenome.get(PhenoConstants.CAT_SCALE_COLOR));
                 int eye = this.eyeColors.get(phenome.get(PhenoConstants.CAT_EYE_COLOR));
                 
-                final String lg_img_name = "images/eyes/LE" + drake.getGender() + color + "bb" + eye + "b"+ ".jpg";
-                final String sm_img_name = "images/eyes/SE" + drake.getGender() + color +  "bb"  + eye + "b" + ".jpg";
+                final String lg_img_name = "images/eyes/LEb" + color + "bb" + eye + "b"+ ".jpg";
+                final String sm_img_name = "images/eyes/SEb" + color +  "bb"  + eye + "b" + ".jpg";
                 
                 this.drakeGeneticsService.isValidDrakeImage(sm_img_name,
                         new AsyncCallback<Boolean>() {
