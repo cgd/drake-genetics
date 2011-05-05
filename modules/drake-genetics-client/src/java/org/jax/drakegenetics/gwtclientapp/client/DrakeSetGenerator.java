@@ -88,14 +88,14 @@ public class DrakeSetGenerator  {
     }
     
    public Folder getTreeModel(DrakeGeneticsServiceAsync dgs) {
-        Image f_small_example = new Image("images/eyes/SEF51311.jpg");
-        Image f_large_example = new Image("images/eyes/LEF51311.jpg");
-        Image m_small_example = new Image("images/eyes/SEM40100.jpg");
-        Image m_large_example = new Image("images/eyes/LEM40100.jpg");
-        Image d_small_example = new Image("images/eyes/SEF1bb2b.jpg");
-        Image d_large_example = new Image("images/eyes/LEF1bb2b.jpg");
-        Image b_small_example = new Image("images/eyes/SEM40100.jpg");
-        Image b_large_example = new Image("images/eyes/LEM40100.jpg");
+        Image f_small_example = new Image("images/eyes/SEb5bb1b.jpg");
+        Image f_large_example = new Image("images/eyes/LEb5bb1b.jpg");
+        Image m_small_example = new Image("images/eyes/SEb4bb0b.jpg");
+        Image m_large_example = new Image("images/eyes/LEb4bb0b.jpg");
+        Image d_small_example = new Image("images/eyes/SEb1bb2b.jpg");
+        Image d_large_example = new Image("images/eyes/LEb1bb2b.jpg");
+        Image b_small_example = new Image("images/eyes/SEb4bb0b.jpg");
+        Image b_large_example = new Image("images/eyes/LEb4bb0b.jpg");
         
         // Create our set of Genotypes
         // normal female
