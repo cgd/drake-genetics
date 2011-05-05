@@ -17,10 +17,15 @@
 
 package org.jax.drakegenetics.server;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletContext;
 
@@ -31,6 +36,8 @@ import org.jax.drakegenetics.shareddata.client.LibraryNode;
  * @author gbeane
  */
 public class StaticDocumentLibrary {
+    private static final Logger LOG = Logger.getLogger(
+            StaticDocumentLibrary.class.getName());
 
     private LibraryNode root;
     private int numberOfDocuments;
@@ -114,9 +121,36 @@ public class StaticDocumentLibrary {
 
         @SuppressWarnings("unchecked")
 		Set<String> children = context.getResourcePaths(resourcePath);
+        
+        // apply an ordering to the child nodes
+        List<String> orderedChildren = new ArrayList<String>();
+        String orderFile = resourcePath + ".order";
+        if(children.contains(resourcePath + ".order")) {
+            try {
+                BufferedReader r = new BufferedReader(new InputStreamReader(
+                        context.getResourceAsStream(orderFile)));
+                String currItem;
+                while((currItem = r.readLine()) != null) {
+                    currItem = resourcePath + currItem.trim();
+                    if(children.contains(currItem)) {
+                        orderedChildren.add(currItem);
+                    }
+                    else if(children.contains(currItem + "/")) {
+                        orderedChildren.add(currItem + "/");
+                    }
+                    else {
+                        LOG.warning("failed to find: " + resourcePath + currItem);
+                    }
+                }
+                r.close();
+            }
+            catch(IOException ex) {
+                LOG.warning("failed to read: " + resourcePath + ".order");
+            }
+        }
 
         // for each file in this directory
-        for(String childResource : children) {
+        for(String childResource : orderedChildren) {
 
             // skip over any files that start with a "."
             if(childResource.startsWith(".")) {
